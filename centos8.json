@@ -13,7 +13,7 @@
         "var_iso_file":             "CentOS-8.1.1911-x86_64-dvd1.iso",
         "var_guest_username":       "{{env `LINUXUSER`}}",
         "var_guest_password":       "{{env `LINUXPASS`}}",
-        "var_build_version":        "{{env `BUILDVERSION'}}",
+        "var_build_version":        "{{env `BUILDVERSION`}}",
         "var_build_repo":           "{{env `BUILDREPO`}}",
         "var_build_branch":         "{{env `BUILDBRANCH`}}"
     },
