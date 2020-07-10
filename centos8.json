@@ -1,0 +1,89 @@
+{
+    "variables": {
+        "var_vsphere_vcenter":      "{{env `VSPHERE_VCENTER`}}",
+        "var_vsphere_username":     "{{env `VSPHERE_USERNAME`}}",
+        "var_vsphere_password":     "{{env `VSPHERE_PASSWORD`}}",
+        "var_vsphere_datacenter":   "{{env `VSPHERE_DATACENTER`}}",
+        "var_vsphere_cluster":      "{{env `VSPHERE_CLUSTER`}}",
+        "var_vsphere_datastore":    "{{env `VSPHERE_DATASTORE`}}",
+        "var_vsphere_network":      "{{env `VSPHERE_NETWORK`}}",
+        "var_vsphere_folder":       "{{env `VSPHERE_FOLDER`}}",
+        "var_vsphere_iso_ds":       "{{env `VSPHERE_ISO_DS`}}",
+        "var_iso_path":             "{{env `ISO_PATH`}}",
+        "var_iso_file":             "{{env `ISO_FILE`}}",
+        "var_guest_username":       "{{env `GUEST_USERNAME`}}",
+        "var_guest_password":       "{{env `GUEST_PASSWORD`}}",
+        "var_build_version":        "{{env `BUILDVER'}}",
+        "var_build_repo":           "{{env `BUILDREPO`}}",
+        "var_build_branch":         "{{env `BUILDBRANCH`}}"
+    },
+  
+    "builders": [
+        {
+            "type":                 "vsphere-iso",
+            "name":                 "centos8",
+
+            "vcenter_server":       "{{user `var_vsphere_vcenter`}}",
+            "username":             "{{user `var_vsphere_username`}}",
+            "password":             "{{user `var_vsphere_password`}}",
+            "insecure_connection":  true,
+  
+            "datacenter":           "{{user `var_vsphere_datacenter`}}",
+            "cluster":              "{{user `var_vsphere_cluster`}}",
+            "folder":               "{{user `var_vsphere_folder`}}",
+            "datastore":            "{{user `var_vsphere_datastore`}}",
+            "convert_to_template":  true,
+  
+            "vm_name":              "centos7-{{user `var_build_version`}}",
+            "guest_os_type":        "centos8_64Guest",
+            "CPUs":                 1,
+            "RAM":                  1024,
+            "disk_controller_type": "pvscsi",
+            "storage": [
+                {
+                  "disk_size":      16384,
+                  "disk_thin_provisioned": true
+                }
+              ],
+            "network_adapters": [
+                {
+                  "network":        "{{user `var_vsphere_network`}}",
+                  "network_card":   "vmxnet3"
+                }
+              ],
+            "notes":                "OSTYPE: CentOS 8\nISO: {{user `var_iso_file`}}\nVERSION: {{user `var_build_version`}}\nSOURCE: {{user `var_build_repo`}} ({{user `var_build_branch`}})",
+  
+            "communicator":         "ssh",
+            "ssh_username":         "{{user `var_guest_username`}}",
+            "ssh_password":         "{{user `var_guest_password`}}",
+  
+            "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
+            "http_directory":       "http",
+            "http_port_min":        8601,
+            "http_port_max":        8610,
+            "boot_command":         ["<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos8.cfg<enter><wait>"],
+            "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type":                 "shell",
+            "execute_command":      "echo '{{user `var_guest_password`}}' | sudo -S -E {{ .Path }}",
+            "scripts":              [
+                                        "./scripts/centos/configure-sshd.sh",
+                                        "./scripts/centos/install-cloudinit.sh",
+                                        "./scripts/centos/update.sh",
+                                        "./scripts/centos/cleanup.sh"
+                                    ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "type": "manifest",
+            "output": "centos8-output.json",
+            "strip_path": false
+        }
+    ]
+}
