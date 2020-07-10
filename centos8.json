@@ -15,7 +15,8 @@
         "var_guest_password":       "{{env `LINUXPASS`}}",
         "var_build_version":        "{{env `BUILDVERSION`}}",
         "var_build_repo":           "{{env `BUILDREPO`}}",
-        "var_build_branch":         "{{env `BUILDBRANCH`}}"
+        "var_build_branch":         "{{env `BUILDBRANCH`}}",
+        "var_http_server":          "{{env `HTTPSERVER`}}"
     },
   
     "builders": [
@@ -61,7 +62,7 @@
             "http_directory":       "http",
             "http_port_min":        8601,
             "http_port_max":        8610,
-            "boot_command":         ["<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos8.cfg<enter><wait>"],
+            "boot_command":         ["<up><wait><tab><wait> text ks=http://{{user `var_http_server`}}:{{ .HTTPPort }}/centos8.cfg<enter><wait>"],
             "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
         }
     ],
