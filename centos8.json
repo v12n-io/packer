@@ -35,7 +35,7 @@
             "datastore":            "{{user `var_vsphere_datastore`}}",
             "convert_to_template":  true,
   
-            "vm_name":              "centos7-{{user `var_build_version`}}",
+            "vm_name":              "centos8-{{user `var_build_version`}}",
             "guest_os_type":        "centos8_64Guest",
             "CPUs":                 1,
             "RAM":                  1024,
