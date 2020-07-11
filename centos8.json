@@ -52,7 +52,7 @@
                   "network_card":   "vmxnet3"
                 }
               ],
-            "notes":                "OSTYPE: CentOS 8\nISO: {{user `var_iso_file`}}\nVERSION: {{user `var_build_version`}}\nSOURCE: {{user `var_build_repo`}} ({{user `var_build_branch`}})",
+            "notes":                "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: CentOS8\nISO: {{user `var_iso_file`}}",
   
             "communicator":         "ssh",
             "ssh_username":         "{{user `var_guest_username`}}",
