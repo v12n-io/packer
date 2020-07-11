@@ -59,10 +59,7 @@
             "ssh_password":         "{{user `var_guest_password`}}",
   
             "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
-            "http_directory":       "http",
-            "http_port_min":        8601,
-            "http_port_max":        8610,
-            "boot_command":         ["<up><wait><tab><wait> text ks=http://{{user `var_http_server`}}:{{ .HTTPPort }}/centos8.cfg<enter><wait>"],
+            "boot_command":         ["<up><wait><tab><wait> text ks={{user `var_http_server`}}/http/centos8.cfg<enter><wait>"],
             "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
         }
     ],
@@ -72,10 +69,11 @@
             "type":                 "shell",
             "execute_command":      "echo '{{user `var_guest_password`}}' | sudo -S -E {{ .Path }}",
             "scripts":              [
-                                        "./scripts/centos/configure-sshd.sh",
-                                        "./scripts/centos/install-cloudinit.sh",
-                                        "./scripts/centos/update.sh",
-                                        "./scripts/centos/cleanup.sh"
+                                        "./scripts/centos/00-update.sh",
+                                        "./scripts/centos/10-configure-sshd.sh",
+                                        "./scripts/centos/80-install-cloudinit.sh",
+                                        "./scripts/centos/95-motd.sh",
+                                        "./scripts/centos/99-cleanup.sh"
                                     ]
         }
     ],
