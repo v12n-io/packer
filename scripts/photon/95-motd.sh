@@ -16,7 +16,8 @@ cat << ISSUE > /etc/issue
   {__ {__   {__    {__     {__  {__
    {_{__    {__  {__       {__  {__
     {__    {____{________ {___  {__
-        v12n - $NAME - REPLACEWITHBUILDVERSION
+        
+        v12n :: $NAME :: REPLACEWITHBUILDVERSION
         $DOCS
 
 ISSUE
