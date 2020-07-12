@@ -69,7 +69,7 @@
             </ImageInstall>
             <UserData>
                 <ProductKey>
-                    <Key>REPLACEWITHLICENSEKEY</Key>
+                    <Key>REPLACEWITHWIN2019STDLIC</Key>
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
