@@ -60,7 +60,7 @@
   
             "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
             "boot_command":         ["<esc><wait>",
-                                    "vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks={{user `var_http_server`}}/http/photon3.json photon.media=cdrom",
+                                    "vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks={{user `var_http_server`}}/photon3.json photon.media=cdrom",
                                     "<enter>"],
             "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
         }
