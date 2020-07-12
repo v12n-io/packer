@@ -124,14 +124,6 @@
 
   "provisioners": [
     {
-      "type":                   "powershell",
-      "scripts":                ["./scripts/windows/70-config.ps1"]
-    },
-    {
-      "type":                   "windows-restart",
-      "restart_timeout":        "60m"
-    },
-    {
       "type":                   "windows-update",
       "search_criteria":        "IsInstalled=0",
       "filters": [
@@ -139,6 +131,10 @@
                                 "include:$true"
       ],
       "restart_timeout":        "120m"
+    },
+    {
+      "type":                   "powershell",
+      "scripts":                ["./scripts/windows/70-config.ps1"]
     }
   ],
 
