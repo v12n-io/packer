@@ -1,28 +1,24 @@
 {
   "variables": {
-    "var_vsphere_vcenter":      "{{env `VSPHEREVCENTER`}}",
-    "var_vsphere_username":     "{{env `VSPHEREUSER`}}",
-    "var_vsphere_password":     "{{env `VSPHEREPASS`}}",
-    "var_vsphere_datacenter":   "{{env `VSPHEREDATACENTER`}}",
-    "var_vsphere_cluster":      "{{env `VSPHERECLUSTER`}}",
-    "var_vsphere_datastore":    "{{env `VSPHEREDATASTORE`}}",
-    "var_vsphere_network":      "{{env `VSPHERENETWORK`}}",
-    "var_vsphere_folder":       "Templates/Windows",
-    "var_vsphere_iso_ds":       "{{env `VSPHEREISODS`}}",
-    "var_iso_path":             "os/microsoft/server/2019",
-    "var_iso_file":             "en_windows_server_2019_updated_june_2020_x64_dvd_7757177c.iso",
-    "var_guest_username":       "administrator",
-    "var_guest_password":       "{{env `WINDOWSPASS`}}",
-    "var_build_version":        "{{env `BUILDVERSION`}}",
-    "var_build_repo":           "{{env `BUILDREPO`}}",
-    "var_build_branch":         "{{env `BUILDBRANCH`}}",
-    "var_http_server":          "{{env `HTTPSERVER`}}"
+    "var_vsphere_vcenter":      "{{env `VSPHERE_VCENTER`}}",
+    "var_vsphere_username":     "{{env `VSPHERE_USERNAME`}}",
+    "var_vsphere_password":     "{{env `VSPHERE_PASSWORD`}}",
+    "var_vsphere_datacenter":   "{{env `VSPHERE_DATACENTER`}}",
+    "var_vsphere_cluster":      "{{env `VSPHERE_CLUSTER`}}",
+    "var_vsphere_datastore":    "{{env `VSPHERE_DATASTORE`}}",
+    "var_vsphere_network":      "{{env `VSPHERE_NETWORK`}}",
+    "var_vsphere_folder":       "{{env `VSPHERE_FOLDER`}}",
+    "var_vsphere_iso_ds":       "{{env `VSPHERE_ISO_DS`}}",
+    "var_iso_path":             "{{env `ISO_PATH`}}",
+    "var_iso_file":             "{{env `ISO_FILE`}}",
+    "var_guest_username":       "{{env `GUEST_USERNAME`}}",
+    "var_guest_password":       "{{env `GUEST_PASSWORD`}}"
   },
   
   "builders": [
     {
       "type":                   "vsphere-iso",
-      "name":                   "win2019std",
+      "name":                   "WindowsServer2016-STANDARD",
     
       "vcenter_server":         "{{user `var_vsphere_vcenter`}}",
       "username":               "{{user `var_vsphere_username`}}",
@@ -35,7 +31,7 @@
       "datastore":              "{{user `var_vsphere_datastore`}}",
       "convert_to_template":    true,
     
-      "vm_name":                "ws2019std-{{user `var_build_version`}}",
+      "vm_name":                "ws2016-{{isotime \"20060102_1504\"}}",
       "guest_os_type":          "windows9Server64Guest",
       "CPUs":                   1,
       "RAM":                    4096,
@@ -52,7 +48,7 @@
           "network_card":       "vmxnet3"
         }
       ],
-      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2019STD\nISO: {{user `var_iso_file`}}",
+      "notes":                  "BUILDDATE: {{isotime \"20060102_1504\"}} || BUILDOS: Windows Server 2016 Standard || BUILDISO: {{user `var_iso_file`}}",
     
       "communicator":           "winrm",
       "winrm_username":         "{{user `var_guest_username`}}",
@@ -64,15 +60,15 @@
       ],
       "shutdown_command":       "shutdown /s /t 10 /f /d p:4:1 /c Packer_Provisioning_Shutdown",
       "floppy_files": [
-                                "./config/2019/STANDARD/Autounattend.xml",
-                                "./scripts/windows/install-vmtools64.cmd",
-                                "./scripts/windows/00-config.ps1"
+                                "./2016/STANDARD/Autounattend.xml",
+                                "./scripts/install-vmtools64.cmd",
+                                "./scripts/phase1-config.ps1"
       ]
     },
       
     {
       "type":                   "vsphere-iso",
-      "name":                   "win2019stdcore",
+      "name":                   "WindowsServer2016-STANDARDCORE",
     
       "vcenter_server":         "{{user `var_vsphere_vcenter`}}",
       "username":               "{{user `var_vsphere_username`}}",
@@ -85,7 +81,7 @@
       "datastore":              "{{user `var_vsphere_datastore`}}",
       "convert_to_template":    true,
     
-      "vm_name":                "wc2019std-{{user `var_build_version`}}",
+      "vm_name":                "wc2016-{{isotime \"20060102_1504\"}}",
       "guest_os_type":          "windows9Server64Guest",
       "CPUs":                   1,
       "RAM":                    4096,
@@ -102,7 +98,7 @@
           "network_card":       "vmxnet3"
         }
       ],
-      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2019STDCORE\nISO: {{user `var_iso_file`}}",
+      "notes":                  "BUILDDATE: {{isotime \"20060102_1504\"}} || BUILDOS: Windows Server 2016 Standard Core || BUILDISO: {{user `var_iso_file`}}",
     
       "communicator":           "winrm",
       "winrm_username":         "{{user `var_guest_username`}}",
@@ -115,9 +111,9 @@
       "shutdown_command":       "shutdown /s /t 10 /f /d p:4:1 /c Packer_Provisioning_Shutdown",
       "shutdown_timeout":       "15m",
       "floppy_files": [
-                                "./config/2019/STANDARDCORE/Autounattend.xml",
-                                "./scripts/windows/install-vmtools64.cmd",
-                                "./scripts/windows/00-config.ps1"
+                                "./2016/STANDARDCORE/Autounattend.xml",
+                                "./scripts/install-vmtools64.cmd",
+                                "./scripts/phase1-config.ps1"
       ]
     }
   ],
@@ -125,7 +121,7 @@
   "provisioners": [
     {
       "type":                   "powershell",
-      "scripts":                ["./scripts/windows/70-config.ps1"]
+      "scripts":                ["./scripts/phase2-config.ps1"]
     },
     {
       "type":                   "windows-restart",
@@ -145,7 +141,7 @@
   "post-processors": [
     {
         "type": "manifest",
-        "output": "win2019std-output.json",
+        "output": "windows2016-vsphere_output.json",
         "strip_path": false
     }
   ]

@@ -9,8 +9,8 @@
     "var_vsphere_network":      "{{env `VSPHERENETWORK`}}",
     "var_vsphere_folder":       "Templates/Windows",
     "var_vsphere_iso_ds":       "{{env `VSPHEREISODS`}}",
-    "var_iso_path":             "os/microsoft/server/2019",
-    "var_iso_file":             "en_windows_server_2019_updated_june_2020_x64_dvd_7757177c.iso",
+    "var_iso_path":             "os/microsoft/server/2016",
+    "var_iso_file":             "en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso",
     "var_guest_username":       "administrator",
     "var_guest_password":       "{{env `WINDOWSPASS`}}",
     "var_build_version":        "{{env `BUILDVERSION`}}",
@@ -22,7 +22,7 @@
   "builders": [
     {
       "type":                   "vsphere-iso",
-      "name":                   "win2019std",
+      "name":                   "win2016std",
     
       "vcenter_server":         "{{user `var_vsphere_vcenter`}}",
       "username":               "{{user `var_vsphere_username`}}",
@@ -35,7 +35,7 @@
       "datastore":              "{{user `var_vsphere_datastore`}}",
       "convert_to_template":    true,
     
-      "vm_name":                "ws2019std-{{user `var_build_version`}}",
+      "vm_name":                "ws2016std-{{user `var_build_version`}}",
       "guest_os_type":          "windows9Server64Guest",
       "CPUs":                   1,
       "RAM":                    4096,
@@ -52,7 +52,7 @@
           "network_card":       "vmxnet3"
         }
       ],
-      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2019STD\nISO: {{user `var_iso_file`}}",
+      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2016STD\nISO: {{user `var_iso_file`}}",
     
       "communicator":           "winrm",
       "winrm_username":         "{{user `var_guest_username`}}",
@@ -64,7 +64,7 @@
       ],
       "shutdown_command":       "shutdown /s /t 10 /f /d p:4:1 /c Packer_Provisioning_Shutdown",
       "floppy_files": [
-                                "./config/2019/STANDARD/Autounattend.xml",
+                                "./config/2016/STANDARD/Autounattend.xml",
                                 "./scripts/windows/install-vmtools64.cmd",
                                 "./scripts/windows/00-config.ps1"
       ]
@@ -72,7 +72,7 @@
       
     {
       "type":                   "vsphere-iso",
-      "name":                   "win2019stdcore",
+      "name":                   "win2016stdcore",
     
       "vcenter_server":         "{{user `var_vsphere_vcenter`}}",
       "username":               "{{user `var_vsphere_username`}}",
@@ -85,7 +85,7 @@
       "datastore":              "{{user `var_vsphere_datastore`}}",
       "convert_to_template":    true,
     
-      "vm_name":                "wc2019std-{{user `var_build_version`}}",
+      "vm_name":                "wc2016std-{{user `var_build_version`}}",
       "guest_os_type":          "windows9Server64Guest",
       "CPUs":                   1,
       "RAM":                    4096,
@@ -102,7 +102,7 @@
           "network_card":       "vmxnet3"
         }
       ],
-      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2019STDCORE\nISO: {{user `var_iso_file`}}",
+      "notes":                  "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: WIN2016STDCORE\nISO: {{user `var_iso_file`}}",
     
       "communicator":           "winrm",
       "winrm_username":         "{{user `var_guest_username`}}",
@@ -115,7 +115,7 @@
       "shutdown_command":       "shutdown /s /t 10 /f /d p:4:1 /c Packer_Provisioning_Shutdown",
       "shutdown_timeout":       "15m",
       "floppy_files": [
-                                "./config/2019/STANDARDCORE/Autounattend.xml",
+                                "./config/2016/STANDARDCORE/Autounattend.xml",
                                 "./scripts/windows/install-vmtools64.cmd",
                                 "./scripts/windows/00-config.ps1"
       ]
@@ -145,7 +145,7 @@
   "post-processors": [
     {
         "type": "manifest",
-        "output": "win2019std-output.json",
+        "output": "win2016std-output.json",
         "strip_path": false
     }
   ]
