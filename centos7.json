@@ -10,12 +10,13 @@
         "var_vsphere_folder":       "Templates/CentOS",
         "var_vsphere_iso_ds":       "{{env `VSPHEREISODS`}}",
         "var_iso_path":             "os/centos/7",
-        "var_iso_file":             "CentOS-7-x86_64-DVD-1908.iso",
+        "var_iso_file":             "entOS-7-x86_64-DVD-1908.iso",
         "var_guest_username":       "{{env `LINUXUSER`}}",
         "var_guest_password":       "{{env `LINUXPASS`}}",
-        "var_build_version":        "{{env `BUILDVERSION'}}",
+        "var_build_version":        "{{env `BUILDVERSION`}}",
         "var_build_repo":           "{{env `BUILDREPO`}}",
-        "var_build_branch":         "{{env `BUILDBRANCH`}}"
+        "var_build_branch":         "{{env `BUILDBRANCH`}}",
+        "var_http_server":          "{{env `HTTPSERVER`}}"
     },
   
     "builders": [
@@ -51,17 +52,14 @@
                   "network_card":   "vmxnet3"
                 }
               ],
-            "notes":                "OSTYPE: CentOS 7\nISO: {{user `var_iso_file`}}\nVERSION: {{user `var_build_version`}}\nSOURCE: {{user `var_build_repo`}} ({{user `var_build_branch`}})",
+            "notes":                "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: CentOS7\nISO: {{user `var_iso_file`}}",
   
             "communicator":         "ssh",
             "ssh_username":         "{{user `var_guest_username`}}",
             "ssh_password":         "{{user `var_guest_password`}}",
   
             "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
-            "http_directory":       "http",
-            "http_port_min":        8601,
-            "http_port_max":        8610,
-            "boot_command":         ["<up><wait><tab><wait> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos7.cfg<enter><wait>"],
+            "boot_command":         ["<up><wait><tab><wait> text ks={{user `var_http_server`}}/centos7.cfg<enter><wait>"],
             "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
         }
     ],
@@ -71,10 +69,11 @@
             "type":                 "shell",
             "execute_command":      "echo '{{user `var_guest_password`}}' | sudo -S -E bash '{{.Path}}'",
             "scripts":              [
-                                        "./scripts/centos/configure-sshd.sh",
-                                        "./scripts/centos/install-cloudinit.sh",
-                                        "./scripts/centos/update.sh",
-                                        "./scripts/centos/cleanup.sh"
+                                        "./scripts/centos/00-update.sh",
+                                        "./scripts/centos/10-configure-sshd.sh",
+                                        "./scripts/centos/80-install-cloudinit.sh",
+                                        "./scripts/centos/95-motd.sh",
+                                        "./scripts/centos/99-cleanup.sh"
                                     ]
         }
     ],
