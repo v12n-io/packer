@@ -59,7 +59,7 @@
             "ssh_password":         "{{user `var_guest_password`}}",
   
             "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
-            "boot_command":         ["<up><wait><tab><wait> text ks={{user `var_http_server`}}/http/centos8.cfg<enter><wait>"],
+            "boot_command":         ["<up><wait><tab><wait> text ks={{user `var_http_server`}}/centos8.cfg<enter><wait>"],
             "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
         }
     ],
