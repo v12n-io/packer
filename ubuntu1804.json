@@ -1,0 +1,100 @@
+{
+    "variables": {
+        "var_vsphere_vcenter":      "{{env `VSPHEREVCENTER`}}",
+        "var_vsphere_username":     "{{env `VSPHEREUSER`}}",
+        "var_vsphere_password":     "{{env `VSPHEREPASS`}}",
+        "var_vsphere_datacenter":   "{{env `VSPHEREDATACENTER`}}",
+        "var_vsphere_cluster":      "{{env `VSPHERECLUSTER`}}",
+        "var_vsphere_datastore":    "{{env `VSPHEREDATASTORE`}}",
+        "var_vsphere_network":      "{{env `VSPHERENETWORK`}}",
+        "var_vsphere_folder":       "Templates/Ubuntu",
+        "var_vsphere_iso_ds":       "{{env `VSPHEREISODS`}}",
+        "var_iso_path":             "os/ubuntu/18",
+        "var_iso_file":             "ubuntu-18.04.4-live-server-amd64.iso",
+        "var_guest_username":       "{{env `LINUXUSER`}}",
+        "var_guest_password":       "{{env `LINUXPASS`}}",
+        "var_build_version":        "{{env `BUILDVERSION`}}",
+        "var_build_repo":           "{{env `BUILDREPO`}}",
+        "var_build_branch":         "{{env `BUILDBRANCH`}}",
+        "var_http_server":          "{{env `HTTPSERVER`}}"
+    },
+  
+    "builders": [
+        {
+            "type":                 "vsphere-iso",
+            "name":                 "ubuntu1804",
+
+            "vcenter_server":       "{{user `var_vsphere_vcenter`}}",
+            "username":             "{{user `var_vsphere_username`}}",
+            "password":             "{{user `var_vsphere_password`}}",
+            "insecure_connection":  true,
+  
+            "datacenter":           "{{user `var_vsphere_datacenter`}}",
+            "cluster":              "{{user `var_vsphere_cluster`}}",
+            "folder":               "{{user `var_vsphere_folder`}}",
+            "datastore":            "{{user `var_vsphere_datastore`}}",
+            "convert_to_template":  true,
+  
+            "vm_name":              "ubuntu1804-{{user `var_build_version`}}",
+            "guest_os_type":        "ubuntu64Guest",
+            "CPUs":                 1,
+            "RAM":                  1024,
+            "disk_controller_type": "pvscsi",
+            "storage": [
+                {
+                  "disk_size":      16384,
+                  "disk_thin_provisioned": true
+                }
+              ],
+            "network_adapters": [
+                {
+                  "network":        "{{user `var_vsphere_network`}}",
+                  "network_card":   "vmxnet3"
+                }
+              ],
+            "notes":                "VER: {{user `var_build_version`}}\nSRC: {{user `var_build_repo`}} ({{user `var_build_branch`}})\nOS: Ubuntu1804\nISO: {{user `var_iso_file`}}",
+  
+            "communicator":         "ssh",
+            "ssh_username":         "{{user `var_guest_username`}}",
+            "ssh_password":         "{{user `var_guest_password`}}",
+  
+            "iso_paths":            ["{{user `var_vsphere_iso_ds`}} {{user `var_iso_path`}}/{{user `var_iso_file`}}"],
+            "boot_command":         ["<enter><wait><f6><wait><esc><wait>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                        "<bs><bs><bs>",
+                                        "/install/vmlinuz",
+                                        " initrd=/install/initrd.gz",
+                                        " priority=critical",
+                                        " locale=en_GB",
+                                        " preseed/url={{user `var_http_server`}}/ubuntu1804.cfg<wait>",
+                                        "<enter>"
+                                    ],
+            "shutdown_command":     "echo '{{user `var_guest_password`}}' | sudo -S -E shutdown -P now"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type":                 "shell",
+            "execute_command":      "echo '{{user `var_guest_password`}}' | sudo -S -E {{ .Path }}",
+            "scripts":              [
+                                        "./scripts/ubuntu/00-update.sh"
+                                    ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "type": "manifest",
+            "output": "ubuntu1804-output.json",
+            "strip_path": false
+        }
+    ]
+}
