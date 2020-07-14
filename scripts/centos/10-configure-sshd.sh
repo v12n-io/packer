@@ -11,6 +11,3 @@ sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_con
 
 # Enable password authentication
 #sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
-
-# Restart sshd
-systemctl restart sshd

@@ -3,23 +3,28 @@
 # @author Michael Poore
 # @website https://blog.v12n.io
 
-#Stop services for cleanup
-systemctl stop rsyslog
+# Stop services for cleanup
+if [ $(systemctl is-active auditd) == "active" ]; then 
+    systemctl stop auditd
+fi
+if [ $(systemctl is-active rsyslog) == "active" ]; then 
+    systemctl stop rsyslog
+fi
 
-#clear audit logs
+# Clear audit logs
 if [ -f /var/log/audit/audit.log ]; then
-cat /dev/null > /var/log/audit/audit.log
+    cat /dev/null > /var/log/audit/audit.log
 fi
 if [ -f /var/log/wtmp ]; then
-cat /dev/null > /var/log/wtmp
+    cat /dev/null > /var/log/wtmp
 fi
 if [ -f /var/log/lastlog ]; then
-cat /dev/null > /var/log/lastlog
+    cat /dev/null > /var/log/lastlog
 fi
 
-#cleanup persistent udev rules
+# Cleanup persistent udev rules
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
-rm /etc/udev/rules.d/70-persistent-net.rules
+    rm /etc/udev/rules.d/70-persistent-net.rules
 fi
 
 # Cleanup /tmp directories
@@ -34,6 +39,8 @@ ln -s /etc/machine-id /var/lib/dbus/machine-id
 # Clean cloud-init
 cloud-init clean --logs --seed
 
+# Yum clean
+yum clean all
+
 # Cleanup shell history
-history -w
-history -c
+cat /dev/null > ~/.bash_history && history -c

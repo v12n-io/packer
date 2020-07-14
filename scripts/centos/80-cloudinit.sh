@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Install cloud-init
-sudo yum install -y cloud-init
+yum install -y cloud-init
 # Disable VMware customization to facilitate static IP address assignment
 sed -i "s/^disable_vmware_customization: false/disable_vmware_customization: true/" /etc/cloud/cloud.cfg
 # Disable network configuration if VMware customization is false
@@ -20,20 +20,23 @@ sed -i "/^After=vgauthd.service/a After=dbus.service" /lib/systemd/system/vmtool
 touch /etc/cloud/cloud-init.disabled
 
 # Create delay-init.sh script
-cat << DELAY > /root/delay-init.sh
+cat << DELAY > /etc/cloud/delay-init.sh
 
-sudo rm -rf /etc/cloud/cloud-init.disabled
-sudo cloud-init init
+rm -rf /etc/cloud/cloud-init.disabled
+cloud-init init
 sleep 20
-sudo cloud-init modules --mode config
+cloud-init modules --mode config
 sleep 20
-sudo cloud-init modules --mode final
+cloud-init modules --mode final
 
+crontab -r root
+
+rm -rf /etc/cloud/delay-init.sh
 DELAY
-chmod +x /root/delay-init.sh
+chmod +rx /etc/cloud/delay-init.sh
 
 # Add delay-init to crontab
-echo "$(echo '@reboot ( sleep 60 ; sh /root/delay-init.sh )' ; crontab -l)" | crontab -
+echo "$(echo '@reboot ( sleep 60 ; sh /etc/cloud/delay-init.sh )' ; crontab -l)" | crontab -
 
 # Change default config to enable SSH password auth
 if [ -f "/etc/cloud/cloud.cfg" ]; then
