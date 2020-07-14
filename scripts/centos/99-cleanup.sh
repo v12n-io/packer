@@ -4,11 +4,11 @@
 # @website https://blog.v12n.io
 
 # Stop services for cleanup
-if [ $(systemctl is-active auditd) == "active" ]; then 
-    systemctl stop auditd
-fi
 if [ $(systemctl is-active rsyslog) == "active" ]; then 
-    systemctl stop rsyslog
+    sudo systemctl stop rsyslog
+fi
+if [ $(systemctl is-active auditd) == "active" ]; then 
+    sudo systemctl stop auditd
 fi
 
 # Clear audit logs
@@ -37,10 +37,10 @@ rm /var/lib/dbus/machine-id
 ln -s /etc/machine-id /var/lib/dbus/machine-id
 
 # Clean cloud-init
-cloud-init clean --logs --seed
+sudo cloud-init clean --logs --seed
 
 # Yum clean
-yum clean all
+sudo yum clean all
 
 # Cleanup shell history
 cat /dev/null > ~/.bash_history && history -c

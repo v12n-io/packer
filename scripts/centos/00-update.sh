@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Update existing packages
-yum update -y
+sudo yum update -y
 
 # Reinstall CA certificates
-yum reinstall -y ca-certificates
+sudo yum reinstall -y ca-certificates

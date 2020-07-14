@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Build date used for motd
-RELEASE=$(cat /etc/release)
+RELEASE=$(cat /etc/centos-release)
 DOCS="https://github.com/v12n-io/packer"
 
 # Create Issue
