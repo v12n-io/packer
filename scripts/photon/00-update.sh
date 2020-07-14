@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Update existing packages
-tdnf update -y -q
+sudo tdnf update -y -q
 
 # Clean up packages
-tdnf clean all
+sudo tdnf clean all

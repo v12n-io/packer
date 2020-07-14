@@ -3,7 +3,7 @@
     "password":
         {
             "crypted": false,
-            "text": "VMware1!"
+            "text": "REPLACEWITHROOTPASSWORD"
         },
     "disk": "/dev/sda",
     "partitions": [
@@ -13,12 +13,12 @@
                         {"size": 128, "filesystem": "swap"}
                     ],
     "packagelist_file": "packages_minimal.json",
-    "additional_packages": ["vim"],
+    "additional_packages": ["vim","perl","openssl"],
     "postinstall": [
                         "#!/bin/sh",
-                        "useradd -m -G sudo v12n",
-                        "echo \"v12n:VMware1!\" | chpasswd",
-                        "echo \"v12n  ALL=(ALL)  NOPASSWD:SETENV: ALL\" >> /etc/sudoers.d/v12n",
+                        "useradd -m -G sudo REPLACEWITHLINUXUSERNAME",
+                        "echo \"REPLACEWITHLINUXUSERNAME:REPLACEWITHLINUXUSERPASS\" | chpasswd",
+                        "echo \"REPLACEWITHLINUXUSERNAME  ALL=(ALL)  NOPASSWD:SETENV: ALL\" >> /etc/sudoers.d/REPLACEWITHLINUXUSERNAME",
                         "sed -i \"s/^.*requiretty/#Defaults requiretty/\" /etc/sudoers",
                         "iptables -A INPUT -p ICMP -j ACCEPT",
                         "iptables -A INPUT -p ICMP -j ACCEPT",

@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Build date used for motd
-NAME="Photon3"
+RELEASE=$(cat /etc/photon-release | head 1)
 DOCS="https://github.com/v12n-io/packer"
 
 # Create Issue
@@ -17,7 +17,8 @@ cat << ISSUE > /etc/issue
    {_{__    {__  {__       {__  {__
     {__    {____{________ {___  {__
         
-        v12n :: $NAME :: REPLACEWITHBUILDVERSION
+        $RELEASE
+        Build REPLACEWITHBUILDVERSION
         $DOCS
 
 ISSUE

@@ -72,7 +72,10 @@
             "execute_command":      "echo '{{user `var_guest_password`}}' | sudo -S -E {{ .Path }}",
             "scripts":              [
                                         "./scripts/photon/00-update.sh",
-                                        "./scripts/photon/95-motd.sh"
+                                        "./scripts/photon/10-configure-sshd.sh",
+                                        "./scripts/photon/20-ansibleuser.sh",
+                                        "./scripts/photon/95-motd.sh",
+                                        "./scripts/photon/99-cleanup.sh"
                                     ]
         }
     ],
