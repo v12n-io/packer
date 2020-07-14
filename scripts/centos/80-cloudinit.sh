@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Install cloud-init
-sudo yum install -y cloud-init
+sudo yum install -y perl cloud-init
 # Disable VMware customization to facilitate static IP address assignment
 sudo sed -i "s/^disable_vmware_customization: false/disable_vmware_customization: true/" /etc/cloud/cloud.cfg
 # Disable network configuration if VMware customization is false

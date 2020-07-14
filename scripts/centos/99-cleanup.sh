@@ -7,9 +7,6 @@
 if [ $(systemctl is-active rsyslog) == "active" ]; then 
     sudo systemctl stop rsyslog
 fi
-if [ $(systemctl is-active auditd) == "active" ]; then 
-    sudo systemctl stop auditd
-fi
 
 # Clear audit logs
 if [ -f /var/log/audit/audit.log ]; then
