@@ -7,8 +7,8 @@
 sudo yum install -y cloud-init
 # Disable VMware customization to facilitate static IP address assignment
 sudo sed -i "s/^disable_vmware_customization: false/disable_vmware_customization: true/" /etc/cloud/cloud.cfg
-# Disable network configuration if VMware customization is false
-sudo sed -i "/disable_vmware_customization: false/a\\\nnetwork:\n  config: disabled" /etc/cloud/cloud.cfg
+# Disable network configuration if VMware customization is true
+sudo sed -i "/disable_vmware_customization: true/a\\\nnetwork:\n  config: disabled" /etc/cloud/cloud.cfg
 
 # Disable /tmp folder clearing
 sudo sed -i "s@q /tmp@#q /tmp@" /usr/lib/tmpfiles.d/tmp.conf
