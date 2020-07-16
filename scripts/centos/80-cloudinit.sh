@@ -28,6 +28,7 @@ sudo cloud-init modules --mode config
 sleep 20
 sudo cloud-init modules --mode final
 sudo touch /etc/cloud/cloud-init.disabled
+sudo eject --cdrom
 DELAY
 chmod +rx /usr/local/bin/cloud-init.sh
 
