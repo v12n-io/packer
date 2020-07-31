@@ -16,7 +16,8 @@
         "var_build_version":        "{{env `BUILDVERSION`}}",
         "var_build_repo":           "{{env `BUILDREPO`}}",
         "var_build_branch":         "{{env `BUILDBRANCH`}}",
-        "var_http_server":          "{{env `HTTPSERVER`}}"
+        "var_http_server":          "{{env `HTTPSERVER`}}",
+        "var_content_library":      ""
     },
   
     "builders": [
