@@ -1,0 +1,92 @@
+{
+    "builders": [
+        {
+            "type":                 "vsphere-iso",
+            "name":                 "win2019-STD",
+    
+            "vcenter_server":       "{{user `vcenter_server`}}",
+            "username":             "{{user `vcenter_username`}}",
+            "password":             "{{user `vcenter_password`}}",
+            "insecure_connection":  true,
+    
+            "datacenter":           "{{user `vcenter_datacenter`}}",
+            "cluster":              "{{user `vcenter_cluster`}}",
+            "folder":               "{{user `vcenter_folder`}}",
+            "datastore":            "{{user `vcenter_datastore`}}",
+            "content_library_destination" : {
+                "library":          "{{user `vcenter_contentlib`}}",
+                "ovf":              true,
+                "destroy":          true
+            },
+            "convert_to_template":  true,
+    
+            "vm_name":              "ws2019std",
+            "guest_os_type":        "{{user `guest_type`}}",
+            "CPUs":                 "{{user `cpu_count`}}",
+            "RAM":                  "{{user `mem_count`}}",
+            "disk_controller_type": "pvscsi",
+            "storage": [
+                {
+                    "disk_size":    "{{user `disk_size`}}",
+                    "disk_thin_provisioned": "{{user `disk_thin`}}"
+                }
+            ],
+            "network_adapters": [
+                {
+                    "network":      "{{user `vcenter_network`}}",
+                    "network_card": "vmxnet3"
+                }
+            ],
+            "notes":                "VER: {{user `build_version`}}\nSRC: {{user `build_repo`}} ({{user `build_branch`}})\nOS: Windows 2019 STD\nISO: {{user `iso_file`}}",
+    
+            "communicator":         "winrm",
+            "winrm_username":       "{{user `guest_username`}}",
+            "winrm_password":       "{{user `guest_password`}}",
+    
+            "iso_paths": [
+                                    "[{{user `vcenter_isods`}}] {{user `iso_path`}}/{{user `iso_file`}}",
+                                    "[] /vmimages/tools-isoimages/windows.iso"
+            ],
+            "shutdown_command":     "shutdown /s /t 10 /f /d p:4:1 /c Packer_Provisioning_Shutdown",
+            "floppy_files": [
+                                    "../../configs/win2019/std/Autounattend.xml",
+                                    "../../scripts/windows/00-vmtools64.cmd",
+                                    "../../scripts/windows/01-initialise.ps1"
+            ]
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type":                 "windows-update",
+            "search_criteria":      "IsInstalled=0",
+            "filters": [
+                                    "exclude:$_.Title -like '*Preview*'",
+                                    "include:$true"
+            ],
+            "restart_timeout":      "120m"
+        },
+        {
+            "type":                 "powershell",
+            "elevated_user":        "{{user `guest_username`}}",
+            "elevated_password":    "{{user `guest_password`}}",
+            "scripts": [
+                                    "../../scripts/windows/03-systemsettings.ps1",
+                                    "../../scripts/windows/04-tlsconfig.ps1",
+                                    "../../scripts/windows/10-createuser.ps1",
+                                    "../../scripts/windows/40-ssltrust.ps1",
+                                    "../../scripts/windows/60-openssh.ps1",
+                                    "../../scripts/windows/80-ansible.ps1",
+                                    "../../scripts/windows/95-enablerdp.ps1"
+            ]
+        }
+    ],
+
+    "post-processors": [
+        {
+            "type":                 "manifest",
+            "output":               "output.json",
+            "strip_path":           false
+        }
+    ]
+}

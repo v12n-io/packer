@@ -1,0 +1,11 @@
+{
+    "vcenter_server":       "ukw-p-vcs-01.v12n.io",
+    "vcenter_username":     "administrator@vsphere.local",
+    "vcenter_password":     "PSych01!",
+    "vcenter_datacenter":   "ukw01",
+    "vcenter_cluster":      "ukw01-cls01",
+    "vcenter_datastore":    "ukw-p-syn-01_ds02",
+    "vcenter_network":      "ukw-172.25.1.0_24",
+    "vcenter_isods":        "ukw-p-qnp-0001_iso",
+    "vcenter_contentlib":   "win2019-master"
+}

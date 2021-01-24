@@ -1,0 +1,15 @@
+{
+    "vcenter_folder":       "Templates/Windows",
+    "iso_path":             "os/microsoft/server/2019",
+    "iso_file":             "en_windows_server_2019_updated_dec_2020_x64_dvd_36e0f791.iso",
+    "guest_username":       "Administrator",
+    "guest_password":       "PSych01!",
+    "guest_type":           "windows9Server64Guest",
+    "build_version":        "1111",
+    "build_repo":           "repo",
+    "build_branch":         "master",
+    "cpu_count":            "2",
+    "mem_count":            "4096",
+    "disk_size":            "51200",
+    "disk_thin":            "true"
+}
