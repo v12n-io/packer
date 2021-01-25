@@ -15,7 +15,7 @@
             "datastore":            "{{user `vcenter_datastore`}}",
             "convert_to_template":  true,
     
-            "vm_name":              "ws2019std",
+            "vm_name":              "ws2019std_{{user `build_version`}}",
             "guest_os_type":        "{{user `guest_type`}}",
             "CPUs":                 "{{user `cpu_count`}}",
             "RAM":                  "{{user `mem_count`}}",
