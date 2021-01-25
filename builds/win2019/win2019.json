@@ -13,11 +13,6 @@
             "cluster":              "{{user `vcenter_cluster`}}",
             "folder":               "{{user `vcenter_folder`}}",
             "datastore":            "{{user `vcenter_datastore`}}",
-            "content_library_destination" : {
-                "library":          "{{user `vcenter_contentlib`}}",
-                "ovf":              true,
-                "destroy":          true
-            },
             "convert_to_template":  true,
     
             "vm_name":              "ws2019std",
