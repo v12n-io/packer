@@ -5,13 +5,14 @@
 $ErrorActionPreference = "Stop"
 
 # Variables
-$passwordLength = 12
+$passwordLength = 20
 $nonAlphaChars = 5
 $ansibleUser = "REPLACEWITHANSIBLEUSERNAME"
 Add-Type -AssemblyName 'System.Web'
 
 # Create the ansible user
 $ansiblePass = ([System.Web.Security.Membership]::GeneratePassword($passwordLength, $nonAlphaChars))
+Write-Host $ansiblePass
 $secureString = ConvertTo-SecureString $ansiblePass -AsPlainText -Force
 New-LocalUser -Name $ansibleUser -Password $secureString
 $credential = New-Object System.Management.Automation.PsCredential($ansibleUser,$secureString)
