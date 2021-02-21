@@ -121,6 +121,10 @@ variable "script_files" {
     type        = list(string)
     description = "A list of scripts defined using relative paths that will be executed against the VM"
 }
+variable "inline_cmds" {
+    type        = list(string)
+    description = "A list of commands that will be executed against the VM"
+}
 
 # Build Settings
 variable "build_repo" {
@@ -242,7 +246,7 @@ source "vsphere-iso" "win2019stdcore" {
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
     communicator                = "winrm"
-    winrm_timeout               = "2h"
+    winrm_timeout               = "30m"
     winrm_username              = var.build_username
     winrm_password              = var.build_password
     shutdown_command            = var.vm_shutdown_cmd
@@ -272,5 +276,11 @@ build {
         elevated_user       = var.build_username
         elevated_password   = var.build_password
         scripts             = var.script_files
+    }
+    # PowerShell Provisioner to execute commands
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        inline              = var.inline_cmds
     }
 }
