@@ -56,10 +56,9 @@
 						<PartitionID>3</PartitionID>
 					</InstallTo>
 					<InstallFrom>
-						<Path>install.wim</Path>
-						<MetaData>
-							<Key>/IMAGE/INDEX</Key>
-							<Value>1</Value>
+						<MetaData wcm:action="add">
+							<Key>/IMAGE/NAME</Key>
+							<Value>Windows 10 Enterprise</Value>
 						</MetaData>
 					</InstallFrom>
 				</OSImage>
