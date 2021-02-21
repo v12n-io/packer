@@ -136,6 +136,7 @@ variable "build_branch" {
 variable "build_username" {
     type        = string
     description = "The guest OS username used to login"
+    default     = "Administrator"
     sensitive   = true
 }
 variable "build_password" {

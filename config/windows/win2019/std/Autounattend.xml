@@ -69,7 +69,7 @@
             </ImageInstall>
             <UserData>
                 <ProductKey>
-                    <Key>REPLACEWITHWIN2019STDLIC</Key>
+                    <Key>N69G4-B89J2-4G8F4-WWYCC-J464C</Key>
                     <WillShowUI>OnError</WillShowUI>
                 </ProductKey>
                 <AcceptEula>true</AcceptEula>
@@ -87,7 +87,7 @@
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <AutoLogon>
                 <Password>
-                    <Value>REPLACEWITHWINDOWSPASSWORD</Value>
+                    <Value>REPLACEWITHADMINPASS</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <LogonCount>1</LogonCount>
@@ -129,7 +129,7 @@
             </OOBE>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>REPLACEWITHWINDOWSPASSWORD</Value>
+                    <Value>REPLACEWITHADMINPASS</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
             </UserAccounts>
