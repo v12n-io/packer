@@ -33,11 +33,5 @@ vm_shutdown_cmd     = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
 # Provisioner Settings
 script_files        = [ "../../../script/windows/03-systemsettings.ps1",
                         "../../../script/windows/04-tlsconfig.ps1",
-                        "../../../script/windows/40-ssltrust.ps1",
-                        "../../../script/windows/85-chocolatey.ps1"
-                        ]
-inline_cmds         = [ "choco install postman",
-                        "choco install winscp",
-                        "choco install putty",
-                        "choco install vscode",
-                        "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
+                        "../../../script/windows/40-ssltrust.ps1" ]
+inline_cmds         = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
