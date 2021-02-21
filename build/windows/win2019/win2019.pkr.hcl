@@ -254,20 +254,23 @@ source "vsphere-iso" "win2019stdcore" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources = [ "source.vsphere-iso.win2019std",
-                "source.vsphere-iso.win2019stdcore" ]
+    sources                 = [ "source.vsphere-iso.win2019std",
+                                "source.vsphere-iso.win2019stdcore" ]
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {
-        pause_before = "30s"
-        search_criteria = "IsInstalled=0"
-        filters = [ "exclude:$_.Title -like '*VMware*'",
-                    "exclude:$_.Title -like '*Preview*'",
-                    "exclude:$_.Title -like '*Defender*'",
-                    "exclude:$_.InstallationBehavior.CanRequestUserInput",
-                    "include:$true" ]
+        pause_before        = "30s"
+        search_criteria     = "IsInstalled=0"
+        filters             = [ "exclude:$_.Title -like '*VMware*'",
+                                "exclude:$_.Title -like '*Preview*'",
+                                "exclude:$_.Title -like '*Defender*'",
+                                "exclude:$_.InstallationBehavior.CanRequestUserInput",
+                                "include:$true" ]
+        restart_timeout     = "120m"
     }      
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
-        scripts = var.script_files
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        scripts             = var.script_files
     }
 }
