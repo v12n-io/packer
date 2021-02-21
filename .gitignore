@@ -1,0 +1,4 @@
+packer
+packer-provisioner-windows-update
+tree.txt
+vsphere.pkrvars.hcl
