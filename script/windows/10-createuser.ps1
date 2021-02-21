@@ -5,8 +5,8 @@
 $ErrorActionPreference = "Stop"
 
 # Variables
-$user = "REPLACEWITHWINDOWSUSER"
-$pass = "REPLACEWITHWINDOWSPASS"
+$user = "REPLACEWITHUSERNAME"
+$pass = "REPLACEWITHUSERPASS"
 Add-Type -AssemblyName 'System.Web'
 
 # Create the user

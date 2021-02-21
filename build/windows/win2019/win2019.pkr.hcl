@@ -265,11 +265,9 @@ build {
                     "exclude:$_.Title -like '*Defender*'",
                     "exclude:$_.InstallationBehavior.CanRequestUserInput",
                     "include:$true" ]
-    }
-    /*       
+    }      
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
         scripts = var.script_files
     }
-    */
 }
