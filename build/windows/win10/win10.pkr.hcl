@@ -177,7 +177,7 @@ source "vsphere-iso" "w10-2004" {
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "w10-2004"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file }"
+    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
@@ -225,7 +225,7 @@ source "vsphere-iso" "w10-20h2" {
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "w10-20h2"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file }"
+    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file_20h2 }"
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
