@@ -83,6 +83,11 @@ variable "vm_shutdown_cmd" {
 }
 
 # Virtual Machine Hardware Settings
+variable "vm_firmware" {
+    type        = string
+    description = "The type of firmware for the VM"
+    default     = "bios"
+}
 variable "vm_cpu_sockets" {
     type        = number
     description = "The number of 'physical' CPUs to be configured on the VM"
@@ -166,10 +171,12 @@ source "vsphere-iso" "win2016std" {
     datastore                   = var.vcenter_datastore
     remove_cdrom                = false
     convert_to_template         = true
+    
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "win2016std"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2016 Standard\nISO: ${ var.os_iso_file }"
+    firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
@@ -184,12 +191,14 @@ source "vsphere-iso" "win2016std" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win2016/std/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
                                     "../../../script/windows/01-initialise.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
+    
     # Boot and Provisioner
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
@@ -214,10 +223,12 @@ source "vsphere-iso" "win2016stdcore" {
     datastore                   = var.vcenter_datastore
     remove_cdrom                = false
     convert_to_template         = true
+    
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "win2016stdcore"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2016 Standard Core\nISO: ${ var.os_iso_file }"
+    firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
@@ -232,12 +243,14 @@ source "vsphere-iso" "win2016stdcore" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win2016/stdcore/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
                                     "../../../script/windows/01-initialise.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
+    
     # Boot and Provisioner
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
@@ -256,6 +269,7 @@ build {
     # Build sources
     sources = [ "source.vsphere-iso.win2016std",
                 "source.vsphere-iso.win2016stdcore" ]
+    
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {
         pause_before = "30s"
@@ -266,8 +280,16 @@ build {
                     "exclude:$_.InstallationBehavior.CanRequestUserInput",
                     "include:$true" ]
     }      
+    
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
         scripts = var.script_files
+    }
+
+    # PowerShell Provisioner to execute commands
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        inline              = var.inline_cmds
     }
 }
