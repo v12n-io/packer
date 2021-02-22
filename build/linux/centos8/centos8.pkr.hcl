@@ -75,6 +75,11 @@ variable "vm_os_type" {
 }
 
 # Virtual Machine Hardware Settings
+variable "vm_firmware" {
+    type        = string
+    description = "The type of firmware for the VM"
+    default     = "bios"
+}
 variable "vm_cpu_sockets" {
     type        = number
     description = "The number of 'physical' CPUs to be configured on the VM"
@@ -172,7 +177,7 @@ source "vsphere-iso" "centos8" {
     guest_os_type               = var.vm_os_type
     vm_name                     = "centos8"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: CentOS 8 Server\nISO: ${ var.os_iso_file }"
-    firmware                    = "bios"
+    firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
