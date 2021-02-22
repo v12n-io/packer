@@ -8,7 +8,7 @@ yum clean all
 
 # Cleanup persistent udev rules
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
-    sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
+    rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
 
 # Cleanup /tmp directories
