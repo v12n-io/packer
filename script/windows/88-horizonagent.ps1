@@ -6,7 +6,7 @@ $ErrorActionPreference = "Stop"
 
 $uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2012/8.1.0")
 $installer = "VMware-Horizon-Agent-x86_64-2012-8.1.0-17352461.exe"
-$listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,SVIAgent,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
+$listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
 
 # Get Horizon Agent
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
