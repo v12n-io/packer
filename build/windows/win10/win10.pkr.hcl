@@ -87,6 +87,11 @@ variable "vm_shutdown_cmd" {
 }
 
 # Virtual Machine Hardware Settings
+variable "vm_firmware" {
+    type        = string
+    description = "The type of firmware for the VM"
+    default     = "bios"
+}
 variable "vm_cpu_sockets" {
     type        = number
     description = "The number of 'physical' CPUs to be configured on the VM"
@@ -121,11 +126,19 @@ variable "vm_cdrom_type" {
 }
 
 # Provisioner Settings
-variable "script_files" {
+variable "script_files1" {
     type        = list(string)
     description = "A list of scripts defined using relative paths that will be executed against the VM"
 }
-variable "inline_cmds" {
+variable "script_files2" {
+    type        = list(string)
+    description = "A list of scripts defined using relative paths that will be executed against the VM"
+}
+variable "inline_cmds1" {
+    type        = list(string)
+    description = "A list of commands that will be executed against the VM"
+}
+variable "inline_cmds2" {
     type        = list(string)
     description = "A list of commands that will be executed against the VM"
 }
@@ -173,11 +186,14 @@ source "vsphere-iso" "w10-2004" {
     folder                      = "Templates/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
     remove_cdrom                = true
-    convert_to_template         = true
+    create_snapshot             = true
+    convert_to_template         = false
+    
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "w10-2004"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
+    firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
@@ -192,12 +208,14 @@ source "vsphere-iso" "w10-2004" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win10/ent/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
                                     "../../../script/windows/01-initialise.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file_2004 }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
+    
     # Boot and Provisioner
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
@@ -220,12 +238,15 @@ source "vsphere-iso" "w10-20h2" {
     cluster                     = var.vcenter_cluster
     folder                      = "Templates/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = false
-    convert_to_template         = true
+    remove_cdrom                = true
+    create_snapshot             = true
+    convert_to_template         = false
+    
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "w10-20h2"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file_20h2 }"
+    firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
@@ -240,12 +261,14 @@ source "vsphere-iso" "w10-20h2" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win10/ent/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
                                     "../../../script/windows/01-initialise.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file_20h2 }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
+    
     # Boot and Provisioner
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
@@ -264,6 +287,26 @@ build {
     # Build sources
     sources                 = [ "source.vsphere-iso.w10-2004",
                                 "source.vsphere-iso.w10-20h2" ]
+    
+    # PowerShell Provisioner to execute commands #1
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        inline              = var.inline_cmds1
+    }
+
+    # PowerShell Provisioner to execute scripts #1
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        scripts             = var.script_files1
+    }
+
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        restart_timeout     = "30m"
+    }
+    
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {
         pause_before        = "30s"
@@ -275,16 +318,18 @@ build {
                                 "include:$true" ]
         restart_timeout     = "120m"
     }      
-    # PowerShell Provisioner to execute scripts 
+    
+    # PowerShell Provisioner to execute scripts #2
     provisioner "powershell" {
         elevated_user       = var.build_username
         elevated_password   = var.build_password
-        scripts             = var.script_files
+        scripts             = var.script_files2
     }
-    # PowerShell Provisioner to execute commands
+    
+    # PowerShell Provisioner to execute commands #2
     provisioner "powershell" {
         elevated_user       = var.build_username
         elevated_password   = var.build_password
-        inline              = var.inline_cmds
+        inline              = var.inline_cmds2
     }
 }
