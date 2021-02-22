@@ -126,6 +126,10 @@ variable "script_files" {
     type        = list(string)
     description = "A list of scripts defined using relative paths that will be executed against the VM"
 }
+variable "inline_cmds" {
+    type        = list(string)
+    description = "A list of commands that will be executed against the VM"
+}
 
 # Build Settings
 variable "build_repo" {
