@@ -172,6 +172,7 @@ source "vsphere-iso" "centos8" {
     guest_os_type               = var.vm_os_type
     vm_name                     = "centos8"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: CentOS 8 Server\nISO: ${ var.os_iso_file }"
+    firmware                    = "bios"
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
