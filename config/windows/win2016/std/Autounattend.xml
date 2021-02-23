@@ -125,7 +125,7 @@
                     <RequiresUserInput>true</RequiresUserInput>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c a:\00-vmtools64.cmd<</CommandLine>
+                    <CommandLine>cmd.exe /c a:\00-vmtools64.cmd</CommandLine>
                     <Order>3</Order>
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
