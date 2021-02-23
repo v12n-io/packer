@@ -212,7 +212,7 @@ source "vsphere-iso" "w10-2004" {
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win10/ent/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
-                                    "../../../script/windows/01-initialise.ps1" ]
+                                    "../../../script/windows/01-initialisedesktop.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file_2004 }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
     
@@ -265,7 +265,7 @@ source "vsphere-iso" "w10-20h2" {
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win10/ent/Autounattend.xml",
                                     "../../../script/windows/00-vmtools64.cmd",
-                                    "../../../script/windows/01-initialise.ps1" ]
+                                    "../../../script/windows/01-initialisedesktop.ps1" ]
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file_20h2 }",
                                     "[] /vmimages/tools-isoimages/windows.iso" ]
     
