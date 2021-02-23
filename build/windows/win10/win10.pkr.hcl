@@ -273,7 +273,7 @@ source "vsphere-iso" "w10-20h2" {
     boot_command                = var.vm_boot_cmd
     ip_wait_timeout             = "20m"
     communicator                = "winrm"
-    winrm_timeout               = "2h"
+    winrm_timeout               = "30m"
     winrm_username              = var.build_username
     winrm_password              = var.build_password
     shutdown_command            = var.vm_shutdown_cmd
