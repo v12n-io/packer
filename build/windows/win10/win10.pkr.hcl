@@ -304,8 +304,9 @@ build {
 
     # Restart Provisioner
     provisioner "windows-restart" {
-        pause_before        = "60s"
-        restart_timeout     = "30m"
+        pause_before            = "30s"
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
     }
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
