@@ -304,6 +304,7 @@ build {
 
     # Restart Provisioner
     provisioner "windows-restart" {
+        pause_before        = "60s"
         restart_timeout     = "30m"
     }
     
