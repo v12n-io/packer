@@ -107,7 +107,7 @@
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\01-initialise.ps1</CommandLine>
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\01-initialisedesktop.ps1</CommandLine>
                     <Description>Basic configuration</Description>
                     <Order>99</Order>
                 </SynchronousCommand>
