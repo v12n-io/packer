@@ -271,7 +271,7 @@ source "vsphere-iso" "w10-20h2" {
     
     # Boot and Provisioner
     boot_command                = var.vm_boot_cmd
-    ip_wait_timeout             = "20m"
+    ip_wait_timeout             = "60m"
     communicator                = "winrm"
     winrm_timeout               = "30m"
     winrm_username              = var.build_username
