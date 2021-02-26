@@ -145,17 +145,6 @@ variable "build_password" {
     description = "The password for the guest OS username"
     sensitive   = true
 }
-variable "build_admin_username" {
-    type        = string
-    description = "The guest OS username used to login"
-    default     = "root"
-    sensitive   = true
-}
-variable "build_admin_password" {
-    type        = string
-    description = "The password for the guest OS username"
-    sensitive   = true
-}
 variable "build_http" {
     type        = string
     description = "An HTTP server URL and base where configuration files may be retrieved"
@@ -235,6 +224,5 @@ build {
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
         scripts             = var.script_files
-        execute_command     = "echo '${ var.build_admin_password }' | sudo -S -E {{ .Path }}"
     }
 }

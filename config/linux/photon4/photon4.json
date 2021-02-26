@@ -30,7 +30,7 @@
         "iptables -A OUTPUT -p ICMP -j ACCEPT",
         "iptables-save > /etc/systemd/scripts/ip4save",
         "systemctl restart iptables",
-        "sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config",
+        "sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config",
         "systemctl restart sshd.service"
     ],
     "install_linux_esx": true,
