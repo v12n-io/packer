@@ -156,7 +156,7 @@ variable "build_password" {
 
 # Local Variables
 locals { 
-    builddate   = formatdate("YYYYMMDD-hhmm", timestamp())
+    builddate   = formatdate("YYMM", timestamp())
 }
 
 # -------------------------------------------------------------------------- #
@@ -178,7 +178,7 @@ source "vsphere-iso" "win2016std" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016std"
+    vm_name                     = "win2016std-${ var.build_branch }-${ local.builddate }"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2016 Standard\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
@@ -230,7 +230,7 @@ source "vsphere-iso" "win2016stdcore" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016stdcore"
+    vm_name                     = "win2016stdcore-${ var.build_branch }-${ local.builddate }"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2016 Standard Core\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets

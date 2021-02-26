@@ -168,7 +168,7 @@ variable "build_password" {
 
 # Local Variables
 locals { 
-    builddate   = formatdate("YYYYMMDD-hhmm", timestamp())
+    builddate   = formatdate("YYMM", timestamp())
 }
 
 # -------------------------------------------------------------------------- #
@@ -191,7 +191,7 @@ source "vsphere-iso" "w10-2004" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "w10-2004"
+    vm_name                     = "w10-2004-${ var.build_branch }-${ local.builddate }"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
@@ -244,7 +244,7 @@ source "vsphere-iso" "w10-20h2" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "w10-20h2"
+    vm_name                     = "w10-20h2-${ var.build_branch }-${ local.builddate }"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file_20h2 }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets

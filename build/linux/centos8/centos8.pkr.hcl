@@ -153,7 +153,7 @@ variable "build_http" {
 
 # Local Variables
 locals { 
-    builddate   = formatdate("YYYYMMDD-hhmm", timestamp())
+    builddate   = formatdate("YYMM", timestamp())
 }
 
 # -------------------------------------------------------------------------- #
@@ -175,7 +175,7 @@ source "vsphere-iso" "centos8" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "centos8"
+    vm_name                     = "centos8-${ var.build_branch }-${ local.builddate }"
     notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: CentOS 8 Server\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
