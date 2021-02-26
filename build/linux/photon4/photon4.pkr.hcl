@@ -197,6 +197,7 @@ source "vsphere-iso" "photon4" {
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
 
     # Boot and Provisioner
+    boot_order                  = "disk,cdrom"
     boot_command                = [ "<esc><wait>",
                                     " vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks=${ var.build_http }/linux/photon4/photon4.json photon.media=cdrom ",
                                     "<enter>" ]
