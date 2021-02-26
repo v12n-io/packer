@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Disable root login via SSH
-sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
+sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
 
 # Enable public key authentication
-sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config

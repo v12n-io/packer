@@ -29,7 +29,8 @@
         "iptables -A INPUT -p ICMP -j ACCEPT",
         "iptables -A OUTPUT -p ICMP -j ACCEPT",
         "iptables-save > /etc/systemd/scripts/ip4save",
-        "systemctl restart iptables"
+        "systemctl restart iptables",
+        "sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config"
     ],
     "install_linux_esx": true,
     "network": {
