@@ -199,7 +199,7 @@ source "vsphere-iso" "photon4" {
     # Boot and Provisioner
     boot_order                  = "disk,cdrom"
     boot_command                = [ "<esc><wait>",
-                                    " vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks=${ var.build_http }/linux/photon4/photon4.json photon.media=cdrom ",
+                                    " vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 ks=${ var.build_http }/linux/photon4/photon4.json insecure_installation=1 photon.media=cdrom ",
                                     "<enter>" ]
     ip_wait_timeout             = "20m"
     communicator                = "ssh"
