@@ -192,7 +192,7 @@ source "vsphere-iso" "w10_2004" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "w10-2004-${ var.build_branch }-${ local.build_version }"
+    vm_name                     = "w10_2004-${ var.build_branch }-${ local.build_version }"
     notes                       = "VER: ${ local.build_version } (${ local.build_date })\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
