@@ -4,6 +4,7 @@
 # @website https://blog.v12n.io
 
 # Build date used for motd
+BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/centos-release)
 DOCS="https://github.com/v12n-io/packer"
 
@@ -17,7 +18,7 @@ cat << ISSUE > /etc/issue
    {_{__    {__  {__       {__  {__
     {__    {____{________ {___  {__
         
-        $RELEASE
+        $RELEASE ($BUILDDATE)
         $DOCS
 
 ISSUE
