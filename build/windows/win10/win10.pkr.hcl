@@ -168,14 +168,15 @@ variable "build_password" {
 
 # Local Variables
 locals { 
-    builddate   = formatdate("YYMM", timestamp())
+    build_version   = formatdate("YYMM", timestamp())
+    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
 }
 
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
 ## Windows 10 (2004) - Enterprise Edition
-source "vsphere-iso" "w10-2004" {
+source "vsphere-iso" "w10_2004" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -191,8 +192,8 @@ source "vsphere-iso" "w10-2004" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "w10-2004-${ var.build_branch }-${ local.builddate }"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
+    vm_name                     = "w10-2004-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version } (${ local.build_date })\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (2004) Enterprise\nISO: ${ var.os_iso_file_2004 }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -228,7 +229,7 @@ source "vsphere-iso" "w10-2004" {
 }
 
 ## Windows 10 (20H2) - Enterprise Edition
-source "vsphere-iso" "w10-20h2" {
+source "vsphere-iso" "w10_20h2" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -244,8 +245,8 @@ source "vsphere-iso" "w10-20h2" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "w10-20h2-${ var.build_branch }-${ local.builddate }"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file_20h2 }"
+    vm_name                     = "w10_20h2-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version } (${ local.build_date })\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10 (20H2) Enterprise\nISO: ${ var.os_iso_file_20h2 }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -285,8 +286,8 @@ source "vsphere-iso" "w10-20h2" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.w10-2004",
-                                "source.vsphere-iso.w10-20h2" ]
+    sources                 = [ "source.vsphere-iso.w10_2004",
+                                "source.vsphere-iso.w10_20h2" ]
     
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {
