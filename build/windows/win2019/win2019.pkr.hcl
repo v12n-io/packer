@@ -156,7 +156,8 @@ variable "build_password" {
 
 # Local Variables
 locals { 
-    builddate   = formatdate("YYMM", timestamp())
+    build_version   = formatdate("YYMM", timestamp())
+    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
 }
 
 # -------------------------------------------------------------------------- #
@@ -178,8 +179,8 @@ source "vsphere-iso" "win2019std" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2019std-${ var.build_branch }-${ local.builddate }"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2019 Standard\nISO: ${ var.os_iso_file }"
+    vm_name                     = "win2019std-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version } (${ local.build_date })\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2019 Standard\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -230,8 +231,8 @@ source "vsphere-iso" "win2019stdcore" {
     
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2019stdcore-${ var.build_branch }-${ local.builddate }"
-    notes                       = "VER: ${ local.builddate }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2019 Standard Core\nISO: ${ var.os_iso_file }"
+    vm_name                     = "win2019stdcore-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version } (${ local.build_date })\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows Server 2019 Standard Core\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
