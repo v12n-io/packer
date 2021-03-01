@@ -164,7 +164,7 @@ grep -rl 'REPLACEWITHPKISERVER' | xargs sed -i 's/REPLACEWITHPKISERVER/<pki_serv
 
 ## Executing Packer
 ### Validation
-Assuming that you've download Packer itself (https://www.packer.io/downloads) and that it's located somewhere in your system's path, then validating the build becomes as simple as:
+Assuming that you've download Packer itself (https://www.packer.io/downloads) and the Windows Update provisioner (https://github.com/rgl/packer-provisioner-windows-update/releases) if required, and that they're located somewhere in your system's path, then validating the build becomes as simple as:
 ```
 cd build/linux/centos8
 packer validate .
