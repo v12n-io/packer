@@ -35,6 +35,5 @@ script_files        = [ "../../../script/windows/03-systemsettings.ps1",
                         "../../../script/windows/10-createuser.ps1",
                         "../../../script/windows/40-ssltrust.ps1",
                         "../../../script/windows/80-ansible.ps1",
-                        "../../../script/windows/90-cloudinit.ps1",
                         "../../../script/windows/95-enablerdp.ps1" ]
 inline_cmds         = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
