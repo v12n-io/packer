@@ -19,8 +19,9 @@ cat << ISSUE > /etc/issue
    {_{__    {__  {__       {__  {__
     {__    {____{________ {___  {__
         
-        $RELEASE ($BUILDDATE)
-        $DOCS
+$RELEASE 
+
+$DOCS ($BUILDDATE)
 
 ISSUE
 
