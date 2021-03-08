@@ -145,10 +145,19 @@ variable "build_password" {
     description = "The password for the guest OS username"
     sensitive   = true
 }
-variable "build_http" {
+
+# HTTP Settings
+variable "http_directory" {
     type        = string
-    description = "An HTTP server URL and base where configuration files may be retrieved"
-    default     = ""
+    description = "The directory used to serve HTTP content"
+}
+variable "http_port_min" {
+    type        = number
+    description = "The lower port number to be used for HTTP content"
+}
+variable "http_port_max" {
+    type        = number
+    description = "The upper port number to be used for HTTP content"
 }
 
 # Local Variables
@@ -198,8 +207,11 @@ source "vsphere-iso" "centos8" {
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
 
     # Boot and Provisioner
+    http_directory              = var.http_directory
+    http_port_min               = var.http_port_min
+    http_port_max               = var.http_port_max
     boot_command                = [ "<up><wait><tab><wait>",
-                                    " text ks=${ var.build_http }/linux/centos8/centos8.cfg",
+                                    " text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos8.cfg",
                                     "<enter><wait>" ]
     ip_wait_timeout             = "20m"
     communicator                = "ssh"

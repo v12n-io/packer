@@ -145,10 +145,19 @@ variable "build_password" {
     description = "The password for the guest OS username"
     sensitive   = true
 }
-variable "build_http" {
+
+# HTTP Settings
+variable "http_directory" {
     type        = string
-    description = "An HTTP server URL and base where configuration files may be retrieved"
-    default     = ""
+    description = "The directory used to serve HTTP content"
+}
+variable "http_port_min" {
+    type        = number
+    description = "The lower port number to be used for HTTP content"
+}
+variable "http_port_max" {
+    type        = number
+    description = "The upper port number to be used for HTTP content"
 }
 
 # Local Variables
@@ -198,6 +207,9 @@ source "vsphere-iso" "ubuntu18" {
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
 
     # Boot and Provisioner
+    http_directory              = var.http_directory
+    http_port_min               = var.http_port_min
+    http_port_max               = var.http_port_max
     boot_command                = [ "<enter><wait><f6><wait><esc><wait>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
@@ -210,7 +222,7 @@ source "vsphere-iso" "ubuntu18" {
                                     "<bs><bs><bs>",
                                     "/install/vmlinuz initrd=/install/initrd.gz",
                                     " priority=critical locale=en_GB",
-                                    " url=${ var.build_http }/linux/ubuntu18/ubuntu18.cfg",
+                                    " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu18.cfg",
                                     "<enter>" ]
     ip_wait_timeout             = "20m"
     communicator                = "ssh"

@@ -30,3 +30,8 @@ vm_os_type          = "ubuntu64Guest"
 # Provisioner Settings
 script_files        = [ ]
 inline_cmds         = [ ]
+
+# Packer Settings
+http_directory      = "../../../config/linux/ubuntu18"
+http_port_min       = 8000
+http_port_max       = 8050

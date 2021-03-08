@@ -33,3 +33,8 @@ script_files        = [ "../../../script/linux/photon/00-update.sh",
                         "../../../script/linux/photon/95-motd.sh",
                         "../../../script/linux/photon/99-cleanup.sh" ]
 inline_cmds         = [ ]
+
+# Packer Settings
+http_directory      = "../../../config/linux/photon4"
+http_port_min       = 8000
+http_port_max       = 8050
