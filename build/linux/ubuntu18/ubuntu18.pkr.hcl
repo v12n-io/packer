@@ -239,7 +239,7 @@ build {
     # Build sources
     sources                 = [ "source.vsphere-iso.ubuntu18" ]
     
-    /*# Shell Provisioner to execute commands 
+    # Shell Provisioner to execute commands 
     provisioner "shell" {
         inline              = var.inline_cmds
     }
@@ -247,5 +247,5 @@ build {
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
         scripts             = var.script_files
-    }*/
+    }
 }
