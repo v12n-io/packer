@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file_20h2    = "en-gb_windows_10_business_editions_version_20h2_updated_feb_2021_x64_dvd_0d450cea.iso"
-os_iso_file_2004    = "en-gb_windows_10_business_editions_version_2004_updated_feb_2021_x64_dvd_b8a04bec.iso"
+os_iso_file_20h2    = "en-gb_windows_10_business_editions_version_20h2_updated_march_2021_x64_dvd_acc0ed5d.iso"
+os_iso_file_2004    = "en-gb_windows_10_business_editions_version_2004_updated_march_2021_x64_dvd_5db032c9.iso"
 os_iso_path         = "os/microsoft/desktop/10"
 
 # OS Meta Data
