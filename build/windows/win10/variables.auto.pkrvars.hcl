@@ -36,8 +36,7 @@ script_files1       = [ "../../../script/windows/03-systemsettings.ps1",
                         "../../../script/windows/40-ssltrust.ps1",
                         "../../../script/windows/87-bginfo.ps1",
                         "../../../script/windows/88-horizonagent.ps1" ]
-script_files2       = [ "../../../script/windows/89-horizonosot.ps1",
-                        "../../../script/windows/92-sdelete.ps1" ]                        
+script_files2       = [ "../../../script/windows/89-horizonosot.ps1" ]                        
 inline_cmds1        = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
                         "Get-AppXPackage -AllUsers | Where {($_.name -notlike \"Photos\") -and ($_.Name -notlike \"Calculator\") -and ($_.Name -notlike \"Store\")} | Remove-AppXPackage -ErrorAction SilentlyContinue",
                         "Get-AppXProvisionedPackage -Online | Where {($_.DisplayName -notlike \"Photos\") -and ($_.DisplayName -notlike \"Calculator\") -and ($_.DisplayName -notlike \"Store\")} | Remove-AppXProvisionedPackage -Online -ErrorAction SilentlyContinue",
