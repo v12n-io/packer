@@ -191,6 +191,8 @@ source "vsphere-iso" "w10_2004" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    RAM_reserve_all             = true
+    video_ram                   = 128000
     
     # Removeable Media
     floppy_files                = [ "../../../config/windows/win10/ent/Autounattend.xml",
@@ -284,10 +286,15 @@ build {
         inline              = [ "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online" ]
     }
 
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
+    }
+
     # PowerShell Provisioner to execute scripts #1
     provisioner "powershell" {
-        scripts             = [ "../../../script/windows/03-systemsettings.ps1",
-                                "../../../script/windows/40-ssltrust.ps1",
+        scripts             = [ "../../../script/windows/40-ssltrust.ps1",
                                 "../../../script/windows/87-bginfo.ps1",
                                 "../../../script/windows/88-horizonagent.ps1" ]
     }
