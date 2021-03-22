@@ -27,4 +27,4 @@ Catch
 }
 
 # Cleanup on aisle 4...
-Remove-Item C:\$installer -Confirm:$false
+#Remove-Item C:\$installer -Confirm:$false

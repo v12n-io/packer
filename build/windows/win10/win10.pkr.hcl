@@ -286,8 +286,7 @@ source "vsphere-iso" "w10_20h2" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.w10_2004",
-                                "source.vsphere-iso.w10_20h2" ]
+    sources                 = [ "source.vsphere-iso.w10_2004" ]
     
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {

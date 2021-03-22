@@ -34,6 +34,7 @@ vm_shutdown_cmd     = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
 script_files1       = [ "../../../script/windows/03-systemsettings.ps1",
                         "../../../script/windows/04-tlsconfig.ps1",
                         "../../../script/windows/40-ssltrust.ps1",
+                        "../../../script/windows/95-enablerdp.ps1",
                         "../../../script/windows/87-bginfo.ps1",
                         "../../../script/windows/88-horizonagent.ps1" ]
 script_files2       = [ "../../../script/windows/89-horizonosot.ps1" ]                        
