@@ -125,24 +125,6 @@ variable "vm_cdrom_type" {
     description = "The type of CDROM device that should be configured on the VM"
 }
 
-# Provisioner Settings
-variable "script_files1" {
-    type        = list(string)
-    description = "A list of scripts defined using relative paths that will be executed against the VM"
-}
-variable "script_files2" {
-    type        = list(string)
-    description = "A list of scripts defined using relative paths that will be executed against the VM"
-}
-variable "inline_cmds1" {
-    type        = list(string)
-    description = "A list of commands that will be executed against the VM"
-}
-variable "inline_cmds2" {
-    type        = list(string)
-    description = "A list of commands that will be executed against the VM"
-}
-
 # Build Settings
 variable "build_repo" {
     type        = string
@@ -290,16 +272,24 @@ build {
     
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {
+        inline              = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
+                                "Get-AppXPackage -AllUsers | Where {($_.name -notlike \"Photos\") -and ($_.Name -notlike \"Calculator\") -and ($_.Name -notlike \"Store\")} | Remove-AppXPackage -ErrorAction SilentlyContinue",
+                                "Get-AppXProvisionedPackage -Online | Where {($_.DisplayName -notlike \"Photos\") -and ($_.DisplayName -notlike \"Calculator\") -and ($_.DisplayName -notlike \"Store\")} | Remove-AppXProvisionedPackage -Online -ErrorAction SilentlyContinue" ]
+    }
+
+    # PowerShell Provisioner to install RSAT
+    provisioner "powershell" {
         elevated_user       = var.build_username
         elevated_password   = var.build_password
-        inline              = var.inline_cmds1
+        inline              = [ "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online" ]
     }
 
     # PowerShell Provisioner to execute scripts #1
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
-        scripts             = var.script_files1
+        scripts             = [ "../../../script/windows/03-systemsettings.ps1",
+                                "../../../script/windows/40-ssltrust.ps1",
+                                "../../../script/windows/87-bginfo.ps1",
+                                "../../../script/windows/88-horizonagent.ps1" ]
     }
 
     # Restart Provisioner
@@ -323,15 +313,11 @@ build {
     
     # PowerShell Provisioner to execute scripts #2
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
-        scripts             = var.script_files2
+        scripts             = [ "../../../script/windows/89-horizonosot.ps1" ]
     }
     
     # PowerShell Provisioner to execute commands #2
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
-        inline              = var.inline_cmds2
+        inline              = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
     }
 }
