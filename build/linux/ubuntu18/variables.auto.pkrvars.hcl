@@ -28,8 +28,9 @@ vm_cdrom_type       = "sata"
 vm_os_type          = "ubuntu64Guest"
 
 # Provisioner Settings
-script_files        = [ ]
-inline_cmds         = [ ]
+script_files        = [ "../../../script/linux/ubuntu/95-motd.sh" ]
+inline_cmds         = [ "apt update",
+                        "apt upgrade -y" ]
 
 # Packer Settings
 http_directory      = "../../../config/linux/ubuntu18"

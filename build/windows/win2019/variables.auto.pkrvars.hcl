@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file         = "en_windows_server_2019_updated_feb_2021_x64_dvd_277a6bfe.iso"
+os_iso_file         = "en_windows_server_2019_updated_march_2021_x64_dvd_ec2626a1.iso"
 os_iso_path         = "os/microsoft/server/2019"
 
 # OS Meta Data
