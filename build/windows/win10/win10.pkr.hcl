@@ -294,9 +294,12 @@ build {
 
     # PowerShell Provisioner to execute scripts #1
     provisioner "powershell" {
-        scripts             = [ "../../../script/windows/40-ssltrust.ps1",
-                                "../../../script/windows/87-bginfo.ps1",
-                                "../../../script/windows/88-horizonagent.ps1" ]
+        scripts             = [ "../../../script/windows/03-systemsettings.ps1",
+                                "../../../script/windows/04-tlsconfig.ps1",
+                                "../../../script/windows/40-ssltrust.ps1",
+                                "../../../script/windows/85-bginfo.ps1",
+                                "../../../script/windows/86-horizonagent.ps1",
+                                "../../../script/windows/88-horizonfslogix.ps1" ]
     }
 
     # Restart Provisioner
@@ -320,7 +323,8 @@ build {
     
     # PowerShell Provisioner to execute scripts #2
     provisioner "powershell" {
-        scripts             = [ "../../../script/windows/89-horizonosot.ps1" ]
+        scripts             = [ "../../../script/windows/89-horizonosot.ps1",
+                                "../../../script/windows/92-sdelete.ps1" ]
     }
     
     # PowerShell Provisioner to execute commands #2
