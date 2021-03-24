@@ -18,7 +18,8 @@ Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop
 # Install Horizon Agent
 Try 
 {
-   Start-Process C:\$installer -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
+   #Start-Process C:\$installer -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
+   Write-Host "Skipping AppVolumes installation"
 }
 Catch
 {
