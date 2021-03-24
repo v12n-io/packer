@@ -138,6 +138,13 @@ build {
                                 "Get-AppXProvisionedPackage -Online | Where {($_.DisplayName -notlike \"Photos\") -and ($_.DisplayName -notlike \"Calculator\") -and ($_.DisplayName -notlike \"Store\")} | Remove-AppXProvisionedPackage -Online -ErrorAction SilentlyContinue" ]
     }
 
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        pause_before            = "30s"
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
+    }
+
     # PowerShell Provisioner to execute scripts #1
     provisioner "powershell" {
         scripts             = [ "../../../script/windows/40-ssltrust.ps1",
