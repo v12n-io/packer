@@ -299,6 +299,7 @@ build {
                                 "../../../script/windows/40-ssltrust.ps1",
                                 "../../../script/windows/85-bginfo.ps1",
                                 "../../../script/windows/86-horizonagent.ps1",
+                                "../../../script/windows/87-horizonappvols.ps1",
                                 "../../../script/windows/88-horizonfslogix.ps1" ]
     }
 

@@ -130,4 +130,29 @@ source "vsphere-iso" "w10_20h2_appv" {
 build {
     # Build sources
     sources                 = [ "source.vsphere-iso.w10_2004_appv" ]
+
+    # PowerShell Provisioner to execute commands #1
+    provisioner "powershell" {
+        inline              = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
+                                "Get-AppXPackage -AllUsers | Where {($_.name -notlike \"Photos\") -and ($_.Name -notlike \"Calculator\") -and ($_.Name -notlike \"Store\")} | Remove-AppXPackage -ErrorAction SilentlyContinue",
+                                "Get-AppXProvisionedPackage -Online | Where {($_.DisplayName -notlike \"Photos\") -and ($_.DisplayName -notlike \"Calculator\") -and ($_.DisplayName -notlike \"Store\")} | Remove-AppXProvisionedPackage -Online -ErrorAction SilentlyContinue" ]
+    }
+
+    # PowerShell Provisioner to execute scripts #1
+    provisioner "powershell" {
+        scripts             = [ "../../../script/windows/40-ssltrust.ps1",
+                                "../../../script/windows/87-horizonappvols.ps1" ]
+    }
+
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        pause_before            = "30s"
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
+    }
+    
+    # PowerShell Provisioner to execute commands #2
+    provisioner "powershell" {
+        inline              = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
+    }
 }

@@ -4,8 +4,8 @@
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2012/8.1.0")
-$installer = "VMware-Horizon-Agent-x86_64-2012-8.1.0-17352461.exe"
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
+$installer = "VMware-Horizon-Agent-x86_64-2103-8.2.0-17771933.exe"
 $listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
 
 # Get Horizon Agent
@@ -27,4 +27,4 @@ Catch
 }
 
 # Cleanup on aisle 4...
-#Remove-Item C:\$installer -Confirm:$false
+Remove-Item C:\$installer -Confirm:$false

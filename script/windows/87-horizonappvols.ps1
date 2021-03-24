@@ -1,14 +1,15 @@
-# Install FSLogix
+# Install Horizon App Volumes Agent
 # @author Mark Brookfield
 # @modified Michael Poore
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
 $uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
-$installer = "FSLogixAppsSetup.exe"
-$listConfig = "/install /quiet /norestart"
+$installer = "App Volumes Agent.msi"
+$appVolumesServer = "REPLACEWITHAPPVOLSERVER"
+$listConfig = "/i ""C:\$installer"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appVolumesServer MANAGER_PORT=443 EnforceSSLCertificateValidation=1"
 
-# Get Horizon Agent
+# Get AppVolumes Agent
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
 
 # Unblock installer
@@ -21,7 +22,7 @@ Try
 }
 Catch
 {
-   Write-Error "Failed to install FSLogix"
+   Write-Error "Failed to install the AppVolumes Agent"
    Write-Error $_.Exception
    Exit -1 
 }
