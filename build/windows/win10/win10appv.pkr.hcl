@@ -27,7 +27,7 @@ source "vsphere-iso" "w10_2004_appv" {
     insecure_connection         = true
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "Templates/${ var.os_family }/${ var.os_version }"
+    folder                      = "Horizon"
     datastore                   = var.vcenter_datastore
     remove_cdrom                = false
     create_snapshot             = true
@@ -130,7 +130,8 @@ source "vsphere-iso" "w10_20h2_appv" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.w10_2004_appv" ]
+    sources                 = [ "source.vsphere-iso.w10_2004_appv",
+                                "source.vsphere-iso.w10_20h2_appv" ]
 
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {
