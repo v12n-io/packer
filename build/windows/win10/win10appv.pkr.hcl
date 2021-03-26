@@ -29,7 +29,8 @@ source "vsphere-iso" "w10_2004_appv" {
     cluster                     = var.vcenter_cluster
     folder                      = "Templates/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = true
+    remove_cdrom                = false
+    create_snapshot             = true
     convert_to_template         = false
     
     # Virtual Machine
@@ -81,7 +82,7 @@ source "vsphere-iso" "w10_20h2_appv" {
     insecure_connection         = true
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "Templates/${ var.os_family }/${ var.os_version }"
+    folder                      = "Horizon"
     datastore                   = var.vcenter_datastore
     remove_cdrom                = true
     convert_to_template         = false

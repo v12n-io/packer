@@ -19,7 +19,6 @@ Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop
 Try 
 {
    Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait
-   Write-Host "Skipping AppVolumes installation"
 }
 Catch
 {
