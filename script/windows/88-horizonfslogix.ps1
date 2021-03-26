@@ -1,12 +1,12 @@
-# Install Horizon Agent
+# Install FSLogix
 # @author Mark Brookfield
 # @modified Michael Poore
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2012/8.1.0")
-$installer = "VMware-Horizon-Agent-x86_64-2012-8.1.0-17352461.exe"
-$listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
+$installer = "FSLogixAppsSetup.exe"
+$listConfig = "/install /quiet /norestart"
 
 # Get Horizon Agent
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
@@ -21,7 +21,7 @@ Try
 }
 Catch
 {
-   Write-Error "Failed to install the Horizon Agent"
+   Write-Error "Failed to install FSLogix"
    Write-Error $_.Exception
    Exit -1 
 }
