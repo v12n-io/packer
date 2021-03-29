@@ -302,6 +302,7 @@ build {
         scripts             = [ "../../../script/windows/03-systemsettings.ps1",
                                 "../../../script/windows/04-tlsconfig.ps1",
                                 "../../../script/windows/40-ssltrust.ps1",
+                                "../../../script/windows/84-wallpaper.ps1",
                                 "../../../script/windows/85-bginfo.ps1",
                                 "../../../script/windows/86-horizonagent.ps1",
                                 "../../../script/windows/87-horizonappvols.ps1",
