@@ -270,8 +270,12 @@ source "vsphere-iso" "w10_20h2" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.w10_2004",
-                                "source.vsphere-iso.w10_20h2" ]
+    source "source.vsphere-iso.w10_2004" {
+        name                = "w10_2004"
+    }
+    source "source.vsphere-iso.w10_20h2" {
+        name                = "w10_20h2"
+    }
     
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {
@@ -298,6 +302,7 @@ build {
         scripts             = [ "../../../script/windows/03-systemsettings.ps1",
                                 "../../../script/windows/04-tlsconfig.ps1",
                                 "../../../script/windows/40-ssltrust.ps1",
+                                "../../../script/windows/84-wallpaper.ps1",
                                 "../../../script/windows/85-bginfo.ps1",
                                 "../../../script/windows/86-horizonagent.ps1",
                                 "../../../script/windows/87-horizonappvols.ps1",

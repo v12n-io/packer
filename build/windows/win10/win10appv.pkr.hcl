@@ -130,8 +130,12 @@ source "vsphere-iso" "w10_20h2_appv" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.w10_2004_appv",
-                                "source.vsphere-iso.w10_20h2_appv" ]
+    source "source.vsphere-iso.w10_2004_appv" {
+        name                = "w10_2004_appv"
+    }
+    source "source.vsphere-iso.w10_20h2_appv" {
+        name                = "w10_20h2_appv"
+    }
 
     # PowerShell Provisioner to execute commands #1
     provisioner "powershell" {
