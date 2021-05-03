@@ -58,3 +58,6 @@ chmod +rx /etc/cloud/runonce.sh
 
 # Schedule runonce.sh in crontab
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | crontab -
+
+# Add VMwareGuestInfo data source
+yum install https://github.com/vmware/cloud-init-vmware-guestinfo/releases/download/v1.1.0/cloud-init-vmware-guestinfo-1.1.0-1.el7.noarch.rpm
