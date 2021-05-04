@@ -50,7 +50,6 @@ sudo cloud-init modules --mode final
 sudo touch /etc/cloud/cloud-init.disabled
 sudo touch /tmp/cloud-init.complete
 sudo crontab -r
-sudo eject --cdrom
 RUNONCE
 
 # Set execute permissions on runonce.sh
@@ -60,5 +59,4 @@ chmod +rx /etc/cloud/runonce.sh
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | crontab -
 
 # Add VMwareGuestInfo data source
-#yum install -y https://github.com/vmware/cloud-init-vmware-guestinfo/releases/download/v1.1.0/cloud-init-vmware-guestinfo-1.1.0-1.el7.noarch.rpm
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh -
