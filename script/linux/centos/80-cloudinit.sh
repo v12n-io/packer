@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Install cloud-init
-yum install -y cloud-init perl
+yum install -y cloud-init perl python3
 
 # Disable cloud-init on boot
 touch /etc/cloud/cloud-init.disabled
@@ -50,7 +50,6 @@ sudo cloud-init modules --mode final
 sudo touch /etc/cloud/cloud-init.disabled
 sudo touch /tmp/cloud-init.complete
 sudo crontab -r
-sudo eject --cdrom
 RUNONCE
 
 # Set execute permissions on runonce.sh
@@ -58,3 +57,6 @@ chmod +rx /etc/cloud/runonce.sh
 
 # Schedule runonce.sh in crontab
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | crontab -
+
+# Add VMwareGuestInfo data source
+curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh -

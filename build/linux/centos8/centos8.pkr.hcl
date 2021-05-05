@@ -180,7 +180,7 @@ source "vsphere-iso" "centos8" {
     cluster                     = var.vcenter_cluster
     folder                      = "Templates/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = false
+    remove_cdrom                = true
     convert_to_template         = true
 
     # Virtual Machine

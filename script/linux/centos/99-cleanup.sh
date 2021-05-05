@@ -3,6 +3,11 @@
 # @author Michael Poore
 # @website https://blog.v12n.io
 
+# Disable IPv6
+echo 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX ipv6.disable=1"' >> /etc/default/grub
+grub2-mkconfig -o /boot/grub2/grub.cfg
+grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+
 # Yum clean
 yum clean all
 
