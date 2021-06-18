@@ -30,7 +30,6 @@ vm_os_type          = "centos8_64Guest"
 # Provisioner Settings
 script_files        = [ "../../../script/linux/centos/10-configure-sshd.sh",
                         "../../../script/linux/centos/20-ansibleuser.sh",
-                        "../../../script/linux/centos/80-cloudinit.sh",
                         "../../../script/linux/centos/95-motd.sh",
                         "../../../script/linux/centos/99-cleanup.sh" ]
 inline_cmds         = [ "yum update -y",
