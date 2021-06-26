@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Install cloud-init
-tdnf install -y cloud-init perl python3
+tdnf install -y cloud-init perl python3 cronie
 
 # Disable cloud-init on boot
 touch /etc/cloud/cloud-init.disabled
