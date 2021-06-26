@@ -57,11 +57,3 @@ chmod +rx /etc/cloud/runonce.sh
 
 # Schedule runonce.sh in crontab
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | crontab -
-
-# Make python3 the default
-alternatives --install /usr/bin/python python /usr/bin/python2 50
-alternatives --install /usr/bin/python python /usr/bin/python3.6 60
-alternatives --config python
-
-# Add VMwareGuestInfo data source
-curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sh -
