@@ -237,5 +237,6 @@ build {
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
         scripts             = var.script_files
+        valid_exit_codes    = [ 0,1535 ]
     }
 }
