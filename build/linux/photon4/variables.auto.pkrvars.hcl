@@ -30,6 +30,7 @@ vm_os_type          = "vmwarePhoton64Guest"
 # Provisioner Settings
 script_files        = [ "../../../script/linux/photon/00-update.sh",
                         "../../../script/linux/photon/10-configure-sshd.sh",
+                        "../../../script/linux/photon/80-cloudinit.sh",
                         "../../../script/linux/photon/95-motd.sh",
                         "../../../script/linux/photon/99-cleanup.sh" ]
 inline_cmds         = [ ]
