@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Install cloud-init
-yum install -y cloud-init perl python3
+yum install -y cloud-init perl python3 cloud-utils-growpart
 
 # Disable cloud-init on boot
 touch /etc/cloud/cloud-init.disabled
