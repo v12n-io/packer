@@ -16,7 +16,8 @@
     "packagelist_file": "packages_minimal.json",
     "additional_packages": [
         "sudo",
-        "vim"
+        "vim",
+        "cloud-utils"
     ],
     "postinstall": [
         "#!/bin/sh",
