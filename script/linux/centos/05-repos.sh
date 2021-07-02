@@ -4,7 +4,7 @@
 # @website https://blog.v12n.io
 
 # Add SaltStack repo
-yum install https://repo.saltstack.com/py3/redhat/salt-py3-repo-latest.el7.noarch.rpm -y
+# yum install https://repo.saltstack.com/py3/redhat/salt-py3-repo-latest.el7.noarch.rpm -y
 
 # Add HashiCorp repo
 yum install -y yum-utils
