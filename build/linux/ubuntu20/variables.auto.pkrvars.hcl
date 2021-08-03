@@ -25,7 +25,7 @@ vm_disk_thin        = true
 vm_cdrom_type       = "sata"
 
 # VM OS Settings
-vm_os_type          = "ubuntu-64"
+vm_os_type          = "ubuntu64Guest"
 
 # Provisioner Settings
 script_files        = [ "../../../script/linux/centos/05-repos.sh",
