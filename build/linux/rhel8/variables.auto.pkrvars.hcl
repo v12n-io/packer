@@ -15,7 +15,7 @@ os_family           = "Linux"
 os_version          = "RHEL8"
 
 # VM Hardware Settings
-vm_firmware         = "efi-secure"
+vm_firmware         = "bios"
 vm_cpu_sockets      = 1
 vm_cpu_cores        = 1
 vm_mem_size         = 2048
