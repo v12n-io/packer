@@ -243,9 +243,9 @@ build {
     sources                 = [ "source.vsphere-iso.rhel8" ]
     
     # Shell Provisioner to execute commands 
-    provisioner "shell" {
-        inline              = var.inline_cmds
-    }
+    #provisioner "shell" {
+        #inline              = var.inline_cmds
+    #}
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
