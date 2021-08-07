@@ -27,6 +27,8 @@ vm_cdrom_type       = "sata"
 
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"
+rhsm_user           = "REPLACEWITHRHSMUSER"
+rhsm_pass           = "REPLACEWITHRHSMPASS"
 
 # Provisioner Settings
 script_files        = [ "../../../script/linux/rhel/rhel8-config.sh" ]
