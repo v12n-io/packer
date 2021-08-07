@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file         = "rhel-8.4-x86_64-dvd.iso"
+os_iso_file         = "rhel-8.3-x86_64-dvd.iso"
 os_iso_path         = "os/rhel/8"
 
 # OS Meta Data
