@@ -92,6 +92,11 @@ variable "vm_firmware" {
     description = "The type of firmware for the VM"
     default     = "bios"
 }
+variable "vm_boot_order" {
+    type        = string
+    description = "Boot order for the VM"
+    default     = "disk,cdrom"
+}
 variable "vm_cpu_sockets" {
     type        = number
     description = "The number of 'physical' CPUs to be configured on the VM"
@@ -222,6 +227,7 @@ source "vsphere-iso" "rhel8" {
     http_directory              = var.http_directory
     http_port_min               = var.http_port_min
     http_port_max               = var.http_port_max
+    boot_order                  = var.vm_boot_order
     boot_command                = [ "up","e","<down><down><end><wait>",
                                     "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
