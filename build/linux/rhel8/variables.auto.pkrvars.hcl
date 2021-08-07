@@ -23,6 +23,7 @@ vm_disk_controller  = ["pvscsi"]
 vm_disk_size        = 16384
 vm_disk_thin        = true
 vm_cdrom_type       = "sata"
+vm_boot_wait        = "2s"
 
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"

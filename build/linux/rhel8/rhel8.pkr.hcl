@@ -97,6 +97,10 @@ variable "vm_boot_order" {
     description = "Boot order for the VM"
     default     = "disk,cdrom"
 }
+variable "vm_boot_wait" {
+    type        = string
+    description = "Time to wait before booting"
+}
 variable "vm_cpu_sockets" {
     type        = number
     description = "The number of 'physical' CPUs to be configured on the VM"
@@ -232,6 +236,7 @@ source "vsphere-iso" "rhel8" {
     http_port_min               = var.http_port_min
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
+    boot_wait                   = var.vm_boot_wait
     boot_command                = [ "<tab>",
                                     "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file }",
                                     "<enter><wait>" ]
