@@ -168,6 +168,10 @@ variable "http_directory" {
     type        = string
     description = "The directory used to serve HTTP content"
 }
+variable "http_file" {
+    type        = string
+    description = "Configuration file to be served by HTTP"
+}
 variable "http_port_min" {
     type        = number
     description = "The lower port number to be used for HTTP content"
@@ -228,9 +232,9 @@ source "vsphere-iso" "rhel8" {
     http_port_min               = var.http_port_min
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
-    boot_command                = [ "up","e","<down><down><end><wait>",
-                                    "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
-                                    "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
+    boot_command                = [ "<tab>",
+                                    "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file }",
+                                    "<enter><wait>" ]
     ip_wait_timeout             = "20m"
     communicator                = "ssh"
     ssh_username                = var.build_username

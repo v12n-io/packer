@@ -35,5 +35,6 @@ inline_cmds         = []
 
 # Packer Settings
 http_directory      = "../../../config/linux/rhel8"
+http_file           = "ks.cfg"
 http_port_min       = 8000
 http_port_max       = 8050
