@@ -252,6 +252,6 @@ build {
         execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eux '{{.Path}}'"
         environment_vars    = [ "RHSM_USER=${ var.rhsm_user }",
                                 "RHSM_PASS=${ var.rhsm_pass }" ]
-        scripts             = var.shell_scripts
+        scripts             = var.script_files
     }
 }
