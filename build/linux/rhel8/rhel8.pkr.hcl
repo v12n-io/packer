@@ -222,8 +222,6 @@ source "vsphere-iso" "rhel8" {
     http_directory              = var.http_directory
     http_port_min               = var.http_port_min
     http_port_max               = var.http_port_max
-    boot_order                  = "disk,cdrom"
-    boot_wait                   = "2s"
     boot_command                = [ "up","e","<down><down><end><wait>",
                                     "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
