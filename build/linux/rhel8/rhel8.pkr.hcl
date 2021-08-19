@@ -90,7 +90,7 @@ variable "vm_os_type" {
 variable "vm_firmware" {
     type        = string
     description = "The type of firmware for the VM"
-    default     = "bios"
+    default     = "efi"
 }
 variable "vm_boot_order" {
     type        = string
