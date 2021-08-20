@@ -9,6 +9,7 @@
 # ISO Settings
 os_iso_file         = "rhel-8.3-x86_64-dvd.iso"
 os_iso_path         = "os/rhel/8"
+os_iso_checksum     = "48f955712454c32718dcde858dea5aca574376a1d7a4b0ed6908ac0b85597811"
 
 # OS Meta Data
 os_family           = "Linux"

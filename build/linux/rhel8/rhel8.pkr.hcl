@@ -56,6 +56,10 @@ variable "os_iso_path" {
     type        = string
     description = "The path of the ISO file to be used for OS installation"
 }
+variable "os_iso_checksum" {
+    type        = string
+    description = "Checksum for the ISO file"
+}
 
 # OS Meta Data
 variable "os_family" {
@@ -90,7 +94,7 @@ variable "vm_os_type" {
 variable "vm_firmware" {
     type        = string
     description = "The type of firmware for the VM"
-    default     = "efi"
+    default     = "efi-secure"
 }
 variable "vm_boot_order" {
     type        = string
@@ -230,6 +234,7 @@ source "vsphere-iso" "rhel8" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
+    iso_checksum                = "sha256:${ var.os_iso_checksum }"
 
     # Boot and Provisioner
     http_directory              = var.http_directory
