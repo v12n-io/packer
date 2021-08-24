@@ -18,7 +18,7 @@ sudo yum update -y
 ## Install core packages
 echo ' - Install core packages ...'
 sudo yum install -y -q yum-utils
-sudo yum install -y -q epel-release
+sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
 sudo yum install -y -q curl
 sudo yum install -y -q wget
 sudo yum install -y -q git

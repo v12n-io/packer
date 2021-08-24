@@ -9,7 +9,6 @@
 # ISO Settings
 os_iso_file         = "rhel-8.4-x86_64-dvd.iso"
 os_iso_path         = "os/redhat/8"
-os_iso_checksum     = "48f955712454c32718dcde858dea5aca574376a1d7a4b0ed6908ac0b85597811"
 
 # OS Meta Data
 os_family           = "Linux"
@@ -26,10 +25,6 @@ vm_disk_size        = 16384
 vm_disk_thin        = true
 vm_cdrom_type       = "sata"
 
-# Boot Settings
-vm_boot_wait        = "2s"
-vm_boot_order       = "disk,cdrom"
-
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"
 build_username      = "root"
@@ -37,14 +32,9 @@ rhsm_user           = "REPLACEWITHRHSMUSER"
 rhsm_pass           = "REPLACEWITHRHSMPASS"
 
 # Provisioner Settings
-script_files        = [ "../../../script/linux/rhel/rhel8-config.sh" ]
+script_files        = [ "../../scripts/rhel8-config.sh" ]
 inline_cmds         = []
 
-# Build Settings
-build_repo          = "https://github.com/v12n.io/packer"
-
 # Packer Settings
-http_directory      = "../../../config/linux/rhel8"
+http_directory      = "config"
 http_file           = "ks.cfg"
-http_port_min       = 8000
-http_port_max       = 8050

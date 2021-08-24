@@ -54,12 +54,13 @@ variable "vcenter_datacenter"       { type = string }
 variable "vcenter_cluster"          { type = string }
 variable "vcenter_datastore"        { type = string }
 variable "vcenter_network"          { type = string }
+variable "vcenter_insecure"         { type = bool }
+variable "vcenter_folder"           { type = string }
 
 # vCenter and ISO Configuration
 variable "vcenter_iso_datastore"    { type = string }
 variable "os_iso_file"              { type = string }
 variable "os_iso_path"              { type = string }
-variable "os_iso_checksum"          { type = string }
 
 # OS Meta Data
 variable "os_family"                { type = string }
@@ -80,6 +81,10 @@ variable "vm_disk_controller"       { type = list(string) }
 variable "vm_disk_size"             { type = number }
 variable "vm_disk_thin"             { type = bool }
 variable "vm_cdrom_type"            { type = string }
+variable "vm_cdrom_remove"          { type = bool }
+variable "vm_convert_template"      { type = bool }
+variable "vm_ip_timeout"            { type = string }
+variable "vm_shutdown_timeout"      { type = string }
 
 # Provisioner Settings
 variable "script_files"             { type = list(string) }
@@ -97,7 +102,7 @@ variable "http_port_max"            { type = number }
 
 # Local Variables
 locals { 
-    build_version   = formatdate("YYMM", timestamp())
+    build_version   = formatdate("YY.MM", timestamp())
     build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
 }
 
@@ -109,13 +114,13 @@ source "vsphere-iso" "rhel8" {
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
     password                    = var.vcenter_password
-    insecure_connection         = true
+    insecure_connection         = var.vcenter_insecure
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "Templates/${ var.os_family }/${ var.os_version }"
+    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = true
-    convert_to_template         = true
+    remove_cdrom                = var.vm_cdrom_remove
+    convert_to_template         = var.vm_convert_template
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
@@ -129,7 +134,6 @@ source "vsphere-iso" "rhel8" {
     disk_controller_type        = var.vm_disk_controller
     storage {
         disk_size               = var.vm_disk_size
-        disk_controller_index   = 0
         disk_thin_provisioned   = var.vm_disk_thin
     }
     network_adapters {
@@ -139,7 +143,6 @@ source "vsphere-iso" "rhel8" {
 
     # Removeable Media
     iso_paths                   = ["[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
-    iso_checksum                = "sha256:${ var.os_iso_checksum }"
 
     # Boot and Provisioner
     http_directory              = var.http_directory
@@ -150,12 +153,12 @@ source "vsphere-iso" "rhel8" {
     boot_command                = [ "up", "e", "<down><down><end><wait>",
                                     "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
-    ip_wait_timeout             = "20m"
+    ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
     ssh_username                = var.build_username
     ssh_password                = var.build_password
     shutdown_command            = "systemctl poweroff"
-    shutdown_timeout            = "15m"
+    shutdown_timeout            = var.vm_shutdown_timeout
 }
 
 # -------------------------------------------------------------------------- #
