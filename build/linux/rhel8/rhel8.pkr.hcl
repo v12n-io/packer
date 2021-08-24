@@ -12,53 +12,30 @@
 # vCenter Credentials
 variable "vcenter_username" {
     type        = string
-    description = "The username Packer will use to login to vCenter"
     sensitive   = true
 }
 variable "vcenter_password" {
     type        = string
-    description = "The password Packer will use to login to vCenter"
     sensitive   = true
 }
 
 # vCenter Configuration
-variable "vcenter_server" {
-    type        = string
-    description = "The FQDN of vCenter"
-}
-variable "vcenter_datacenter" {
-    type        = string
-    description = "The name of the vSphere datacenter that Packer will use"
-}
-variable "vcenter_cluster" {
-    type        = string
-    description = "The name of the vSphere cluster that Packer will use"
-}
-variable "vcenter_datastore" {
-    type        = string
-    description = "The name of the datastore where Packer will create templates"
-}
-variable "vcenter_network" {
-    type        = string
-    description = "The name of the network that Packer will attache templates to"
-}
+variable "vcenter_server"           { type = string }
+variable "vcenter_datacenter"       { type = string }
+variable "vcenter_cluster"          { type = string }
+variable "vcenter_datastore"        { type = string }
+variable "vcenter_network"          { type = string }
 
 # vCenter and ISO Configuration
-variable "vcenter_iso_datastore" {
-    type        = string
-    description = "The name of the datastore where Packer will attach ISO files from"
-}
+variable "vcenter_iso_datastore"    { type = string }
 variable "os_iso_file" {
     type        = string
-    description = "The name of the ISO file to be used for OS installation"
 }
 variable "os_iso_path" {
     type        = string
-    description = "The path of the ISO file to be used for OS installation"
 }
 variable "os_iso_checksum" {
     type        = string
-    description = "Checksum for the ISO file"
 }
 
 # OS Meta Data
