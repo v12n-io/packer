@@ -27,7 +27,7 @@ vm_cdrom_type       = "sata"
 
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"
-build_username      = "root"
+build_username      = "REPLACEWITHUSERNAME"
 build_password      = "REPLACEWITHUSERPASS"
 rhsm_user           = "REPLACEWITHRHSMUSER"
 rhsm_pass           = "REPLACEWITHRHSMPASS"
