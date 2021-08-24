@@ -40,6 +40,9 @@ rhsm_pass           = "REPLACEWITHRHSMPASS"
 script_files        = [ "../../../script/linux/rhel/rhel8-config.sh" ]
 inline_cmds         = []
 
+# Build Settings
+build_repo          = "https://github.com/v12n.io/packer"
+
 # Packer Settings
 http_directory      = "../../../config/linux/rhel8"
 http_file           = "ks.cfg"
