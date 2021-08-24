@@ -12,6 +12,7 @@ vm_boot_order       = "disk,cdrom"
 
 # Build Settings
 build_repo          = "https://github.com/v12n.io/packer"
+build_branch        = "BUILD_BRANCH"
 
 # Packer Settings
 http_port_min       = 8000
