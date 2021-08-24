@@ -17,15 +17,8 @@ sudo yum update -y
 
 ## Install core packages
 echo ' - Install core packages ...'
-sudo yum install -y -q yum-utils
 sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
-sudo yum install -y -q curl
-sudo yum install -y -q wget
-sudo yum install -y -q git
-sudo yum install -y -q net-tools
-sudo yum install -y -q unzip
 sudo yum install -y -q ca-certificates
-sudo yum install -y -q vim
 sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart
 
 ## Adding additional repositories
@@ -124,9 +117,6 @@ subscription-manager clean
 
 ## Final cleanup actions
 echo ' - Executing final cleanup tasks ...'
-sudo echo 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX ipv6.disable=1"' >> /etc/default/grub
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-sudo grub2-mkconfig -o /boot/efi/EFI/rhel/grub.cfg
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
     sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
