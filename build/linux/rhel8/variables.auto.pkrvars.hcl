@@ -32,6 +32,7 @@ vm_boot_order       = "disk,cdrom"
 
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"
+build_username      = "root"
 rhsm_user           = "REPLACEWITHRHSMUSER"
 rhsm_pass           = "REPLACEWITHRHSMPASS"
 
