@@ -24,7 +24,7 @@ vm_nic_type         = "vmxnet3"
 vm_disk_controller  = ["pvscsi"]
 vm_disk_size        = 16384
 vm_disk_thin        = true
-vm_cdrom_type       = "sata"
+vm_cdrom_type       = "ide"
 
 # Boot Settings
 vm_boot_wait        = "2s"
