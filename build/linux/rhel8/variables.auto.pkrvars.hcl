@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file         = "rhel-8.3-x86_64-dvd.iso"
+os_iso_file         = "rhel-8.4-x86_64-dvd.iso"
 os_iso_path         = "os/rhel/8"
 os_iso_checksum     = "48f955712454c32718dcde858dea5aca574376a1d7a4b0ed6908ac0b85597811"
 
@@ -16,7 +16,8 @@ os_family           = "Linux"
 os_version          = "RHEL8"
 
 # VM Hardware Settings
-vm_cpu_sockets      = 1
+vm_firmware         = "efi-secure"
+vm_cpu_sockets      = 2
 vm_cpu_cores        = 1
 vm_mem_size         = 2048
 vm_nic_type         = "vmxnet3"
@@ -24,7 +25,10 @@ vm_disk_controller  = ["pvscsi"]
 vm_disk_size        = 16384
 vm_disk_thin        = true
 vm_cdrom_type       = "sata"
+
+# Boot Settings
 vm_boot_wait        = "2s"
+vm_boot_order       = "disk,cdrom"
 
 # VM OS Settings
 vm_os_type          = "rhel8_64Guest"

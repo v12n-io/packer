@@ -7,14 +7,43 @@
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
+#                           Packer Configuration                             #
+# -------------------------------------------------------------------------- #
+packer {
+    required_version = ">= 1.7.4"
+    required_plugins {
+        vsphere = {
+            version = ">= v1.0.1"
+            source  = "github.com/hashicorp/vsphere"
+        }
+    }
+}
+
+# -------------------------------------------------------------------------- #
 #                           Variable Definitions                             #
 # -------------------------------------------------------------------------- #
-# vCenter Credentials
+# Sensitive Variables
 variable "vcenter_username" {
     type        = string
     sensitive   = true
 }
 variable "vcenter_password" {
+    type        = string
+    sensitive   = true
+}
+variable "rhsm_user" {
+    type        = string
+    sensitive   = true
+}
+variable "rhsm_pass" {
+    type        = string
+    sensitive   = true
+}
+variable "build_username" {
+    type        = string
+    sensitive   = true
+}
+variable "build_password" {
     type        = string
     sensitive   = true
 }
@@ -28,143 +57,43 @@ variable "vcenter_network"          { type = string }
 
 # vCenter and ISO Configuration
 variable "vcenter_iso_datastore"    { type = string }
-variable "os_iso_file" {
-    type        = string
-}
-variable "os_iso_path" {
-    type        = string
-}
-variable "os_iso_checksum" {
-    type        = string
-}
+variable "os_iso_file"              { type = string }
+variable "os_iso_path"              { type = string }
+variable "os_iso_checksum"          { type = string }
 
 # OS Meta Data
-variable "os_family" {
-    type        = string
-    description = "The family that guest OS belongs to (e.g. Windows, RedHat or CentOS etc)"
-}
-variable "os_version" {
-    type        = string
-    description = "The major version of guest OS that will be installed (e.g. 2019, 8, 4 etc)"
-}
-
-# RedHat Subscription Manager Settings
-variable "rhsm_user" {
-    type        = string
-    description = "The user used to connect to Redhat Subscription Manager"
-    sensitive   = true
-}
-variable "rhsm_pass" {
-    type        = string
-    description = "The password used to connect to Redhat Subscription Manager"
-    sensitive   = true
-}
+variable "os_family"                { type = string }
+variable "os_version"               { type = string }
 
 # Virtual Machine OS Settings
-# See https://vdc-download.vmware.com/vmwb-repository/dcr-public/da47f910-60ac-438b-8b9b-6122f4d14524/16b7274a-bf8b-4b4c-a05e-746f2aa93c8c/doc/vim.vm.GuestOsDescriptor.GuestOsIdentifier.html
-variable "vm_os_type" {
-    type        = string
-    description = "The vSphere guest OS identifier"
-}
+variable "vm_os_type"               { type = string }
 
 # Virtual Machine Hardware Settings
-variable "vm_firmware" {
-    type        = string
-    description = "The type of firmware for the VM"
-    default     = "efi-secure"
-}
-variable "vm_boot_order" {
-    type        = string
-    description = "Boot order for the VM"
-    default     = "disk,cdrom"
-}
-variable "vm_boot_wait" {
-    type        = string
-    description = "Time to wait before booting"
-}
-variable "vm_cpu_sockets" {
-    type        = number
-    description = "The number of 'physical' CPUs to be configured on the VM"
-}
-variable "vm_cpu_cores" {
-    type        = number
-    description = "The number of cores to be configured per CPU on the VM"
-}
-variable "vm_mem_size" {
-    type        = number
-    description = "The size of the VM's virtual memory (in Mb)"
-}
-variable "vm_nic_type" {
-    type        = string
-    description = "The type of network interface to configure on the VM"
-}
-variable "vm_disk_controller" {
-    type        = list(string)
-    description = "A list of the disk controller types to be configured (in order)"
-}
-variable "vm_disk_size" {
-    type        = number
-    description = "The size of the VM's system disk (in Mb)"
-}
-variable "vm_disk_thin" {
-    type        = bool
-    description = "Indicates if the system disk should be thin provisioned"
-}
-variable "vm_cdrom_type" {
-    type        = string
-    description = "The type of CDROM device that should be configured on the VM"
-}
+variable "vm_firmware"              { type = string }
+variable "vm_boot_order"            { type = string }
+variable "vm_boot_wait"             { type = string }
+variable "vm_cpu_sockets"           { type = number }
+variable "vm_cpu_cores"             { type = number }
+variable "vm_mem_size"              { type = number }
+variable "vm_nic_type"              { type = string }
+variable "vm_disk_controller"       { type = list(string) }
+variable "vm_disk_size"             { type = number }
+variable "vm_disk_thin"             { type = bool }
+variable "vm_cdrom_type"            { type = string }
 
 # Provisioner Settings
-variable "script_files" {
-    type        = list(string)
-    description = "A list of scripts defined using relative paths that will be executed against the VM"
-}
-variable "inline_cmds" {
-    type        = list(string)
-    description = "A list of commands that will be executed against the VM"
-}
+variable "script_files"             { type = list(string) }
+variable "inline_cmds"              { type = list(string) }
 
 # Build Settings
-variable "build_repo" {
-    type        = string
-    description = "The source control repository used to build the templates"
-    default     = "https://github.com/v12n-io/packer"
-}
-variable "build_branch" {
-    type        = string
-    description = "The source control repository branch used to build the templates"
-    default     = "none"
-}
-variable "build_username" {
-    type        = string
-    description = "The guest OS username used to login"
-    default     = "root"
-    sensitive   = true
-}
-variable "build_password" {
-    type        = string
-    description = "The password for the guest OS username"
-    sensitive   = true
-}
+variable "build_repo"               { type = string }
+variable "build_branch"             { type = string }
 
 # HTTP Settings
-variable "http_directory" {
-    type        = string
-    description = "The directory used to serve HTTP content"
-}
-variable "http_file" {
-    type        = string
-    description = "Configuration file to be served by HTTP"
-}
-variable "http_port_min" {
-    type        = number
-    description = "The lower port number to be used for HTTP content"
-}
-variable "http_port_max" {
-    type        = number
-    description = "The upper port number to be used for HTTP content"
-}
+variable "http_directory"           { type = string }
+variable "http_file"                { type = string }
+variable "http_port_min"            { type = number }
+variable "http_port_max"            { type = number }
 
 # Local Variables
 locals { 
@@ -175,7 +104,6 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-## RHEL 8 Server
 source "vsphere-iso" "rhel8" {
     # vCenter
     vcenter_server              = var.vcenter_server
@@ -210,7 +138,7 @@ source "vsphere-iso" "rhel8" {
     }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
+    iso_paths                   = ["[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
     iso_checksum                = "sha256:${ var.os_iso_checksum }"
 
     # Boot and Provisioner
@@ -219,9 +147,9 @@ source "vsphere-iso" "rhel8" {
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<tab>",
-                                    "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file }",
-                                    "<enter><wait>" ]
+    boot_command                = [ "up", "e", "<down><down><end><wait>",
+                                    "text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
+                                    "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = "20m"
     communicator                = "ssh"
     ssh_username                = var.build_username
@@ -236,11 +164,6 @@ source "vsphere-iso" "rhel8" {
 build {
     # Build sources
     sources                 = [ "source.vsphere-iso.rhel8" ]
-    
-    # Shell Provisioner to execute commands 
-    #provisioner "shell" {
-        #inline              = var.inline_cmds
-    #}
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
