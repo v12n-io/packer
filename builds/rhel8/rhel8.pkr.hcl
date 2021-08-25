@@ -157,7 +157,7 @@ source "vsphere-iso" "rhel8" {
     communicator                = "ssh"
     ssh_username                = var.build_username
     ssh_password                = var.build_password
-    shutdown_command            = "systemctl poweroff"
+    shutdown_command            = "sudo shutdown -P now"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
