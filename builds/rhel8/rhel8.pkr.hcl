@@ -150,8 +150,8 @@ source "vsphere-iso" "rhel8" {
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "up", "up", "e", "<down><down><end><wait>",
-                                    "text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
+    boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
+                                    " text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
