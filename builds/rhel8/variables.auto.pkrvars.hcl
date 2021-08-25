@@ -38,4 +38,4 @@ inline_cmds         = []
 
 # Packer Settings
 http_directory      = "config"
-http_file           = "inst.cfg"
+http_file           = "ks-8.cfg"
