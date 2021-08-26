@@ -4,8 +4,8 @@
 # @website https://blog.v12n.io
 
 ## Disable IPv6
-sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
-sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+#sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+#sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
 
 ## Apply updates
 echo ' - Updating the guest operating system ...'
