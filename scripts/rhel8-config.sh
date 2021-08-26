@@ -7,6 +7,10 @@
 export RHSM_USER
 export RHSM_PASS
 
+## Disable IPv6
+sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+
 ## Register with RHSM
 echo ' - Registering with RedHat Subscription Manager ...'
 subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto-attach
