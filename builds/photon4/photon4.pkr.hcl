@@ -142,8 +142,8 @@ source "vsphere-iso" "photon4" {
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<tab><wait>",
-                                    " ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file } insecure_installation=1",
+    boot_command                = [ "<esc><wait>",
+                                    "vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 insecure_installation=1 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file } photon.media=cdrom",
                                     "<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
