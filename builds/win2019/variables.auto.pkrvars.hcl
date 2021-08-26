@@ -27,8 +27,8 @@ vm_cdrom_type       = "sata"
 
 # VM OS Settings
 vm_os_type          = "windows2019srv_64Guest"
-build_username      = "REPLACEWITHUSERNAME"
-build_password      = "REPLACEWITHUSERPASS"
+build_username      = "Administrator"
+build_password      = "REPLACEWITHADMINPASS"
 
 # Provisioner Settings
 script_files        = [ "../../scripts/win2019-config.ps1" ]

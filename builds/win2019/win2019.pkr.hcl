@@ -92,6 +92,10 @@ variable "inline_cmds"              { type = list(string) }
 variable "build_repo"               { type = string }
 variable "build_branch"             { type = string }
 
+# HTTP Settings
+variable "http_port_min"            { type = number }
+variable "http_port_max"            { type = number }
+
 # Local Variables
 locals { 
     build_version   = formatdate("YY.MM", timestamp())
