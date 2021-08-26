@@ -7,7 +7,7 @@
 # ----------------------------------------------------------------------------
 
 # Boot Settings
-vm_boot_wait        = "10s"
+vm_boot_wait        = "2s"
 vm_boot_order       = "disk,cdrom"
 
 # Build Settings
