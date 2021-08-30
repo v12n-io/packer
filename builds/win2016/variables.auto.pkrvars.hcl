@@ -26,7 +26,7 @@ vm_disk_thin        = true
 vm_cdrom_type       = "sata"
 
 # VM OS Settings
-vm_os_type          = "windows2016srv_64Guest"
+vm_os_type          = "windows9Server64Guest"
 build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 
