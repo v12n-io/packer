@@ -3,12 +3,11 @@
 # Description:  Common vSphere variables for Windows 10 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         21/02/2021
+# Date:         04/08/2021
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file_20h2    = "en-gb_windows_10_business_editions_version_20h2_updated_march_2021_x64_dvd_acc0ed5d.iso"
-os_iso_file_2004    = "en-gb_windows_10_business_editions_version_2004_updated_march_2021_x64_dvd_5db032c9.iso"
+os_iso_file         = "en-gb_windows_10_business_editions_version_21h1_updated_aug_2021_x64_dvd_694d89d9.iso"
 os_iso_path         = "os/microsoft/desktop/10"
 
 # OS Meta Data
@@ -16,9 +15,10 @@ os_family           = "Windows"
 os_version          = "10"
 
 # VM Hardware Settings
+vm_firmware         = "bios"
 vm_cpu_sockets      = 2
 vm_cpu_cores        = 1
-vm_mem_size         = 8192
+vm_mem_size         = 2048
 vm_nic_type         = "vmxnet3"
 vm_disk_controller  = ["pvscsi"]
 vm_disk_size        = 51200
@@ -27,5 +27,9 @@ vm_cdrom_type       = "sata"
 
 # VM OS Settings
 vm_os_type          = "windows9_64Guest"
-vm_boot_cmd         = ["<spacebar>"]
-vm_shutdown_cmd     = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
+build_username      = "Administrator"
+build_password      = "REPLACEWITHADMINPASS"
+
+# Provisioner Settings
+script_files        = [ "../../scripts/win10vdi-config.ps1" ]
+inline_cmds         = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
