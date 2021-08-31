@@ -1,6 +1,9 @@
 # Packer
 This repository contains Packer builds for many common OSs running as guests on a vSphere platform. As of Packer v1.7.0, HashiCorp Configuration Language (HCL) is fully supported and so all of the builds in this repository have been updated to use HCL instead of JSON. As such it is possible that some of the templates may not function correctly when using a version of Packer <1.7.0.
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
+
+## Version History
+* 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
 ## Structure
 The following is a tree view of the files in this repository:
 ```
@@ -198,7 +201,7 @@ This folder contains a file (or sometimes more than one file) that allows the se
 
 All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
 ### Scripts
-The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts (hopefully). Consequently, they need editing before they are used or customisation is possible by replacing pieces of placholder text.
+The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts (hopefully). They may need editing before they are used or customisation is possible by replacing pieces of placholder text. It depends on your use-case!
 ## Placeholders
 To make the various scripts more portable, key configuration items are represented by placeholder text strings. These can easily be replaced with a smattering of grep and sed.
 ### Example: Replace Admin user password
@@ -220,7 +223,7 @@ The following list defines all of the placeholder strings that can be replaced u
 * REPLACEWITHANSIBLEUSERNAME -- User name of a local account to create for Ansible access
 * REPLACEWITHANSIBLEUSERKEY -- SSH public key for Ansible to access
 * REPLACEWITHPKISERVER -- HTTP(s) location for downloading Root and Issuing CA certificates (e.g. http://pki.domain.com)
-* REPLACEWITHINTRANET -- HTTP(s) location for agent files, configuratiosn etc (e.g. http://intranet.domain.com)
+* REPLACEWITHINTRANET -- HTTP(s) location for agent files, configurations etc (e.g. http://intranet.domain.com)
 * REPLACEWITHAPPVOLSERVER -- For VDI builds, this is the FQDN of the Horizon AppVols server to register with
 * VCENTER_USER -- User name for Packer to connect to vCenter with (e.g. administrator@vsphere.local)
 * VCENTER_PASS -- Password for vCenter access
@@ -236,16 +239,16 @@ The following list defines all of the placeholder strings that can be replaced u
 ### Validation
 Assuming that you've download Packer itself (https://www.packer.io/downloads) and the Windows Update provisioner (https://github.com/rgl/packer-provisioner-windows-update/releases) if required, and that they're located somewhere in your system's path, then validating the build becomes as simple as:
 ```
-cd build/rhel8
+cd builds/rhel8
 packer init .
 packer validate -var-file="../vsphere.pkrvars.hcl" -var-file="../common.pkrvars.hcl" .
 ```
-Again, there should be no errors.
+There should be no errors. (Running "packer init" will check the required versions and plugins are present.)
 
 ### Build
 Actually executing the build is done using the following:
 ```
-cd build/rhel8
+cd builds/rhel8
 packer build -var-file="../vsphere.pkrvars.hcl" -var-file="../common.pkrvars.hcl" .
 ```
-Execution time will vary depending on a number of factors such as how current the OS image is and how many updates are needed.
+Execution time will vary depending on a number of factors such as how current the ISO file is, how many updates are needed, and the steps used in the customisation scripts.
