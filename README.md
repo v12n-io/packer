@@ -120,8 +120,8 @@ Each subfolder contains the build definition and build-specific variables for an
 * Photon 4
 * RedHat 8
 * Windows 10
-* Windows Server 2016
-* Windows Server 2019
+* Windows Server 2016 (Desktop Experience and Core)
+* Windows Server 2019 (Desktop Experience and Core)
 
 Each build contains the following:
 #### variables.auto.pkrvars.hcl
