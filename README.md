@@ -10,6 +10,8 @@ The following is a tree view of the files in this repository:
 ├── LICENSE
 ├── README.md
 ├── builds
+│   ├── common.pkrvars.hcl
+│   ├── vsphere.pkrvars.hcl
 │   ├── centos7
 │   │   ├── centos7.pkr.hcl
 │   │   ├── config
@@ -20,7 +22,6 @@ The following is a tree view of the files in this repository:
 │   │   ├── config
 │   │   │   └── ks.cfg
 │   │   └── variables.auto.pkrvars.hcl
-│   ├── common.pkrvars.hcl
 │   ├── photon4
 │   │   ├── config
 │   │   │   ├── packages_minimal.json
@@ -32,7 +33,6 @@ The following is a tree view of the files in this repository:
 │   │   │   └── ks.cfg
 │   │   ├── rhel8.pkr.hcl
 │   │   └── variables.auto.pkrvars.hcl
-│   ├── vsphere.pkrvars.hcl
 │   ├── win10vdi
 │   │   ├── config
 │   │   │   └── Autounattend.xml
