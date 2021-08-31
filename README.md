@@ -1,5 +1,6 @@
 # Packer
-This repository contains Packer builds for many common OSs running as guests on a vSphere platform. As of Packer v1.7.0, HashiCorp Configuration Language (HCL) is fully supported and so all of the builds in this repository have been updated to use HCL instead of JSON. As such it is possible that some of the templates may not function correctly when using a version of Packer <1.7.0. As of September 2021, required versions have been included in each of the builds.
+This repository contains Packer builds for many common OSs running as guests on a vSphere platform. As of Packer v1.7.0, HashiCorp Configuration Language (HCL) is fully supported and so all of the builds in this repository have been updated to use HCL instead of JSON. As such it is possible that some of the templates may not function correctly when using a version of Packer <1.7.0.
+From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 ## Structure
 The following is a tree view of the files in this repository:
 ```
@@ -75,26 +76,26 @@ The files under the "config" directory are used during Packer builds and contain
 * A placeholder string "REPLACEWITHUSERPASS" is used instead of a password for the non-root user.
 
 The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts. Consequently, they need editing before they are used or customisation is possible by replacing pieces of placholder text.
-```
-
 ## Placeholders
 To make the various scripts more portable, key configuration items are represented by placeholder text strings. These can easily be replaced with a smattering of grep and sed.
-```
 ## Replace Admin user password
+```
 grep -rl 'REPLACEWITHADMINPASS' | xargs sed -i 's/REPLACEWITHADMINPASS/<password>/g'
-
+```
 ## Replace user credentials
+```
 grep -rl 'REPLACEWITHUSERNAME' | xargs sed -i 's/REPLACEWITHUSERNAME/<nonrootuser>/g'
 grep -rl 'REPLACEWITHUSERPASS' | xargs sed -i 's/REPLACEWITHUSERPASS/<password>/g'
-
+```
 ## Replace Ansible user name and key
+```
 grep -rl 'REPLACEWITHANSIBLEUSERNAME' | xargs sed -i 's/REPLACEWITHANSIBLEUSERNAME/<ansible_user>/g'
 grep -rl 'REPLACEWITHANSIBLEUSERKEY' | xargs sed -i 's|REPLACEWITHANSIBLEUSERKEY|<ansible_ssh_key>|g'
-
+```
 ## Replace PKI server
+```
 grep -rl 'REPLACEWITHPKISERVER' | xargs sed -i 's/REPLACEWITHPKISERVER/<pki_server_fqdn>/g'
 ```
-
 ## Executing Packer
 ### Validation
 Assuming that you've download Packer itself (https://www.packer.io/downloads) and the Windows Update provisioner (https://github.com/rgl/packer-provisioner-windows-update/releases) if required, and that they're located somewhere in your system's path, then validating the build becomes as simple as:
