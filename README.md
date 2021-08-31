@@ -67,8 +67,8 @@ The following is a tree view of the files in this repository:
 The files are divided in to two main directories.
 * The "builds" directory contains the build definitions and variables used by Packer.
 * The "scripts" directory contains scripts that are used to further customise the builds.
-All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
 
+All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
 Within the "builds" folder there are two variable definitions files that provide common values to all of the builds:
 #### common.pkrvars.hcl
 This file contains variables that configure some of the Packer functionality and some elements of build customisation. The values in this file can be altered if desired.
@@ -160,7 +160,7 @@ http_file           = "ks.cfg"
 ```
 The variable values in this file may need to be changed to suit your requirements. In particular, user names and passwords and paths to ISO files etc.
 
-#### <build>.pkr.hcl
+#### {build}.pkr.hcl
 This file contains the build definition that Packer will use. It references the variables supplied from the file above and the two common files to build an OS image. The excerpt of an example RHEL8 file is provided below. It illustrates how the variables are consumed by Packer. Ordinarily it should not be necessary to alter the build file as the majority of configuration is held in one of the variable files.
 ```
 source "vsphere-iso" "rhel8" {
@@ -198,34 +198,40 @@ This folder contains a file (or sometimes more than one file) that allows the se
 
 All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
 ### Scripts
-Each of these three directories have subdirectories for Windows and Linux-based builds. Within each of these are separate directories for each OS type and version. (For example, for CentOS 8 the relative path would be build/linux/centos8.) Each template itself is in one of these directories and is named after the OS, e.g. "centos8.pkr.hcl". This file is used by Packer to build / provision the template in to vSphere. Alongside each template will be a file named "variables.auto.pkrvars.hcl". These files contain variable values that Packer will automatically consume.
-
-The files under the "config" directory are used during Packer builds and contain basic settings for the relevant OS. Where potentially sensitive data, such as non-default usernames or passwords, is used there will exist a placeholder. Examples of the placeholders in use are:
-* A placeholder string "REPLACEWITHADMINPASS" is used instead of a password for the Administrator or root user.
-* A placeholder string "REPLACEWITHUSERNAME" is used instead of a name for a non-root user.
-* A placeholder string "REPLACEWITHUSERPASS" is used instead of a password for the non-root user.
-
-The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts. Consequently, they need editing before they are used or customisation is possible by replacing pieces of placholder text.
+The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts (hopefully). Consequently, they need editing before they are used or customisation is possible by replacing pieces of placholder text.
 ## Placeholders
 To make the various scripts more portable, key configuration items are represented by placeholder text strings. These can easily be replaced with a smattering of grep and sed.
-## Replace Admin user password
+### Example: Replace Admin user password
 ```
 grep -rl 'REPLACEWITHADMINPASS' | xargs sed -i 's/REPLACEWITHADMINPASS/<password>/g'
 ```
-## Replace user credentials
+### Example: Replace user credentials
 ```
 grep -rl 'REPLACEWITHUSERNAME' | xargs sed -i 's/REPLACEWITHUSERNAME/<nonrootuser>/g'
 grep -rl 'REPLACEWITHUSERPASS' | xargs sed -i 's/REPLACEWITHUSERPASS/<password>/g'
 ```
-## Replace Ansible user name and key
-```
-grep -rl 'REPLACEWITHANSIBLEUSERNAME' | xargs sed -i 's/REPLACEWITHANSIBLEUSERNAME/<ansible_user>/g'
-grep -rl 'REPLACEWITHANSIBLEUSERKEY' | xargs sed -i 's|REPLACEWITHANSIBLEUSERKEY|<ansible_ssh_key>|g'
-```
-## Replace PKI server
-```
-grep -rl 'REPLACEWITHPKISERVER' | xargs sed -i 's/REPLACEWITHPKISERVER/<pki_server_fqdn>/g'
-```
+### All placeholder replacements
+The following list defines all of the placeholder strings that can be replaced using the two examples above as a guide to customise the builds and scripts for your environment:
+* REPLACEWITHADMINPASS -- Password for root or Administrator users
+* REPLACEWITHUSERNAME -- User name of a non-administrative user to create
+* REPLACEWITHUSERPASS -- Password for the non-administrative user
+* REPLACEWITHRHSMUSER -- User ID for registering with RedHat Subscription Manager
+* REPLACEWITHRHSMPASS -- Password for registering with RedHat Subscription Manager
+* REPLACEWITHANSIBLEUSERNAME -- User name of a local account to create for Ansible access
+* REPLACEWITHANSIBLEUSERKEY -- SSH public key for Ansible to access
+* REPLACEWITHPKISERVER -- HTTP(s) location for downloading Root and Issuing CA certificates (e.g. http://pki.domain.com)
+* REPLACEWITHINTRANET -- HTTP(s) location for agent files, configuratiosn etc (e.g. http://intranet.domain.com)
+* REPLACEWITHAPPVOLSERVER -- For VDI builds, this is the FQDN of the Horizon AppVols server to register with
+* VCENTER_USER -- User name for Packer to connect to vCenter with (e.g. administrator@vsphere.local)
+* VCENTER_PASS -- Password for vCenter access
+* VCENTER_SERVER -- FQDN of the vCenter server
+* VCENTER_DC -- Name of the vSphere Datacenter to build images in
+* VCENTER_CLUSTER -- Name of the vSphere Cluster to build images in
+* VCENTER_DS -- Name of the vSphere Datastore to build images on (e.g. ds02)
+* VCENTER_NETWORK -- Name of the vSphere Network to connect build images to (e.g. network01), that has DHCP enabled
+* VCENTER_ISO_DS -- Name of the vSphere Datastore that hosts ISO images (e.g. iso01)
+* BUILD_BRANCH -- Used as part of the VM template names that are produced
+
 ## Executing Packer
 ### Validation
 Assuming that you've download Packer itself (https://www.packer.io/downloads) and the Windows Update provisioner (https://github.com/rgl/packer-provisioner-windows-update/releases) if required, and that they're located somewhere in your system's path, then validating the build becomes as simple as:
