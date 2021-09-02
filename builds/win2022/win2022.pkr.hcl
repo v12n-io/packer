@@ -139,7 +139,8 @@ source "vsphere-iso" "win2022std" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/std/Autounattend.xml" ]
+    floppy_files                = [ "config/std/Autounattend.xml",
+                                    "../../scripts/win2022-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
