@@ -158,7 +158,7 @@ source "vsphere-iso" "win2022std" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2019std" ]
+    sources                 = [ "source.vsphere-iso.win2022std" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     #provisioner "windows-update" {
