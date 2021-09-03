@@ -31,6 +31,7 @@ vm_convert_template     = true
 
 # VM OS Settings
 vm_os_type          = "windows2019srv_64Guest"
+vm_tools_update     = true
 build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 

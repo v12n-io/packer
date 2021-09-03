@@ -66,6 +66,7 @@ variable "os_version"               { type = string }
 
 # Virtual Machine OS Settings
 variable "vm_os_type"               { type = string }
+variable "vm_tools_update"          { type = bool }
 
 # Virtual Machine Hardware Settings
 variable "vm_firmware"              { type = string }
@@ -128,6 +129,7 @@ source "vsphere-iso" "win2016std" {
     RAM                         = var.vm_mem_size
     cdrom_type                  = var.vm_cdrom_type
     disk_controller_type        = var.vm_disk_controller
+    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin
@@ -176,6 +178,7 @@ source "vsphere-iso" "win2016stdcore" {
     RAM                         = var.vm_mem_size
     cdrom_type                  = var.vm_cdrom_type
     disk_controller_type        = var.vm_disk_controller
+    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin

@@ -66,6 +66,7 @@ variable "os_version"               { type = string }
 
 # Virtual Machine OS Settings
 variable "vm_os_type"               { type = string }
+variable "vm_tools_update"          { type = bool }
 
 # Virtual Machine Hardware Settings
 variable "vm_firmware"              { type = string }
@@ -128,6 +129,7 @@ source "vsphere-iso" "win2022std" {
     RAM                         = var.vm_mem_size
     cdrom_type                  = var.vm_cdrom_type
     disk_controller_type        = var.vm_disk_controller
+    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin
@@ -162,28 +164,28 @@ build {
     sources                 = [ "source.vsphere-iso.win2022std" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
-    #provisioner "windows-update" {
-        #pause_before        = "30s"
-        #search_criteria     = "IsInstalled=0"
-        #filters             = [ "exclude:$_.Title -like '*VMware*'",
+    provisioner "windows-update" {
+        pause_before        = "30s"
+        search_criteria     = "IsInstalled=0"
+        filters             = [ "exclude:$_.Title -like '*VMware*'",
                                 #"exclude:$_.Title -like '*Preview*'",
                                 #"exclude:$_.Title -like '*Defender*'",
                                 #"exclude:$_.InstallationBehavior.CanRequestUserInput",
                                 #"include:$true" ]
-        #restart_timeout     = "120m"
-    #}      
+        restart_timeout     = "120m"
+    }      
     
     # PowerShell Provisioner to execute scripts 
-    #provisioner "powershell" {
-        #elevated_user       = var.build_username
-        #elevated_password   = var.build_password
-        #scripts             = var.script_files
-    #}
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        scripts             = var.script_files
+    }
 
     # PowerShell Provisioner to execute commands
-    #provisioner "powershell" {
-        #elevated_user       = var.build_username
-        #elevated_password   = var.build_password
-        #inline              = var.inline_cmds
-    #}
+    provisioner "powershell" {
+        elevated_user       = var.build_username
+        elevated_password   = var.build_password
+        inline              = var.inline_cmds
+    }
 }

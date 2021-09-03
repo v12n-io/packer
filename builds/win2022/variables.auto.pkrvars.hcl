@@ -31,9 +31,10 @@ vm_convert_template = false
 
 # VM OS Settings
 vm_os_type          = "windows2019srv_64Guest"
+vm_tools_update     = true
 build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 
 # Provisioner Settings
-script_files        = [ ]
+script_files        = [ "../../win2022-config.ps1" ]
 inline_cmds         = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]

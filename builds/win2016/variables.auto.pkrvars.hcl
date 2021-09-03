@@ -27,6 +27,7 @@ vm_cdrom_type       = "sata"
 
 # VM OS Settings
 vm_os_type          = "windows9Server64Guest"
+vm_tools_update     = true
 build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 
