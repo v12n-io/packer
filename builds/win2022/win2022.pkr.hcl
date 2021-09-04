@@ -156,12 +156,63 @@ source "vsphere-iso" "win2022std" {
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
+source "vsphere-iso" "win2022stdcore" {
+    # vCenter
+    vcenter_server              = var.vcenter_server
+    username                    = var.vcenter_username
+    password                    = var.vcenter_password
+    insecure_connection         = var.vcenter_insecure
+    datacenter                  = var.vcenter_datacenter
+    cluster                     = var.vcenter_cluster
+    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+    datastore                   = var.vcenter_datastore
+    remove_cdrom                = var.vm_cdrom_remove
+    convert_to_template         = var.vm_convert_template
+
+    # Virtual Machine
+    guest_os_type               = var.vm_os_type
+    vm_name                     = "win2022stdcore-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2022 Std Core\nISO: ${ var.os_iso_file }"
+    firmware                    = var.vm_firmware
+    CPUs                        = var.vm_cpu_sockets
+    cpu_cores                   = var.vm_cpu_cores
+    RAM                         = var.vm_mem_size
+    cdrom_type                  = var.vm_cdrom_type
+    disk_controller_type        = var.vm_disk_controller
+    tools_upgrade_policy        = var.vm_tools_update
+    storage {
+        disk_size               = var.vm_disk_size
+        disk_thin_provisioned   = var.vm_disk_thin
+    }
+    network_adapters {
+        network                 = var.vcenter_network
+        network_card            = var.vm_nic_type
+    }
+
+    # Removeable Media
+    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
+    floppy_files                = [ "config/stdcore/Autounattend.xml",
+                                    "../../scripts/win2022-initialise.ps1" ]
+
+    # Boot and Provisioner
+    boot_order                  = var.vm_boot_order
+    boot_wait                   = var.vm_boot_wait
+    boot_command                = [ "<spacebar>" ]
+    ip_wait_timeout             = var.vm_ip_timeout
+    communicator                = "winrm"
+    winrm_username              = var.build_username
+    winrm_password              = var.build_password
+    shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
+    shutdown_timeout            = var.vm_shutdown_timeout
+}
+
 # -------------------------------------------------------------------------- #
 #                             Build Management                               #
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2022std" ]
+    sources                 = [ "source.vsphere-iso.win2022std",
+                                "source.vsphere-iso.win2022stdcore" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {

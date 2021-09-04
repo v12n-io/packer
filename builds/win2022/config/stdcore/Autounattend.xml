@@ -85,7 +85,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
-                            <Value>Windows Server 2019 SERVERSTANDARDCORE</Value>
+                            <Value>Windows Server 2022 SERVERSTANDARDCORE</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -97,11 +97,11 @@
                 </OSImage>
             </ImageInstall>
             <UserData>
+			    <AcceptEula>true</AcceptEula>
                 <ProductKey>
-                    <Key>N69G4-B89J2-4G8F4-WWYCC-J464C</Key>
                     <WillShowUI>OnError</WillShowUI>
+                    <Key>VDYBN-27WPP-V4HQT-9VMD4-VMK7H</Key>
                 </ProductKey>
-                <AcceptEula>true</AcceptEula>
                 <FullName>v12n</FullName>
                 <Organization>v12n</Organization>
             </UserData>
@@ -110,6 +110,25 @@
     <settings pass="specialize">
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <TimeZone>GMT Standard Time</TimeZone>
+        </component>
+		<component name="Microsoft-Windows-TerminalServices-LocalSessionManager" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <fDenyTSConnections>false</fDenyTSConnections>
+        </component>
+        <component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <FirewallGroups>
+                <FirewallGroup wcm:action="add" wcm:keyValue="RemoteDesktop">
+                    <Active>true</Active>
+                    <Group>Remote Desktop</Group>
+                    <Profile>all</Profile>
+                </FirewallGroup>
+            </FirewallGroups>
+        </component>
+        <component name="Microsoft-Windows-TerminalServices-RDP-WinStationExtensions" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <SecurityLayer>2</SecurityLayer>
+            <UserAuthentication>1</UserAuthentication>
+        </component>
+		<component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
         </component>
     </settings>
     <settings pass="oobeSystem">
@@ -123,7 +142,7 @@
                 <Username>Administrator</Username>
                 <Enabled>true</Enabled>
             </AutoLogon>
-                    <FirstLogonCommands>
+            <FirstLogonCommands>
                 <SynchronousCommand wcm:action="add">
                     <Order>1</Order>
                     <Description>Set Execution Policy 64 Bit</Description>
@@ -142,7 +161,7 @@
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win2019-initialise.ps1</CommandLine>
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win2022-initialise.ps1</CommandLine>
                     <Description>Basic configuration</Description>
                     <Order>99</Order>
                 </SynchronousCommand>
@@ -164,5 +183,5 @@
             </UserAccounts>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/wim/install.wim#Windows Server 2019 SERVERSTANDARDCORE" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/wims/install.wim#Windows Server 2022 SERVERSTANDARDCORE" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>
