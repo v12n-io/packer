@@ -1,9 +1,9 @@
 # ----------------------------------------------------------------------------
-# Name:         win2016.pkr.hcl
-# Description:  Build definition for Windows 2016
+# Name:         win2022.pkr.hcl
+# Description:  Build definition for Windows 2022
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         02/09/2021
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -106,7 +106,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "win2016std" {
+source "vsphere-iso" "win2022std" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -121,8 +121,8 @@ source "vsphere-iso" "win2016std" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016std-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std\nISO: ${ var.os_iso_file }"
+    vm_name                     = "win2022std-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2022 Std\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -141,7 +141,8 @@ source "vsphere-iso" "win2016std" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/std/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
+    floppy_files                = [ "config/std/Autounattend.xml",
+                                    "../../scripts/win2022-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -155,7 +156,7 @@ source "vsphere-iso" "win2016std" {
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
-source "vsphere-iso" "win2016stdcore" {
+source "vsphere-iso" "win2022stdcore" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -170,8 +171,8 @@ source "vsphere-iso" "win2016stdcore" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016stdcore-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std Core\nISO: ${ var.os_iso_file }"
+    vm_name                     = "win2022stdcore-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2022 Std Core\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -190,7 +191,8 @@ source "vsphere-iso" "win2016stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
+    floppy_files                = [ "config/stdcore/Autounattend.xml",
+                                    "../../scripts/win2022-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -209,8 +211,8 @@ source "vsphere-iso" "win2016stdcore" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2016std",
-                                "source.vsphere-iso.win2016stdcore" ]
+    sources                 = [ "source.vsphere-iso.win2022std",
+                                "source.vsphere-iso.win2022stdcore" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {

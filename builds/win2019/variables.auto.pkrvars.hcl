@@ -25,8 +25,13 @@ vm_disk_size        = 51200
 vm_disk_thin        = true
 vm_cdrom_type       = "sata"
 
+# Build Settings
+vm_cdrom_remove         = false
+vm_convert_template     = true
+
 # VM OS Settings
 vm_os_type          = "windows2019srv_64Guest"
+vm_tools_update     = true
 build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 
