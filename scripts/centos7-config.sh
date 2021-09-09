@@ -17,6 +17,15 @@ sudo yum install -y -q epel-release
 sudo yum install -y -q ca-certificates
 sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart
 
+## Configure python alternatives
+echo ' - Configuring python alternatives'
+sudo alternatives --install /usr/bin/python python /usr/bin/python2 50
+sudo alternatives --install /usr/bin/python python /usr/bin/python3.6 60
+sudo alternatives --auto python
+# Fix yum scripts
+sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/bin/yum
+sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/libexec/urlgrabber-ext-down
+
 ## Adding additional repositories
 echo ' - Adding additional repositories ...'
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
@@ -84,7 +93,7 @@ sudo crontab -r
 RUNONCE
 sudo chmod +rx /etc/cloud/runonce.sh
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | sudo crontab -
-#curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -
+curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -
 
 ## Setup MoTD
 BUILDDATE=$(date +"%y%m")
