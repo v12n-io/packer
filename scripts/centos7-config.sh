@@ -14,12 +14,12 @@ sudo yum update -y -q &>/dev/null
 
 ## Install core packages
 echo ' - Installing additional packages ...'
-sudo yum install -y -q epel-release
-sudo yum install -y -q ca-certificates
-sudo yum install -y -q cloud-init perl python-pip cloud-utils-growpart
+sudo yum install -y -q epel-release &>/dev/null
+sudo yum install -y -q ca-certificates &>/dev/null
+sudo yum install -y -q cloud-init perl python-pip cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
-echo ' - Adding additional repositories ...'
+echo ' - Adding repositories ...'
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
@@ -85,7 +85,7 @@ sudo touch /tmp/cloud-init.complete
 sudo crontab -r
 RUNONCE
 sudo chmod +rx /etc/cloud/runonce.sh
-echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | sudo crontab - &>/dev/null
+echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | sudo crontab -
 echo ' - Installing cloud-init-vmware-guestinfo ...'
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
