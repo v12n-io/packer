@@ -23,8 +23,10 @@ sudo alternatives --install /usr/bin/python python /usr/bin/python2 50
 sudo alternatives --install /usr/bin/python python /usr/bin/python3.6 60
 sudo alternatives --auto python
 # Fix yum scripts
-sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/bin/yum
-sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' /usr/libexec/urlgrabber-ext-down
+YUMFILES=('/usr/bin/yum' '/usr/bin/yum-builddep' '/usr/bin/yum-config-manager' '/usr/bin/yum-debug-dump' '/usr/bin/yum-debug-restore' '/usr/bin/yumdownloader' '/usr/bin/yum-groups-manager' '/usr/libexec/urlgrabber-ext-down')
+for yumfile in "${YUMFILES[@]}"; do
+    sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' $yumfile
+done
 
 ## Adding additional repositories
 echo ' - Adding additional repositories ...'
