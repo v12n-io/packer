@@ -15,18 +15,7 @@ sudo yum update -y
 echo ' - Install core packages ...'
 sudo yum install -y -q epel-release
 sudo yum install -y -q ca-certificates
-sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart
-
-## Configure python alternatives
-echo ' - Configuring python alternatives'
-sudo alternatives --install /usr/bin/python python /usr/bin/python2 50
-sudo alternatives --install /usr/bin/python python /usr/bin/python3.6 60
-sudo alternatives --auto python
-# Fix yum scripts
-YUMFILES=('/usr/bin/yum' '/usr/bin/yum-builddep' '/usr/bin/yum-config-manager' '/usr/bin/yum-debug-dump' '/usr/bin/yum-debug-restore' '/usr/bin/yumdownloader' '/usr/bin/yum-groups-manager' '/usr/libexec/urlgrabber-ext-down')
-for yumfile in "${YUMFILES[@]}"; do
-    sudo sed -i 's|/usr/bin/python|/usr/bin/python2.7|g' $yumfile
-done
+sudo yum install -y -q cloud-init perl python-pip cloud-utils-growpart
 
 ## Adding additional repositories
 echo ' - Adding additional repositories ...'
