@@ -101,7 +101,6 @@ $confFile = 'cloudbase-init.conf'
 $confPath = "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\"
 $confContent = @"
 [DEFAULT]
-config_drive_cdrom=true
 bsdtar_path=C:\Program Files\Cloudbase Solutions\Cloudbase-Init\bin\bsdtar.exe
 mtools_path=C:\Program Files\Cloudbase Solutions\Cloudbase-Init\bin\
 verbose=true
@@ -110,7 +109,7 @@ logdir=C:\Program Files\Cloudbase Solutions\Cloudbase-Init\log\
 logfile=cloudbase-init.log
 default_log_levels=comtypes=INFO,suds=INFO,iso8601=WARN,requests=WARN
 local_scripts_path=C:\Program Files\Cloudbase Solutions\Cloudbase-Init\LocalScripts\
-metadata_services=cloudbaseinit.metadata.services.ovfservice.OvfService
+metadata_services=cloudbaseinit.metadata.services.vmwareguestinfoservice.VMwareGuestInfoService
 plugins=cloudbaseinit.plugins.common.userdata.UserDataPlugin
 "@
 New-Item -Path $confPath -Name $confFile -ItemType File -Force -Value $confContent
