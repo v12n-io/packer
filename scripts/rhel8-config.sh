@@ -8,6 +8,7 @@ export RHSM_USER
 export RHSM_PASS
 
 ## Disable IPv6
+echo ' - Disabling IPv6 in grub ...'
 sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
 sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
 
@@ -17,7 +18,7 @@ subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto
 
 ## Apply updates
 echo ' - Updating the guest operating system ...'
-sudo yum update -y
+sudo yum update -y -q
 
 ## Install core packages
 echo ' - Install core packages ...'
@@ -63,6 +64,7 @@ done
 sudo update-ca-trust extract
 
 ## Configure cloud-init
+echo ' - Installing cloud-init ...'
 sudo touch /etc/cloud/cloud-init.disabled
 sudo sed -i 's/^ssh_pwauth:   0/ssh_pwauth:   1/g' /etc/cloud/cloud.cfg
 sudo sed -i -e 1,3d /etc/cloud/cloud.cfg
@@ -95,6 +97,7 @@ echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | 
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -
 
 ## Setup MoTD
+echo ' - Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/redhat-release)
 DOCS="https://github.com/v12n-io/packer"
