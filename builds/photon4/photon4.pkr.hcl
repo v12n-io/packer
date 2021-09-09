@@ -160,7 +160,7 @@ build {
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
-        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eux '{{.Path}}'"
+        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
         valid_exit_codes    = [ 0,245,1535 ]
     }
