@@ -121,7 +121,7 @@ Remove-Item C:\$msiFileName -Confirm:$false
 
 # Enabling RDP connections
 Write-Host " - Enabling RDP connections ..."
-netsh advfirewall firewall set rule group="Remote Desktop" new enable=yes > nul 2>&1
+Start-Process netsh -ArgumentList 'advfirewall firewall set rule group="Remote Desktop" new enable=yes' -wait | Out-Null
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
 
 Write-Host " - Configuration complete ..."
