@@ -83,8 +83,8 @@ $credential = New-Object System.Management.Automation.PsCredential($ansibleUser,
 $process = Start-Process cmd /c -Credential $credential -ErrorAction SilentlyContinue -LoadUserProfile
 $newPass = ([System.Web.Security.Membership]::GeneratePassword($passwordLength, $nonAlphaChars))
 $newSecureString = ConvertTo-SecureString $newPass -AsPlainText -Force
-Set-LocalUser -Name $ansibleUser -Password $newSecureString
-New-Item -Path "C:\Users\$ansibleUser" -Name ".ssh" -ItemType Directory
+Set-LocalUser -Name $ansibleUser -Password $newSecureString | Out-Null
+New-Item -Path "C:\Users\$ansibleUser" -Name ".ssh" -ItemType Directory | Out-Null
 $content = @"
 REPLACEWITHANSIBLEUSERKEY REPLACEWITHANSIBLEUSERNAME
 "@ 
@@ -114,14 +114,14 @@ metadata_services=cloudbaseinit.metadata.services.vmwareguestinfoservice.VMwareG
 plugins=cloudbaseinit.plugins.common.userdata.UserDataPlugin
 "@
 New-Item -Path $confPath -Name $confFile -ItemType File -Force -Value $confContent | Out-Null
-& sc.exe config cloudbase-init start= delayed-auto
+Start-Process sc.exe -ArgumentList "config cloudbase-init start= delayed-auto" -wait | Out-Null
 Remove-Item -Path ($confPath + "cloudbase-init-unattend.conf") -Confirm:$false 
 Remove-Item -Path ($confPath + "Unattend.xml") -Confirm:$false 
 Remove-Item C:\$msiFileName -Confirm:$false
 
 # Enabling RDP connections
 Write-Host " - Enabling RDP connections ..."
-netsh advfirewall firewall set rule group="Remote Desktop" new enable=yes
+netsh advfirewall firewall set rule group="Remote Desktop" new enable=yes > nul 2>&1
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
 
 Write-Host " - Configuration complete ..."
