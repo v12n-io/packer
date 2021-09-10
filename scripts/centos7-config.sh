@@ -4,26 +4,27 @@
 # @website https://blog.v12n.io
 
 ## Disable IPv6
-#sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
-#sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg
+echo ' - Disabling IPv6 in grub ...'
+sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+sudo grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg &>/dev/null
 
 ## Apply updates
-echo ' - Updating the guest operating system ...'
-sudo yum update -y
+echo ' - Applying package updates ...'
+sudo yum update -y -q &>/dev/null
 
 ## Install core packages
-echo ' - Install core packages ...'
-sudo yum install -y -q epel-release
-sudo yum install -y -q ca-certificates
-sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart
+echo ' - Installing additional packages ...'
+sudo yum install -y -q epel-release &>/dev/null
+sudo yum install -y -q ca-certificates &>/dev/null
+sudo yum install -y -q cloud-init perl python-pip cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
-echo ' - Adding additional repositories ...'
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+echo ' - Adding repositories ...'
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
 echo ' - Clearing yum cache ...'
-sudo yum clean all
+sudo yum clean all &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
@@ -55,6 +56,7 @@ done
 sudo update-ca-trust extract
 
 ## Configure cloud-init
+echo ' - Installing cloud-init ...'
 sudo touch /etc/cloud/cloud-init.disabled
 sudo sed -i 's/^ssh_pwauth:   0/ssh_pwauth:   1/g' /etc/cloud/cloud.cfg
 sudo sed -i -e 1,3d /etc/cloud/cloud.cfg
@@ -84,9 +86,11 @@ sudo crontab -r
 RUNONCE
 sudo chmod +rx /etc/cloud/runonce.sh
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | sudo crontab -
-#curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh -
+echo ' - Installing cloud-init-vmware-guestinfo ...'
+curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
 ## Setup MoTD
+echo ' - Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/centos-release)
 DOCS="https://github.com/v12n-io/packer"

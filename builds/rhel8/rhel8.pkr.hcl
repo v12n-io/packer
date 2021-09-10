@@ -171,7 +171,7 @@ build {
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
-        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eux '{{.Path}}'"
+        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         environment_vars    = [ "RHSM_USER=${ var.rhsm_user }",
                                 "RHSM_PASS=${ var.rhsm_pass }" ]
         scripts             = var.script_files
