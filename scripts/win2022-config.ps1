@@ -77,7 +77,6 @@ Add-Type -AssemblyName 'System.Web'
 # Creating Ansible user
 Write-Host " - Creating user for Ansible access ..."
 $ansiblePass = ([System.Web.Security.Membership]::GeneratePassword($passwordLength, $nonAlphaChars))
-Write-Host $ansiblePass
 $secureString = ConvertTo-SecureString $ansiblePass -AsPlainText -Force
 New-LocalUser -Name $ansibleUser -Password $secureString | Out-Null
 $credential = New-Object System.Management.Automation.PsCredential($ansibleUser,$secureString)
