@@ -152,7 +152,7 @@ source "vsphere-iso" "win2016std" {
     winrm_username              = var.build_username
     winrm_password              = var.build_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
-    shutdown_timeout            = var.vm_shutdown_timeout
+    shutdown_timeout            = "60m"
 }
 
 source "vsphere-iso" "win2016stdcore" {
