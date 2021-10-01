@@ -24,7 +24,7 @@ sudo yum update -y -q &>/dev/null
 echo ' - Installing additional packages ...'
 sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &>/dev/null
 sudo yum install -y -q ca-certificates &>/dev/null
-sudo yum install -y -q cloud-init perl python3 openssl cloud-utils-growpart &>/dev/null
+sudo yum install -y -q cloud-init perl python3 python-pip openssl cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
 echo ' - Adding repositories ...'
