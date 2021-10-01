@@ -22,7 +22,7 @@ sudo yum update -y -q &>/dev/null
 
 ## Install core packages
 echo ' - Installing additional packages ...'
-sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm &>/dev/null
+sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &>/dev/null
 sudo yum install -y -q ca-certificates &>/dev/null
 sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
