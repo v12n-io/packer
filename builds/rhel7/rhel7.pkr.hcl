@@ -1,9 +1,9 @@
 # ----------------------------------------------------------------------------
-# Name:         win2016.pkr.hcl
-# Description:  Build definition for Windows 2016
+# Name:         rhel7.pkr.hcl
+# Description:  Build definition for RedHat Enterprise Linux 7
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         30/09/2021
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -17,12 +17,6 @@ packer {
             source  = "github.com/hashicorp/vsphere"
         }
     }
-    required_plugins {
-        windows-update = {
-            version = ">= 0.14.0"
-            source  = "github.com/rgl/windows-update"
-        }
-    }
 }
 
 # -------------------------------------------------------------------------- #
@@ -34,6 +28,14 @@ variable "vcenter_username" {
     sensitive   = true
 }
 variable "vcenter_password" {
+    type        = string
+    sensitive   = true
+}
+variable "rhsm_user" {
+    type        = string
+    sensitive   = true
+}
+variable "rhsm_pass" {
     type        = string
     sensitive   = true
 }
@@ -66,7 +68,6 @@ variable "os_version"               { type = string }
 
 # Virtual Machine OS Settings
 variable "vm_os_type"               { type = string }
-variable "vm_tools_update"          { type = bool }
 
 # Virtual Machine Hardware Settings
 variable "vm_firmware"              { type = string }
@@ -94,6 +95,8 @@ variable "build_repo"               { type = string }
 variable "build_branch"             { type = string }
 
 # HTTP Settings
+variable "http_directory"           { type = string }
+variable "http_file"                { type = string }
 variable "http_port_min"            { type = number }
 variable "http_port_max"            { type = number }
 
@@ -106,7 +109,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "win2016std" {
+source "vsphere-iso" "rhel7" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -121,15 +124,14 @@ source "vsphere-iso" "win2016std" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016std-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std\nISO: ${ var.os_iso_file }"
+    vm_name                     = "rhel7-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: RedHat Enterprise Linux 7 Server\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     RAM                         = var.vm_mem_size
     cdrom_type                  = var.vm_cdrom_type
     disk_controller_type        = var.vm_disk_controller
-    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin
@@ -140,67 +142,23 @@ source "vsphere-iso" "win2016std" {
     }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/std/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
+    iso_paths                   = ["[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
 
     # Boot and Provisioner
+    http_directory              = var.http_directory
+    http_port_min               = var.http_port_min
+    http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<spacebar>" ]
+    boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
+                                    "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
+                                    "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = var.vm_ip_timeout
-    communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
-    shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
-    shutdown_timeout            = "60m"
-}
-
-source "vsphere-iso" "win2016stdcore" {
-    # vCenter
-    vcenter_server              = var.vcenter_server
-    username                    = var.vcenter_username
-    password                    = var.vcenter_password
-    insecure_connection         = var.vcenter_insecure
-    datacenter                  = var.vcenter_datacenter
-    cluster                     = var.vcenter_cluster
-    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
-    datastore                   = var.vcenter_datastore
-    remove_cdrom                = var.vm_cdrom_remove
-    convert_to_template         = var.vm_convert_template
-
-    # Virtual Machine
-    guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016stdcore-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std Core\nISO: ${ var.os_iso_file }"
-    firmware                    = var.vm_firmware
-    CPUs                        = var.vm_cpu_sockets
-    cpu_cores                   = var.vm_cpu_cores
-    RAM                         = var.vm_mem_size
-    cdrom_type                  = var.vm_cdrom_type
-    disk_controller_type        = var.vm_disk_controller
-    tools_upgrade_policy        = var.vm_tools_update
-    storage {
-        disk_size               = var.vm_disk_size
-        disk_thin_provisioned   = var.vm_disk_thin
-    }
-    network_adapters {
-        network                 = var.vcenter_network
-        network_card            = var.vm_nic_type
-    }
-
-    # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
-
-    # Boot and Provisioner
-    boot_order                  = var.vm_boot_order
-    boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<spacebar>" ]
-    ip_wait_timeout             = var.vm_ip_timeout
-    communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
-    shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
+    communicator                = "ssh"
+    ssh_username                = var.build_username
+    ssh_password                = var.build_password
+    shutdown_command            = "sudo shutdown -P now"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
@@ -209,32 +167,13 @@ source "vsphere-iso" "win2016stdcore" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2016std",
-                                "source.vsphere-iso.win2016stdcore" ]
+    sources                 = [ "source.vsphere-iso.rhel7" ]
     
-    # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
-    provisioner "windows-update" {
-        pause_before        = "30s"
-        search_criteria     = "IsInstalled=0"
-        filters             = [ "exclude:$_.Title -like '*VMware*'",
-                                "exclude:$_.Title -like '*Preview*'",
-                                "exclude:$_.Title -like '*Defender*'",
-                                "exclude:$_.InstallationBehavior.CanRequestUserInput",
-                                "include:$true" ]
-        restart_timeout     = "120m"
-    }      
-    
-    # PowerShell Provisioner to execute scripts 
-    provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
+    # Shell Provisioner to execute scripts 
+    provisioner "shell" {
+        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
+        environment_vars    = [ "RHSM_USER=${ var.rhsm_user }",
+                                "RHSM_PASS=${ var.rhsm_pass }" ]
         scripts             = var.script_files
-    }
-
-    # PowerShell Provisioner to execute commands
-    provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
-        inline              = var.inline_cmds
     }
 }
