@@ -3,6 +3,7 @@ This repository contains Packer builds for many common OSs running as guests on 
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
+* 21.10 - Added RHEL 7 template, plus some other fixes.
 * 21.09.1 - Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
 * 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
 ## Structure
@@ -28,6 +29,11 @@ The following is a tree view of the files in this repository:
 │   │   │   ├── packages_minimal.json
 │   │   │   └── photon4.json
 │   │   ├── photon4.pkr.hcl
+│   │   └── variables.auto.pkrvars.hcl
+│   ├── rhel7
+│   │   ├── config
+│   │   │   └── ks.cfg
+│   │   ├── rhel7.pkr.hcl
 │   │   └── variables.auto.pkrvars.hcl
 │   ├── rhel8
 │   │   ├── config
@@ -67,6 +73,7 @@ The following is a tree view of the files in this repository:
     ├── centos7-config.sh
     ├── centos8-config.sh
     ├── photon4-config.sh
+    ├── rhel7-config.sh
     ├── rhel8-config.sh
     ├── win10vdi-config.ps1
     ├── win10vdi-initialise.ps1
@@ -129,6 +136,7 @@ Each subfolder contains the build definition and build-specific variables for an
 * CentOS 7
 * CentOS 8
 * Photon 4
+* RedHat 7
 * RedHat 8
 * Windows 10
 * Windows Server 2016 (Desktop Experience and Core)
