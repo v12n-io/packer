@@ -176,4 +176,11 @@ build {
                                 "RHSM_PASS=${ var.rhsm_pass }" ]
         scripts             = var.script_files
     }
+
+    post-processor "manifest" {
+    output = "manifest.txt"
+    strip_path = true
+    custom_data = {
+      my_custom_data = "example"
+    }
 }
