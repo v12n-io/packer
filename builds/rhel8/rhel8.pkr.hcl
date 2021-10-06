@@ -178,9 +178,10 @@ build {
     }
 
     post-processor "manifest" {
-    output = "manifest.txt"
-    strip_path = true
-    custom_data = {
-      my_custom_data = "example"
+        output = "manifest.txt"
+        strip_path = true
+        custom_data = {
+            my_custom_data = "example"
+        }
     }
 }
