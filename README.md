@@ -3,6 +3,7 @@ This repository contains Packer builds for many common OSs running as guests on 
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
+* 21.10.1 - Added manifest post-processors
 * 21.10 - Added RHEL 7 template, plus some other fixes.
 * 21.09.1 - Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
 * 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
@@ -141,6 +142,7 @@ Each subfolder contains the build definition and build-specific variables for an
 * Windows 10
 * Windows Server 2016 (Desktop Experience and Core)
 * Windows Server 2019 (Desktop Experience and Core)
+* Windows Server 2022 (Desktop Experience and Core)
 
 Each build contains the following:
 #### variables.auto.pkrvars.hcl

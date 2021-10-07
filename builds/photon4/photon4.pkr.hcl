@@ -164,4 +164,14 @@ build {
         scripts             = var.script_files
         valid_exit_codes    = [ 0,245,1535 ]
     }
+
+    post-processor "manifest" {
+        output              = "manifest.txt"
+        strip_path          = true
+        custom_data         = {
+                                vcenter_fqdn    = "${ var.vcenter_server }"
+                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                iso_file        = "${ var.os_iso_file }"
+        }
+    }
 }

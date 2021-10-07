@@ -207,4 +207,15 @@ build {
         elevated_password       = var.build_password
         inline                  = var.inline_cmds
     }
+
+    post-processor "manifest" {
+        output              = "manifest.txt"
+        strip_path          = true
+        custom_data         = {
+                                vcenter_fqdn    = "${ var.vcenter_server }"
+                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                iso_file        = "${ var.os_iso_file }"
+                                vdi             = "true"
+        }
+    }
 }
