@@ -3,7 +3,7 @@ This repository contains Packer builds for many common OSs running as guests on 
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
-* 21.10.1 - Added manifest post-processors
+* 21.10.1 - Added manifest post-processors. Windows Server builds with Desktop Experience renamed to *dexp.
 * 21.10 - Added RHEL 7 template, plus some other fixes.
 * 21.09.1 - Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
 * 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
@@ -48,7 +48,7 @@ The following is a tree view of the files in this repository:
 │   │   └── win10vdi.pkr.hcl
 │   ├── win2016
 │   │   ├── config
-│   │   │   ├── std
+│   │   │   ├── stddexp
 │   │   │   │   └── Autounattend.xml
 │   │   │   └── stdcore
 │   │   │       └── Autounattend.xml
@@ -56,7 +56,7 @@ The following is a tree view of the files in this repository:
 │   │   └── win2016.pkr.hcl
 │   ├── win2019
 │   │   ├── config
-│   │   │   ├── std
+│   │   │   ├── stddexp
 │   │   │   │   └── Autounattend.xml
 │   │   │   └── stdcore
 │   │   │       └── Autounattend.xml
@@ -64,7 +64,7 @@ The following is a tree view of the files in this repository:
 │   │   └── win2019.pkr.hcl
 │   └── win2022
 │       ├── config
-│       │   ├── std
+│       │   ├── stddexp
 │       │   │   └── Autounattend.xml
 │       │   └── stdcore
 │       │       └── Autounattend.xml

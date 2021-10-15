@@ -216,6 +216,8 @@ build {
                                 vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
                                 iso_file        = "${ var.os_iso_file }"
                                 vdi             = "true"
+                                build_repo      = "${ var.build_repo }"
+                                build_branch    = "${ var.build_branch }"
         }
     }
 }

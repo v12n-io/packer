@@ -184,6 +184,8 @@ build {
                                 vcenter_fqdn    = "${ var.vcenter_server }"
                                 vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
                                 iso_file        = "${ var.os_iso_file }"
+                                build_repo      = "${ var.build_repo }"
+                                build_branch    = "${ var.build_branch }"
         }
     }
 }
