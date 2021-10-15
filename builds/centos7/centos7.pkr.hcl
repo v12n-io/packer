@@ -166,4 +166,16 @@ build {
         execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
     }
+
+    post-processor "manifest" {
+        output              = "manifest.txt"
+        strip_path          = true
+        custom_data         = {
+                                vcenter_fqdn    = "${ var.vcenter_server }"
+                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                iso_file        = "${ var.os_iso_file }"
+                                build_repo      = "${ var.build_repo }"
+                                build_branch    = "${ var.build_branch }"
+        }
+    }
 }

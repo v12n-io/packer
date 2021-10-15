@@ -106,7 +106,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "win2019std" {
+source "vsphere-iso" "win2019stddexp" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -121,7 +121,7 @@ source "vsphere-iso" "win2019std" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win2019std-${ var.build_branch }-${ local.build_version }"
+    vm_name                     = "win2019stddexp-${ var.build_branch }-${ local.build_version }"
     notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2019 Std\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
@@ -141,7 +141,7 @@ source "vsphere-iso" "win2019std" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/std/Autounattend.xml", "../../scripts/win2019-initialise.ps1" ]
+    floppy_files                = [ "config/stddexp/Autounattend.xml", "../../scripts/win2019-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -209,7 +209,7 @@ source "vsphere-iso" "win2019stdcore" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2019std",
+    sources                 = [ "source.vsphere-iso.win2019stddexp",
                                 "source.vsphere-iso.win2019stdcore" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
@@ -236,5 +236,17 @@ build {
         elevated_user       = var.build_username
         elevated_password   = var.build_password
         inline              = var.inline_cmds
+    }
+
+    post-processor "manifest" {
+        output              = "manifest.txt"
+        strip_path          = true
+        custom_data         = {
+                                vcenter_fqdn    = "${ var.vcenter_server }"
+                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                iso_file        = "${ var.os_iso_file }"
+                                build_repo      = "${ var.build_repo }"
+                                build_branch    = "${ var.build_branch }"
+        }
     }
 }
