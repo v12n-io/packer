@@ -64,7 +64,7 @@ done
 sudo update-ca-trust extract
 
 ## Configure cloud-init
-echo ' - Configuring cloud-init ...'
+echo ' - Installing cloud-init ...'
 sudo touch /etc/cloud/cloud-init.disabled
 sudo sed -i 's/^ssh_pwauth:   0/ssh_pwauth:   1/g' /etc/cloud/cloud.cfg
 sudo sed -i -e 1,3d /etc/cloud/cloud.cfg
@@ -72,7 +72,7 @@ sudo sed -i "s/^disable_vmware_customization: false/disable_vmware_customization
 sudo sed -i "/disable_vmware_customization: true/a\\\nnetwork:\n  config: disabled" /etc/cloud/cloud.cfg
 sudo sed -i "s@^[a-z] /tmp @# &@" /usr/lib/tmpfiles.d/tmp.conf
 sudo sed -i "/^After=vgauthd.service/a After=dbus.service" /usr/lib/systemd/system/vmtoolsd.service
-sudo sed -i '/^disable_vmware_customization: true/a\datasource_list: [ "VMware" ]' /etc/cloud/cloud.cfg
+sudo sed -i '/^disable_vmware_customization: true/a\datasource_list: [OVF]' /etc/cloud/cloud.cfg
 sudo cat << RUNONCE > /etc/cloud/runonce.sh
 #!/bin/bash
 # Runonce script for cloud-init on vSphere
@@ -94,6 +94,8 @@ sudo crontab -r
 RUNONCE
 sudo chmod +rx /etc/cloud/runonce.sh
 echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | sudo crontab -
+echo ' - Installing cloud-init-vmware-guestinfo ...'
+curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
 ## Setup MoTD
 echo ' - Setting login banner ...'
