@@ -3,7 +3,7 @@
 # Description:  Common vSphere variables for Windows 10 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         09/11/2021
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -18,7 +18,7 @@ os_version          = "10"
 vm_firmware         = "bios"
 vm_cpu_sockets      = 2
 vm_cpu_cores        = 1
-vm_mem_size         = 2048
+vm_mem_size         = 4096
 vm_nic_type         = "vmxnet3"
 vm_disk_controller  = ["pvscsi"]
 vm_disk_size        = 51200

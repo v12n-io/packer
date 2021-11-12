@@ -43,8 +43,8 @@ Set-LocalUser Administrator -PasswordNeverExpires $true
 Write-Host " - Importing trusted CA certificates ..."
 $webserver = "REPLACEWITHPKISERVER"
 $url = "http://" + $webserver
-$certRoot = "rootca.cer"
-$certIssuing = "issuingca.cer"
+$certRoot = "root.crt"
+$certIssuing = "issuing.crt"
 ForEach ($cert in $certRoot,$certIssuing) {
   Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
 }
@@ -168,7 +168,7 @@ Catch {
    Write-Error $_.Exception
    Exit -1 
 }
-[Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
+[Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
 $source = [IO.Compression.ZipFile]::OpenRead("C:\$zip")
 $entries = $source.Entries
 ForEach ($file in $entries) {

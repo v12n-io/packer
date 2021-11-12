@@ -51,8 +51,8 @@ New-LocalUser -Name $user -Password $secureString | Out-Null
 Write-Host " - Importing trusted CA certificates ..."
 $webserver = "REPLACEWITHPKISERVER"
 $url = "http://" + $webserver
-$certRoot = "rootca.cer"
-$certIssuing = "issuingca.cer"
+$certRoot = "root.crt"
+$certIssuing = "issuing.crt"
 ForEach ($cert in $certRoot,$certIssuing) {
   Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
 }

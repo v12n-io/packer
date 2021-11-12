@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# Name:         centos7.pkr.hcl
-# Description:  Build definition for CentOS 7
+# Name:         photon3.pkr.hcl
+# Description:  Build definition for Photon 3
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # Date:         29/10/2021
@@ -101,7 +101,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "centos7" {
+source "vsphere-iso" "photon3" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -116,8 +116,8 @@ source "vsphere-iso" "centos7" {
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "centos7-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: CentOS 7 Server\nISO: ${ var.os_iso_file }"
+    vm_name                     = "photon3-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Photon 3 Server\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -142,10 +142,7 @@ source "vsphere-iso" "centos7" {
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
-                                    "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${var.http_file}",
-                                    "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
+    boot_command                = [ "<esc><wait> vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 insecure_installation=1 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file } photon.media=cdrom <enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
     ssh_username                = var.build_username
@@ -159,12 +156,13 @@ source "vsphere-iso" "centos7" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.centos7" ]
+    sources                 = [ "source.vsphere-iso.photon3" ]
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
         execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
+        valid_exit_codes    = [ 0,245,1535 ]
     }
 
     post-processor "manifest" {
