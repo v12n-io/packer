@@ -48,7 +48,7 @@ sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
 pkiServer="REPLACEWITHPKISERVER"
-pkiCerts=("rootca.cer" "issuingca.cer")
+pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
     sudo wget -q $pkiServer/$cert

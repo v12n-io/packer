@@ -1,5 +1,5 @@
 #!/bin/bash
-# Prepare Photon 4 template for vSphere cloning
+# Prepare Photon 3 template for vSphere cloning
 # @author Michael Poore
 # @website https://blog.v12n.io
 

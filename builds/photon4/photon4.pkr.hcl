@@ -3,17 +3,17 @@
 # Description:  Build definition for Photon 4
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         29/10/2021
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
 #                           Packer Configuration                             #
 # -------------------------------------------------------------------------- #
 packer {
-    required_version = ">= 1.7.4"
+    required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.1"
+            version = ">= v1.0.2"
             source  = "github.com/hashicorp/vsphere"
         }
     }
