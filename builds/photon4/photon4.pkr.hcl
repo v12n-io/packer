@@ -20,84 +20,8 @@ packer {
 }
 
 # -------------------------------------------------------------------------- #
-#                           Variable Definitions                             #
+#                              Local Variables                               #
 # -------------------------------------------------------------------------- #
-# Sensitive Variables
-variable "vcenter_username" {
-    type        = string
-    sensitive   = true
-}
-variable "vcenter_password" {
-    type        = string
-    sensitive   = true
-}
-variable "build_username" {
-    type        = string
-    sensitive   = true
-}
-variable "build_password" {
-    type        = string
-    sensitive   = true
-}
-
-# vCenter Configuration
-variable "vcenter_server"           { type = string }
-variable "vcenter_datacenter"       { type = string }
-variable "vcenter_cluster"          { type = string }
-variable "vcenter_datastore"        { type = string }
-variable "vcenter_network"          { type = string }
-variable "vcenter_insecure"         { type = bool }
-variable "vcenter_folder"           { type = string }
-
-# vCenter and ISO Configuration
-variable "vcenter_iso_datastore"    { type = string }
-variable "os_iso_file"              { type = string }
-variable "os_iso_path"              { type = string }
-
-# vCenter Content Library Configuration
-variable "vcenter_cl_name"          { type = string }
-variable "vcenter_cl_base_name"     { type = string }
-
-# OS Meta Data
-variable "os_family"                { type = string }
-variable "os_version"               { type = string }
-
-# Virtual Machine OS Settings
-variable "vm_os_type"               { type = string }
-
-# Virtual Machine Hardware Settings
-variable "vm_firmware"              { type = string }
-variable "vm_boot_order"            { type = string }
-variable "vm_boot_wait"             { type = string }
-variable "vm_cpu_sockets"           { type = number }
-variable "vm_cpu_cores"             { type = number }
-variable "vm_mem_size"              { type = number }
-variable "vm_nic_type"              { type = string }
-variable "vm_disk_controller"       { type = list(string) }
-variable "vm_disk_size"             { type = number }
-variable "vm_disk_thin"             { type = bool }
-variable "vm_cdrom_type"            { type = string }
-variable "vm_cdrom_remove"          { type = bool }
-variable "vm_convert_template"      { type = bool }
-variable "vm_export_ovf"            { type = bool }
-variable "vm_ip_timeout"            { type = string }
-variable "vm_shutdown_timeout"      { type = string }
-
-# Provisioner Settings
-variable "script_files"             { type = list(string) }
-variable "inline_cmds"              { type = list(string) }
-
-# Build Settings
-variable "build_repo"               { type = string }
-variable "build_branch"             { type = string }
-
-# HTTP Settings
-variable "http_directory"           { type = string }
-variable "http_file"                { type = string }
-variable "http_port_min"            { type = number }
-variable "http_port_max"            { type = number }
-
-# Local Variables
 locals { 
     build_version   = formatdate("YY.MM", timestamp())
     build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
@@ -114,27 +38,36 @@ source "vsphere-iso" "photon4" {
     insecure_connection         = var.vcenter_insecure
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+    folder                      = var.vcenter_folder
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = var.vm_cdrom_remove
-    convert_to_template         = var.vm_convert_template
 
-    # Content Library
-    content_library_destination {
-        name                    = "photon4"
-        library                 = "${ var.vcenter_cl_base_name }-${ var.build_branch }"
-        ovf                     = var.vm_export_ovf
+    # Content Library and Template Settings
+    convert_to_template         = var.vcenter_convert_template
+    create_snapshot             = var.vcenter_snapshot
+    snapshot_name               = var.vcenter_snapshot_name
+    dynamic "content_library_destination" {
+        for_each = var.vcenter_content_library_name != null ? [1] : []
+            content {
+                library         = var.vcenter_content_library_name
+                ovf             = var.vcenter_content_library_ovf
+                destroy         = var.vcenter_content_library_destroy
+                skip_import     = var.vcenter_content_library_skip
+            }
+        }
     }
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
     vm_name                     = "photon4-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Photon 4 Server\nISO: ${ var.os_iso_file }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: ${ var.vm_os_vendor } ${ var.vm_os_version } ${ var.vm_os_type }\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
+    CPU_hot_plug                = var.vm_cpu_hotadd
     RAM                         = var.vm_mem_size
+    RAM_hot_plug                = var.vm_mem_hotadd
     cdrom_type                  = var.vm_cdrom_type
+    remove_cdrom                = var.vm_cdrom_remove
     disk_controller_type        = var.vm_disk_controller
     storage {
         disk_size               = var.vm_disk_size
@@ -146,7 +79,7 @@ source "vsphere-iso" "photon4" {
     }
 
     # Removeable Media
-    iso_paths                   = ["[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
 
     # Boot and Provisioner
     http_directory              = var.http_directory
@@ -173,24 +106,23 @@ source "vsphere-iso" "photon4" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.photon4" ]
+    sources                     = [ "source.vsphere-iso.photon4" ]
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
-        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
-        scripts             = var.script_files
-        valid_exit_codes    = [ 0,245,1535 ]
+        execute_command         = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
+        scripts                 = var.script_files
+        valid_exit_codes        = [ 0,245,1535 ]
     }
 
     post-processor "manifest" {
-        output              = "manifest.txt"
-        strip_path          = true
-        custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+        output                  = "manifest.txt"
+        strip_path              = true
+        custom_data             = { vcenter_fqdn    = "${ var.vcenter_server }"
+                                    vcenter_folder  = "${ var.vcenter_folder }"
+                                    iso_file        = "${ var.os_iso_file }"
+                                    build_repo      = "${ var.build_repo }"
+                                    build_branch    = "${ var.build_branch }"
         }
     }
 }

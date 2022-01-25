@@ -26,4 +26,3 @@ vm_shutdown_timeout     = "15m"
 
 # Content Library Settings
 vcenter_cl_name         = "VCENTER_CL"
-vcenter_cl_base_name    = "v12n"
