@@ -271,6 +271,10 @@ variable "http_directory" {
     description = "Relative directory to serve files via Packer's built-in HTTP server"
     default     = "config"
 }
+variable "http_file" {
+    type        = string
+    description = "Name of a file in the http_directory that will be provided in the boot command"
+}
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"
