@@ -46,7 +46,7 @@ source "vsphere-iso" "photon4" {
     create_snapshot             = var.vcenter_snapshot
     snapshot_name               = var.vcenter_snapshot_name
     dynamic "content_library_destination" {
-        for_each = var.vcenter_content_library_name != null ? [1] : []
+        for_each = var.vcenter_content_library != null ? [1] : []
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
