@@ -275,6 +275,7 @@ variable "http_directory" {
 variable "http_file" {
     type        = string
     description = "Name of a file in the http_directory that will be provided in the boot command"
+    default     = "ks.cfg"
 }
 variable "http_port_min" {
     type        = number
