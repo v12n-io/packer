@@ -25,7 +25,7 @@ vm_mem_size                     = 8192
 vm_mem_reserve_all              = true
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
-vm_disk_size                    = 51200
+vm_disk_size                    = 102400
 vm_disk_thin                    = true
 vm_cdrom_type                   = "sata"
 
