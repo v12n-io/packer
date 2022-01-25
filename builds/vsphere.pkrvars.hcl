@@ -25,4 +25,4 @@ vm_ip_timeout                   = "20m"
 vm_shutdown_timeout             = "15m"
 
 # Content Library Settings
-vcenter_content_library_name    = "VCENTER_CL"
+vcenter_content_library         = "VCENTER_CL"

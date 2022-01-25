@@ -201,7 +201,7 @@ variable "vcenter_convert_template" {
     description = "Convert the VM to a template?"
     default     = false
 }
-variable "vcenter_content_library_name" {
+variable "vcenter_content_library" {
     type        = string
     description = "Name of the vSphere Content Library to export the VM to"
     default     = null
