@@ -129,6 +129,11 @@ variable "vm_video_ram" {
     description = "Amount of video memory in KB"
     default     = 4096
 }
+variable "vm_vtpm" {
+    type        = bool
+    description = "Add a vTPM device?"
+    default     = false
+}
 variable "vm_boot_order" {
     type        = string
     description = "Set the comma-separated boot order for the VM (e.g. 'disk,cdrom')"
