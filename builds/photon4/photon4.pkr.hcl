@@ -50,6 +50,7 @@ source "vsphere-iso" "photon4" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
