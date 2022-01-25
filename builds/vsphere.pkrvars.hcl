@@ -3,7 +3,7 @@
 # Description:  Common vSphere variables for Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # vCenter Settings
@@ -21,7 +21,9 @@ vcenter_insecure        = true
 vcenter_folder          = "Templates"
 
 # VM Settings
-vm_cdrom_remove         = true
-vm_convert_template     = true
 vm_ip_timeout           = "20m"
 vm_shutdown_timeout     = "15m"
+
+# Content Library Settings
+vcenter_cl_name         = "VCENTER_CL"
+vcenter_cl_base_name    = "v12n"

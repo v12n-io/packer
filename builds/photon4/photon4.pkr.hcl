@@ -54,6 +54,10 @@ variable "vcenter_iso_datastore"    { type = string }
 variable "os_iso_file"              { type = string }
 variable "os_iso_path"              { type = string }
 
+# vCenter Content Library Configuration
+variable "vcenter_cl_name"          { type = string }
+variable "vcenter_cl_base_name"     { type = string }
+
 # OS Meta Data
 variable "os_family"                { type = string }
 variable "os_version"               { type = string }
@@ -75,6 +79,7 @@ variable "vm_disk_thin"             { type = bool }
 variable "vm_cdrom_type"            { type = string }
 variable "vm_cdrom_remove"          { type = bool }
 variable "vm_convert_template"      { type = bool }
+variable "vm_export_ovf"            { type = bool }
 variable "vm_ip_timeout"            { type = string }
 variable "vm_shutdown_timeout"      { type = string }
 
@@ -113,6 +118,13 @@ source "vsphere-iso" "photon4" {
     datastore                   = var.vcenter_datastore
     remove_cdrom                = var.vm_cdrom_remove
     convert_to_template         = var.vm_convert_template
+
+    # Content Library
+    content_library_destination {
+        name                    = "photon4"
+        library                 = "${ var.vcenter_cl_base_name }-${ var.build_branch }"
+        ovf                     = var.vm_export_ovf
+    }
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type

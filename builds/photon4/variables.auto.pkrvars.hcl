@@ -3,11 +3,11 @@
 # Description:  Common vSphere variables for Photon 4 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file         = "photon-4.0-1526e30ba.iso"
+os_iso_file         = "photon-4.0-c001795b8.iso"
 os_iso_path         = "os/photon/4"
 
 # OS Meta Data
@@ -25,13 +25,18 @@ vm_disk_size        = 16384
 vm_disk_thin        = true
 vm_cdrom_type       = "sata"
 
+# VM Settings
+vm_cdrom_remove     = true
+vm_convert_template = false
+vm_export_ovf       = true
+
 # VM OS Settings
 vm_os_type          = "vmwarePhoton64Guest"
 build_username      = "REPLACEWITHUSERNAME"
 build_password      = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
-script_files        = [ "../../scripts/photon4-config.sh" ]
+script_files        = [ "scripts/photon4-config.sh" ]
 inline_cmds         = []
 
 # Packer Settings
