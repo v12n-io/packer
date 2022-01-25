@@ -3,7 +3,7 @@
 # Description:  Build definition for Windows 10
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -138,7 +138,7 @@ source "vsphere-iso" "win10vdi" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/Autounattend.xml", "../../scripts/win10vdi-initialise.ps1" ]
+    floppy_files                = [ "config/Autounattend.xml", "scripts/win10vdi-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order

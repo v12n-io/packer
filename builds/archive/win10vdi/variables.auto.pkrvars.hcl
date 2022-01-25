@@ -3,7 +3,7 @@
 # Description:  Common vSphere variables for Windows 10 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         09/11/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -31,5 +31,5 @@ build_username      = "Administrator"
 build_password      = "REPLACEWITHADMINPASS"
 
 # Provisioner Settings
-script_files        = [ "../../scripts/win10vdi-config.ps1" ]
+script_files        = [ "scripts/win10vdi-config.ps1" ]
 inline_cmds         = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
