@@ -20,12 +20,12 @@ variable "vcenter_password" {
     description = "Password used by Packer to connect to vCenter"
     sensitive   = true
 }
-variable "std_username" {
+variable "build_username" {
     type        = string
     description = "Non-administrative username for this OS"
     sensitive   = true
 }
-variable "std_password" {
+variable "build_password" {
     type        = string
     description = "Password for the non-administrative user"
     sensitive   = true
