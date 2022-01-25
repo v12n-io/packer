@@ -17,7 +17,7 @@ vm_os_vendor                    = "Windows"
 vm_os_version                   = "11"
 
 # VM Hardware Settings
-vm_firmware                     = "efi-secure"
+vm_firmware                     = "efi"
 vm_video_ram                    = 131072
 vm_cpu_sockets                  = 2
 vm_cpu_cores                    = 1
