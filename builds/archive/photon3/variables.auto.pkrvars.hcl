@@ -3,7 +3,7 @@
 # Description:  Common vSphere variables for Photon 3 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -31,7 +31,7 @@ build_username      = "REPLACEWITHUSERNAME"
 build_password      = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
-script_files        = [ "../../scripts/photon3-config.sh" ]
+script_files        = [ "scripts/photon3-config.sh" ]
 inline_cmds         = []
 
 # Packer Settings
