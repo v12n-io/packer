@@ -35,8 +35,8 @@ vcenter_content_library_destroy = true
 
 # VM OS Settings
 vm_guestos_type                 = "vmwarePhoton64Guest"
-build_username                  = "REPLACEWITHUSERNAME"
-build_password                  = "REPLACEWITHUSERPASS"
+std_username                    = "REPLACEWITHUSERNAME"
+std_password                    = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
 script_files                    = [ "scripts/photon4-config.sh" ]

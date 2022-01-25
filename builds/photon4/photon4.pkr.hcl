@@ -94,8 +94,8 @@ source "vsphere-iso" "photon4" {
                                     "<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
-    ssh_username                = var.build_username
-    ssh_password                = var.build_password
+    ssh_username                = var.std_username
+    ssh_password                = var.std_password
     shutdown_command            = "sudo shutdown -P now"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
