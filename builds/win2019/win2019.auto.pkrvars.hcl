@@ -39,5 +39,5 @@ build_username                  = "Administrator"
 build_password                  = "REPLACEWITHADMINPASS"
 
 # Provisioner Settings
-script_files                    = [ "scripts/win2022-config.ps1" ]
+script_files                    = [ "scripts/win2019-config.ps1" ]
 inline_cmds                     = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
