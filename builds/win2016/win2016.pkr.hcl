@@ -3,7 +3,7 @@
 # Description:  Build definition for Windows 2016
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         29/10/2021
+# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -26,78 +26,8 @@ packer {
 }
 
 # -------------------------------------------------------------------------- #
-#                           Variable Definitions                             #
+#                              Local Variables                               #
 # -------------------------------------------------------------------------- #
-# Sensitive Variables
-variable "vcenter_username" {
-    type        = string
-    sensitive   = true
-}
-variable "vcenter_password" {
-    type        = string
-    sensitive   = true
-}
-variable "build_username" {
-    type        = string
-    sensitive   = true
-}
-variable "build_password" {
-    type        = string
-    sensitive   = true
-}
-
-# vCenter Configuration
-variable "vcenter_server"           { type = string }
-variable "vcenter_datacenter"       { type = string }
-variable "vcenter_cluster"          { type = string }
-variable "vcenter_datastore"        { type = string }
-variable "vcenter_network"          { type = string }
-variable "vcenter_insecure"         { type = bool }
-variable "vcenter_folder"           { type = string }
-
-# vCenter and ISO Configuration
-variable "vcenter_iso_datastore"    { type = string }
-variable "os_iso_file"              { type = string }
-variable "os_iso_path"              { type = string }
-
-# OS Meta Data
-variable "os_family"                { type = string }
-variable "os_version"               { type = string }
-
-# Virtual Machine OS Settings
-variable "vm_os_type"               { type = string }
-variable "vm_tools_update"          { type = bool }
-
-# Virtual Machine Hardware Settings
-variable "vm_firmware"              { type = string }
-variable "vm_boot_order"            { type = string }
-variable "vm_boot_wait"             { type = string }
-variable "vm_cpu_sockets"           { type = number }
-variable "vm_cpu_cores"             { type = number }
-variable "vm_mem_size"              { type = number }
-variable "vm_nic_type"              { type = string }
-variable "vm_disk_controller"       { type = list(string) }
-variable "vm_disk_size"             { type = number }
-variable "vm_disk_thin"             { type = bool }
-variable "vm_cdrom_type"            { type = string }
-variable "vm_cdrom_remove"          { type = bool }
-variable "vm_convert_template"      { type = bool }
-variable "vm_ip_timeout"            { type = string }
-variable "vm_shutdown_timeout"      { type = string }
-
-# Provisioner Settings
-variable "script_files"             { type = list(string) }
-variable "inline_cmds"              { type = list(string) }
-
-# Build Settings
-variable "build_repo"               { type = string }
-variable "build_branch"             { type = string }
-
-# HTTP Settings
-variable "http_port_min"            { type = number }
-variable "http_port_max"            { type = number }
-
-# Local Variables
 locals { 
     build_version   = formatdate("YY.MM", timestamp())
     build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
@@ -114,22 +44,37 @@ source "vsphere-iso" "win2016stddexp" {
     insecure_connection         = var.vcenter_insecure
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+    folder                      = var.vcenter_folder
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = var.vm_cdrom_remove
-    convert_to_template         = var.vm_convert_template
+
+    # Content Library and Template Settings
+    convert_to_template         = var.vcenter_convert_template
+    create_snapshot             = var.vcenter_snapshot
+    snapshot_name               = var.vcenter_snapshot_name
+    dynamic "content_library_destination" {
+        for_each = var.vcenter_content_library != null ? [1] : []
+            content {
+                library         = var.vcenter_content_library
+                name            = "${ source.name }"
+                ovf             = var.vcenter_content_library_ovf
+                destroy         = var.vcenter_content_library_destroy
+                skip_import     = var.vcenter_content_library_skip
+            }
+    }
 
     # Virtual Machine
-    guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016stddexp-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std\nISO: ${ var.os_iso_file }"
+    guest_os_type               = var.vm_guestos_type
+    vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
+    CPU_hot_plug                = var.vm_cpu_hotadd
     RAM                         = var.vm_mem_size
+    RAM_hot_plug                = var.vm_mem_hotadd
     cdrom_type                  = var.vm_cdrom_type
+    remove_cdrom                = var.vm_cdrom_remove
     disk_controller_type        = var.vm_disk_controller
-    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin
@@ -140,8 +85,8 @@ source "vsphere-iso" "win2016stddexp" {
     }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stddexp/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
+    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
+    floppy_files                = [ "config/stddexp/Autounattend.xml", "scripts/win2016-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -163,22 +108,37 @@ source "vsphere-iso" "win2016stdcore" {
     insecure_connection         = var.vcenter_insecure
     datacenter                  = var.vcenter_datacenter
     cluster                     = var.vcenter_cluster
-    folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+    folder                      = var.vcenter_folder
     datastore                   = var.vcenter_datastore
-    remove_cdrom                = var.vm_cdrom_remove
-    convert_to_template         = var.vm_convert_template
+
+    # Content Library and Template Settings
+    convert_to_template         = var.vcenter_convert_template
+    create_snapshot             = var.vcenter_snapshot
+    snapshot_name               = var.vcenter_snapshot_name
+    dynamic "content_library_destination" {
+        for_each = var.vcenter_content_library != null ? [1] : []
+            content {
+                library         = var.vcenter_content_library
+                name            = "${ source.name }"
+                ovf             = var.vcenter_content_library_ovf
+                destroy         = var.vcenter_content_library_destroy
+                skip_import     = var.vcenter_content_library_skip
+            }
+    }
 
     # Virtual Machine
-    guest_os_type               = var.vm_os_type
-    vm_name                     = "win2016stdcore-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 2016 Std Core\nISO: ${ var.os_iso_file }"
+    guest_os_type               = var.vm_guestos_type
+    vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
+    CPU_hot_plug                = var.vm_cpu_hotadd
     RAM                         = var.vm_mem_size
+    RAM_hot_plug                = var.vm_mem_hotadd
     cdrom_type                  = var.vm_cdrom_type
+    remove_cdrom                = var.vm_cdrom_remove
     disk_controller_type        = var.vm_disk_controller
-    tools_upgrade_policy        = var.vm_tools_update
     storage {
         disk_size               = var.vm_disk_size
         disk_thin_provisioned   = var.vm_disk_thin
@@ -189,8 +149,8 @@ source "vsphere-iso" "win2016stdcore" {
     }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml", "../../scripts/win2016-initialise.ps1" ]
+    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
+    floppy_files                = [ "config/stdcore/Autounattend.xml", "scripts/win2016-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -243,7 +203,7 @@ build {
         strip_path          = true
         custom_data         = {
                                 vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                vcenter_folder  = "${ var.vcenter_folder }"
                                 iso_file        = "${ var.os_iso_file }"
                                 build_repo      = "${ var.build_repo }"
                                 build_branch    = "${ var.build_branch }"
