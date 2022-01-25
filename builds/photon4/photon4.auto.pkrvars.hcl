@@ -34,7 +34,7 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-vm_os_type                      = "vmwarePhoton64Guest"
+vm_guestos_type                 = "vmwarePhoton64Guest"
 build_username                  = "REPLACEWITHUSERNAME"
 build_password                  = "REPLACEWITHUSERPASS"
 

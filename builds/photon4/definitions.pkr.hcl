@@ -107,7 +107,7 @@ variable "vm_os_version" {
 }
 
 # Virtual Machine OS Settings
-variable "vm_os_type" {
+variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
 }

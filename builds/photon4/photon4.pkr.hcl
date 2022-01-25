@@ -56,7 +56,7 @@ source "vsphere-iso" "photon4" {
     }
 
     # Virtual Machine
-    guest_os_type               = var.vm_os_type
+    guest_os_type               = var.vm_guestos_type
     vm_name                     = "photon4-${ var.build_branch }-${ local.build_version }"
     notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: ${ var.vm_os_vendor } ${ var.vm_os_version } ${ var.vm_os_type }\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
