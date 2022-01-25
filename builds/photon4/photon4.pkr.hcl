@@ -53,7 +53,6 @@ source "vsphere-iso" "photon4" {
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
             }
-        }
     }
 
     # Virtual Machine
