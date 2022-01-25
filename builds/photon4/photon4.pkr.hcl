@@ -59,7 +59,7 @@ source "vsphere-iso" "photon4" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: ${ var.vm_os_vendor } ${ var.vm_os_version } ${ var.vm_os_type }\nISO: ${ var.os_iso_file }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores

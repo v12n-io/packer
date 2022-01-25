@@ -119,7 +119,7 @@ build {
         strip_path          = true
         custom_data         = {
                                 vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
+                                vcenter_folder  = "${ var.vcenter_folder }"
                                 iso_file        = "${ var.os_iso_file }"
                                 build_repo      = "${ var.build_repo }"
                                 build_branch    = "${ var.build_branch }"
