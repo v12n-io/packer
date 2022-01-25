@@ -95,7 +95,7 @@ source "vsphere-iso" "win11vdi" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                     = [ "source.vsphere-iso.win10vdi" ]
+    sources                     = [ "source.vsphere-iso.win11vdi" ]
 
     # PowerShell Provisioner to install RSAT
     provisioner "powershell" {
