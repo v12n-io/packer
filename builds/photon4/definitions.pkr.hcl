@@ -40,6 +40,7 @@ variable "admin_password" {
     type        = string
     description = "Password for the default administrative user"
     sensitive   = true
+    default     = "password"
 }
 
 # vCenter Configuration
