@@ -116,7 +116,7 @@
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win10vdi-initialise.ps1</CommandLine>
+                    <CommandLine>powershell -ExecutionPolicy Bypass -File a:\win11vdi-initialise.ps1</CommandLine>
                     <Description>Basic configuration</Description>
                     <Order>99</Order>
                 </SynchronousCommand>
@@ -144,5 +144,17 @@
 			<RegisteredOwner>v12n</RegisteredOwner>
 			<RegisteredOrganization>v12n</RegisteredOrganization>
 		</component>
+		<component name="Networking-MPSSVC-Svc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <FirewallGroups>
+                <FirewallGroup wcm:action="add" wcm:keyValue="WindowsRemoteManagement">
+                    <Active>true</Active>
+                    <Group>Windows Remote Management</Group>
+                    <Profile>all</Profile>
+                </FirewallGroup>
+            </FirewallGroups>
+        </component>
+		<component name="Microsoft-Windows-ServerManager-SvrMgrNc" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DoNotOpenServerManagerAtLogon>true</DoNotOpenServerManagerAtLogon>
+        </component>
 	</settings>
 </unattend>
