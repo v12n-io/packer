@@ -20,24 +20,34 @@ Write-Host " - Disabling password expiration for local Administrator user ..."
 Set-LocalUser Administrator -PasswordNeverExpires $true
 
 # Disable TLS 1.0
-#Write-Host " - Disabling TLS 1.0 ..."
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.0" | Out-Null
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Server" | Out-Null
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Client" | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name "Enabled" -Value 0 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name "DisabledByDefault" -Value 1 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "Enabled" -Value 0 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
+Write-Host " - Disabling TLS 1.0 ..."
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.0" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Server" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Client" | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name "Enabled" -Value 0 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Client" -Name "DisabledByDefault" -Value 1 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "Enabled" -Value 0 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
  
 # Disable TLS 1.1
-#Write-Host " - Disabling TLS 1.1 ..."
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.1" | Out-Null
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Server" | Out-Null
-#New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Client" | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name "Enabled" -Value 0 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name "DisabledByDefault" -Value 1 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "Enabled" -Value 0 | Out-Null
-#New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
+Write-Host " - Disabling TLS 1.1 ..."
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.1" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Server" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Client" | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name "Enabled" -Value 0 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Client" -Name "DisabledByDefault" -Value 1 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "Enabled" -Value 0 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
+
+# Enabling TLS 1.2
+Write-Host " - Enabling TLS 1.2 ..."
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.2" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2" -Name "Server" | Out-Null
+New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2" -Name "Client" | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" -Name "Enabled" -Value 1 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Client" -Name "DisabledByDefault" -Value 0 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Name "Enabled" -Value 1 | Out-Null
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Name "DisabledByDefault" -Value 0 | Out-Null
 
 # Importing trusted CA certificates
 Write-Host " - Importing trusted CA certificates ..."
@@ -62,26 +72,26 @@ $targetFolder = "C:\Windows\Web\Wallpaper\Windows"
 Invoke-WebRequest -Uri ($uri + "/" + $sourcefile) -OutFile ($targetFolder + "\" + $sourcefile)
 
 # Install / Configure Bginfo
-Write-Host " - Installing BGinfo ..."
-$uri = ("REPLACEWITHINTRANET" + "/other/bginfo")
-$targetFolder = "C:\Program Files\Bginfo"
-New-Item $targetFolder -Itemtype Directory | Out-Null
-Invoke-WebRequest -Uri ($uri + "/Bginfo.exe") -OutFile $targetFolder\Bginfo.exe
-Invoke-WebRequest -Uri ($uri + "/v12n.bgi") -OutFile $targetFolder\v12n.bgi
-$targetFile          = "$targetFolder\BGinfo.exe"
-$shortcutFile        = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Bginfo.lnk"
-$scriptShell         = New-Object -ComObject WScript.Shell -Verbose
-$shortcut            = $scriptShell.CreateShortcut($shortcutFile)
-$shortcut.TargetPath = $targetFile
-$arg1                = """$targetFolder\v12n.bgi"""
-$arg2                = "/timer:0 /accepteula"
-$shortcut.Arguments  = $arg1 + " " + $arg2
-$shortcut.Save() | Out-Null
+#Write-Host " - Installing BGinfo ..."
+#$uri = ("REPLACEWITHINTRANET" + "/other/bginfo")
+#$targetFolder = "C:\Program Files\Bginfo"
+#New-Item $targetFolder -Itemtype Directory | Out-Null
+#Invoke-WebRequest -Uri ($uri + "/Bginfo.exe") -OutFile $targetFolder\Bginfo.exe
+#Invoke-WebRequest -Uri ($uri + "/v12n.bgi") -OutFile $targetFolder\v12n.bgi
+#$targetFile          = "$targetFolder\BGinfo.exe"
+#$shortcutFile        = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup\Bginfo.lnk"
+#$scriptShell         = New-Object -ComObject WScript.Shell -Verbose
+#$shortcut            = $scriptShell.CreateShortcut($shortcutFile)
+#$shortcut.TargetPath = $targetFile
+#$arg1                = """$targetFolder\v12n.bgi"""
+#$arg2                = "/timer:0 /accepteula"
+#$shortcut.Arguments  = $arg1 + " " + $arg2
+#$shortcut.Save() | Out-Null
 
 # Install Horizon Agent
 Write-Host " - Installing Horizon Agent ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
-$installer = "VMware-Horizon-Agent-x86_64-2103-8.2.0-17771933.exe"
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
+$installer = "VMware-Horizon-Agent-x86_64-2111.1-8.4.0-19066669.exe"
 $listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
 Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop | Out-Null
@@ -97,7 +107,7 @@ Remove-Item C:\$installer -Confirm:$false
 
 # Install Horizon AppVols Agent
 Write-Host " - Installing AppVols Agent ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
 $installer = "App Volumes Agent.msi"
 $appVolumesServer = "REPLACEWITHAPPVOLSERVER"
 $listConfig = "/i ""C:\$installer"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appVolumesServer MANAGER_PORT=443 EnforceSSLCertificateValidation=1"
@@ -115,7 +125,7 @@ Remove-Item C:\$installer -Confirm:$false
 
 # Install FSLogix
 Write-Host " - Installing FSLogix ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2103")
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
 $installer = "FSLogixAppsSetup.exe"
 $listConfig = "/install /quiet /norestart"
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
@@ -131,26 +141,26 @@ Catch {
 Remove-Item C:\$installer -Confirm:$false
 
 # Execute Horizon OS Optimization Tool
-Write-Host " - Executing OS Optimization Tool ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2012/8.1.0")
-$files = @("VMwareOSOptimizationTool.exe","VMwareOSOptimizationTool.exe.config","win10_1809_1909.xml")
-$exe = $files[0]
-$arg = "-o -t " + $files[2]
-ForEach ($file in $files) {
-    Invoke-WebRequest -Uri ($uri + "/" + $file) -OutFile $env:TEMP\$file
-}
-Set-Location $env:TEMP | Out-Null
-Try {
-  Start-Process $exe -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
-}
-Catch {
-  Write-Error "Failed to run OSOT"
-  Write-Error $_.Exception
-  Exit -1 
-}
-ForEach ($file in $files) {
-  Remove-Item -Path $env:TEMP\$file -Confirm:$false
-}
+#Write-Host " - Executing OS Optimization Tool ..."
+#$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
+#$files = @("VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe","VMwareOSOptimizationTool.exe.config","win10_1809_1909.xml")
+#$exe = $files[0]
+#$arg = "-o -t " + $files[2]
+#ForEach ($file in $files) {
+    #Invoke-WebRequest -Uri ($uri + "/" + $file) -OutFile $env:TEMP\$file
+#}
+#Set-Location $env:TEMP | Out-Null
+#Try {
+  #Start-Process $exe -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
+#}
+#Catch {
+  #Write-Error "Failed to run OSOT"
+  #Write-Error $_.Exception
+  #Exit -1 
+#}
+#ForEach ($file in $files) {
+  #Remove-Item -Path $env:TEMP\$file -Confirm:$false
+#}
 
 # Perform sdelete to reduce disk size
 Write-Host " - Executing SDELETE ..."
