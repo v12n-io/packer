@@ -66,9 +66,10 @@ ForEach ($cert in $certRoot,$certIssuing) {
 
 # Download standard wallpaper
 Write-Host " - Importing Wallpaper ..."
+New-Item -Path "C:\Windows\Web" -Name "v12n" -ItemType "directory" | Out-Null
 $uri = ("REPLACEWITHINTRANET" + "/other/bginfo")
-$sourcefile = "v12n-desktop-background.jpg"
-$targetFolder = "C:\Windows\Web\Wallpaper\Windows"
+$sourcefile = "v12n-screen.jpg"
+$targetFolder = "C:\Windows\Web\v12n"
 Invoke-WebRequest -Uri ($uri + "/" + $sourcefile) -OutFile ($targetFolder + "\" + $sourcefile)
 
 # Install / Configure Bginfo
