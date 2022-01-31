@@ -91,15 +91,65 @@ source "vsphere-iso" "win11vdi" {
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
+source "vsphere-clone" "win11vdi-package" {
+    # vCenter
+    vcenter_server              = var.vcenter_server
+    username                    = var.vcenter_username
+    password                    = var.vcenter_password
+    insecure_connection         = var.vcenter_insecure
+    datacenter                  = var.vcenter_datacenter
+    cluster                     = var.vcenter_cluster
+    folder                      = var.vcenter_folder
+    datastore                   = var.vcenter_datastore
+
+    template                    = "${ source.name }-${ var.build_branch }-${ local.build_version }"
+
+    # Content Library and Template Settings
+    convert_to_template         = var.vcenter_convert_template
+    create_snapshot             = var.vcenter_snapshot
+    snapshot_name               = var.vcenter_snapshot_name
+
+    # Virtual Machine
+    vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    firmware                    = var.vm_firmware
+    video_ram                   = var.vm_video_ram
+    vTPM                        = var.vm_vtpm         
+    CPUs                        = var.vm_cpu_sockets
+    cpu_cores                   = var.vm_cpu_cores
+    CPU_hot_plug                = var.vm_cpu_hotadd
+    RAM                         = var.vm_mem_size
+    RAM_hot_plug                = var.vm_mem_hotadd
+    RAM_reserve_all             = false
+    cdrom_type                  = var.vm_cdrom_type
+    disk_controller_type        = var.vm_disk_controller
+    storage {
+        disk_size               = var.vm_disk_size
+        disk_thin_provisioned   = var.vm_disk_thin
+    }
+    network_adapters {
+        network                 = var.vcenter_network
+        network_card            = var.vm_nic_type
+    }
+
+    # Boot and Provisioner
+    boot_order                  = var.vm_boot_order
+    boot_wait                   = var.vm_boot_wait
+    ip_wait_timeout             = var.vm_ip_timeout
+    disable_shutdown            = true
+}
+
 # -------------------------------------------------------------------------- #
 #                             Build Management                               #
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                     = [ "source.vsphere-iso.win11vdi" ]
+    sources                     = [ "source.vsphere-iso.win11vdi",
+                                    "source.vsphere-clone.win11vdi-package" ]
 
     # PowerShell Provisioner to install RSAT
     provisioner "powershell" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         elevated_user           = var.build_username
         elevated_password       = var.build_password
         inline                  = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
@@ -108,12 +158,14 @@ build {
 
     # Restart Provisioner
     provisioner "windows-restart" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         restart_timeout         = "30m"
         restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
     }
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         pause_before            = "30s"
         search_criteria         = "IsInstalled=0"
         filters                 = [ "exclude:$_.Title -like '*VMware*'",
@@ -126,6 +178,7 @@ build {
 
     # Restart Provisioner
     provisioner "windows-restart" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         pause_before            = "30s"
         restart_timeout         = "30m"
         restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
@@ -133,6 +186,7 @@ build {
     
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         elevated_user           = var.build_username
         elevated_password       = var.build_password
         scripts                 = var.script_files
@@ -140,6 +194,7 @@ build {
 
     # PowerShell Provisioner to execute commands
     provisioner "powershell" {
+        only                    = [ "source.vsphere-iso.win11vdi" ]
         elevated_user           = var.build_username
         elevated_password       = var.build_password
         inline                  = var.inline_cmds
