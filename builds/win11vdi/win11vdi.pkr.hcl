@@ -118,7 +118,6 @@ build {
                                     "Get-AppxPackage *HEIFImageExtension* -AllUsers | Remove-AppxPackage | Out-Null",
                                     "Get-AppxPackage *GetHelp* -AllUsers | Remove-AppxPackage | Out-Null",
                                     "Get-AppxPackage *WindowsMaps* -AllUsers | Remove-AppxPackage | Out-Null",
-                                    "Get-AppxPackage *MicrosoftEdge.Stable -AllUsers | Remove-AppxPackage | Out-Null",
                                     "Get-AppxPackage *Todos* -AllUsers | Remove-AppxPackage | Out-Null",
                                     "Get-AppxPackage *ZuneVideo* -AllUsers | Remove-AppxPackage | Out-Null",
                                     "Get-AppxPackage *MicrosoftOfficeHub* -AllUsers | Remove-AppxPackage | Out-Null",
