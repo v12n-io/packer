@@ -111,7 +111,7 @@ Write-Host " - Installing AppVols Agent ..."
 $uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
 $installer = "App Volumes Agent.msi"
 $appVolumesServer = "REPLACEWITHAPPVOLSERVER"
-$listConfig = "/i ""C:\$installer"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appVolumesServer MANAGER_PORT=443 EnforceSSLCertificateValidation=1"
+$listConfig = "/i ""C:\$installer"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appVolumesServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0"
 Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
 Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop | Out-Null
 Try {
