@@ -136,7 +136,7 @@ Remove-Item C:\$installer -Confirm:$false
 Write-Host " - Executing OS Optimization Tool ..."
 $uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
 $exe = "VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe"
-$arg = "-o -t "VMware Templates\Windows 10 and Server 2016 or later" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10"
+$arg = '-o -t "VMware Templates\Windows 10 and Server 2016 or later" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
 Invoke-WebRequest -Uri ($uri + "/" + $exe) -OutFile $env:TEMP\$exe
 Set-Location $env:TEMP | Out-Null
 Try {
