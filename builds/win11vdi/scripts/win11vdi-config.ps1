@@ -133,26 +133,21 @@ Catch {
 Remove-Item C:\$installer -Confirm:$false
 
 # Execute Horizon OS Optimization Tool
-#Write-Host " - Executing OS Optimization Tool ..."
-#$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
-#$files = @("VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe","VMwareOSOptimizationTool.exe.config","win10_1809_1909.xml")
-#$exe = $files[0]
-#$arg = "-o -t " + $files[2]
-#ForEach ($file in $files) {
-    #Invoke-WebRequest -Uri ($uri + "/" + $file) -OutFile $env:TEMP\$file
-#}
-#Set-Location $env:TEMP | Out-Null
-#Try {
-  #Start-Process $exe -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
-#}
-#Catch {
-  #Write-Error "Failed to run OSOT"
-  #Write-Error $_.Exception
-  #Exit -1 
-#}
-#ForEach ($file in $files) {
-  #Remove-Item -Path $env:TEMP\$file -Confirm:$false
-#}
+Write-Host " - Executing OS Optimization Tool ..."
+$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
+$exe = "VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe"
+$arg = "-o -t "VMware Templates\Windows 10 and Server 2016 or later" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10"
+Invoke-WebRequest -Uri ($uri + "/" + $exe) -OutFile $env:TEMP\$exe
+Set-Location $env:TEMP | Out-Null
+Try {
+   Start-Process $exe -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
+}
+Catch {
+   Write-Error "Failed to run OSOT"
+   Write-Error $_.Exception
+   Exit -1 
+}
+Remove-Item -Path $env:TEMP\$exe -Confirm:$false
 
 # Perform sdelete to reduce disk size
 Write-Host " - Executing SDELETE ..."
