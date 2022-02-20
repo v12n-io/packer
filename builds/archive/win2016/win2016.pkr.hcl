@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# Name:         win2019.pkr.hcl
-# Description:  Build definition for Windows 2019
+# Name:         win2016.pkr.hcl
+# Description:  Build definition for Windows 2016
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # Date:         24/01/2022
@@ -36,7 +36,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "win2019stddexp" {
+source "vsphere-iso" "win2016stddexp" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -86,7 +86,7 @@ source "vsphere-iso" "win2019stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stddexp/Autounattend.xml", "scripts/win2019-initialise.ps1" ]
+    floppy_files                = [ "config/stddexp/Autounattend.xml", "scripts/win2016-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -97,10 +97,10 @@ source "vsphere-iso" "win2019stddexp" {
     winrm_username              = var.build_username
     winrm_password              = var.build_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
-    shutdown_timeout            = var.vm_shutdown_timeout
+    shutdown_timeout            = "60m"
 }
 
-source "vsphere-iso" "win2019stdcore" {
+source "vsphere-iso" "win2016stdcore" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -150,7 +150,7 @@ source "vsphere-iso" "win2019stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml", "scripts/win2019-initialise.ps1" ]
+    floppy_files                = [ "config/stdcore/Autounattend.xml", "scripts/win2016-initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -169,8 +169,8 @@ source "vsphere-iso" "win2019stdcore" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.win2019stddexp",
-                                "source.vsphere-iso.win2019stdcore" ]
+    sources                 = [ "source.vsphere-iso.win2016stddexp",
+                                "source.vsphere-iso.win2016stdcore" ]
     
     # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
     provisioner "windows-update" {

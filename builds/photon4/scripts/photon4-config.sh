@@ -31,11 +31,11 @@ sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
 echo ' - Installing trusted SSL CA certificates ...'
 pkiServer="REPLACEWITHPKISERVER"
 pkiCerts=("root.crt" "issuing.crt")
-cd /etc/pki/ca-trust/source/anchors
-for cert in ${pkiCerts[@]}; do
-    sudo wget -q $pkiServer/$cert
-done
-sudo update-ca-trust extract
+#cd /etc/pki/ca-trust/source/anchors
+#for cert in ${pkiCerts[@]}; do
+    #sudo wget -q $pkiServer/$cert
+#done
+#sudo update-ca-trust extract
 
 ## Setup MoTD
 OS=$(head -n 1 /etc/photon-release)

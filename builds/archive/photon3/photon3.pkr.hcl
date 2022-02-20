@@ -1,24 +1,20 @@
 # ----------------------------------------------------------------------------
-# Name:         win10vdi.pkr.hcl
-# Description:  Build definition for Windows 10
+# Name:         photon3.pkr.hcl
+# Description:  Build definition for Photon 3
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/08/2021
+# Date:         29/10/2021
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
 #                           Packer Configuration                             #
 # -------------------------------------------------------------------------- #
 packer {
-    required_version = ">= 1.7.4"
+    required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.1"
+            version = ">= v1.0.2"
             source  = "github.com/hashicorp/vsphere"
-        }
-        windows-update = {
-            version = ">= 0.14.0"
-            source  = "github.com/rgl/windows-update"
         }
     }
 }
@@ -91,6 +87,8 @@ variable "build_repo"               { type = string }
 variable "build_branch"             { type = string }
 
 # HTTP Settings
+variable "http_directory"           { type = string }
+variable "http_file"                { type = string }
 variable "http_port_min"            { type = number }
 variable "http_port_max"            { type = number }
 
@@ -103,7 +101,7 @@ locals {
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "win10vdi" {
+source "vsphere-iso" "photon3" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -114,13 +112,12 @@ source "vsphere-iso" "win10vdi" {
     folder                      = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
     datastore                   = var.vcenter_datastore
     remove_cdrom                = var.vm_cdrom_remove
-    convert_to_template         = false
-    create_snapshot             = true
+    convert_to_template         = var.vm_convert_template
 
     # Virtual Machine
     guest_os_type               = var.vm_os_type
-    vm_name                     = "win10vdi-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Windows 10\nISO: ${ var.os_iso_file }"
+    vm_name                     = "photon3-${ var.build_branch }-${ local.build_version }"
+    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nSRC: ${ var.build_repo } (${ var.build_branch })\nOS: Photon 3 Server\nISO: ${ var.os_iso_file }"
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -137,18 +134,20 @@ source "vsphere-iso" "win10vdi" {
     }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/Autounattend.xml", "../../scripts/win10vdi-initialise.ps1" ]
+    iso_paths                   = ["[${ var.vcenter_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
 
     # Boot and Provisioner
+    http_directory              = var.http_directory
+    http_port_min               = var.http_port_min
+    http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<spacebar>" ]
+    boot_command                = [ "<esc><wait> vmlinuz initrd=initrd.img root=/dev/ram0 loglevel=3 insecure_installation=1 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file } photon.media=cdrom <enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
-    communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
-    shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
+    communicator                = "ssh"
+    ssh_username                = var.build_username
+    ssh_password                = var.build_password
+    shutdown_command            = "sudo shutdown -P now"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
@@ -157,55 +156,13 @@ source "vsphere-iso" "win10vdi" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                     = [ "source.vsphere-iso.win10vdi" ]
-
-    # PowerShell Provisioner to install RSAT
-    provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
-        inline                  = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
-                                    "Get-AppXPackage -AllUsers | Where {($_.name -notlike \"Photos\") -and ($_.Name -notlike \"Calculator\") -and ($_.Name -notlike \"Store\")} | Remove-AppXPackage -ErrorAction SilentlyContinue",
-                                    "Get-AppXProvisionedPackage -Online | Where {($_.DisplayName -notlike \"Photos\") -and ($_.DisplayName -notlike \"Calculator\") -and ($_.DisplayName -notlike \"Store\")} | Remove-AppXProvisionedPackage -Online -ErrorAction SilentlyContinue",
-                                    "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online" ]
-    }
-
-    # Restart Provisioner
-    provisioner "windows-restart" {
-        restart_timeout         = "30m"
-        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
-    }
+    sources                 = [ "source.vsphere-iso.photon3" ]
     
-    # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
-    provisioner "windows-update" {
-        pause_before            = "30s"
-        search_criteria         = "IsInstalled=0"
-        filters                 = [ "exclude:$_.Title -like '*VMware*'",
-                                    "exclude:$_.Title -like '*Preview*'",
-                                    "exclude:$_.Title -like '*Defender*'",
-                                    "exclude:$_.InstallationBehavior.CanRequestUserInput",
-                                    "include:$true" ]
-        restart_timeout         = "120m"
-    }
-
-    # Restart Provisioner
-    provisioner "windows-restart" {
-        pause_before            = "30s"
-        restart_timeout         = "30m"
-        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
-    }   
-    
-    # PowerShell Provisioner to execute scripts 
-    provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
-        scripts                 = var.script_files
-    }
-
-    # PowerShell Provisioner to execute commands
-    provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
-        inline                  = var.inline_cmds
+    # Shell Provisioner to execute scripts 
+    provisioner "shell" {
+        execute_command     = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
+        scripts             = var.script_files
+        valid_exit_codes    = [ 0,245,1535 ]
     }
 
     post-processor "manifest" {
@@ -215,7 +172,6 @@ build {
                                 vcenter_fqdn    = "${ var.vcenter_server }"
                                 vcenter_folder  = "${ var.vcenter_folder }/${ var.os_family }/${ var.os_version }"
                                 iso_file        = "${ var.os_iso_file }"
-                                vdi             = "true"
                                 build_repo      = "${ var.build_repo }"
                                 build_branch    = "${ var.build_branch }"
         }

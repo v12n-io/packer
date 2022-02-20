@@ -1,5 +1,5 @@
 {
-    "hostname": "v12n-photon4",
+    "hostname": "v12n-photon3",
     "password":
         {
             "crypted": false,
@@ -12,11 +12,9 @@
                         {"mountpoint": "/root", "size": 128, "filesystem": "ext4"},
                         {"size": 128, "filesystem": "swap"}
                     ],
-    "bootmode": "efi",
-    "packages": [
-        "minimal",
-        "linux",
-        "initramfs",
+    "bootmode": "bios",
+    "packagelist_file": "packages_minimal.json",
+    "additional_packages": [
         "sudo",
         "vim",
         "cloud-utils"
@@ -36,7 +34,7 @@
         "sed -i 's/PermitRootLogin no/PermitRootLogin yes/g' /etc/ssh/sshd_config",
         "systemctl restart sshd.service"
     ],
-    "linux_flavor": "linux",
+    "install_linux_esx": true,
     "network": {
         "type": "dhcp"
     }    
