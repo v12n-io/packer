@@ -3,108 +3,138 @@ This repository contains Packer builds for many common OSs running as guests on 
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
+* 22.02 - Several major changes:
+            - The folder layout has been updated. All builds are now self-contained; they have all HCL files and scripts under a single directory.
+            - Photon 3, Windows 10 and Windows 2016 have been archived.
+            - Variable definitions have been moved in to separate HCL files to make the main template files smaller and easier to navigate.
 * 21.11 - Minimum Packer version is now 1.7.7. Minimum Packer vSphere plugin is now 1.0.2. Trusted CA cert name changes.
 * 21.10.1 - Added manifest post-processors. Windows Server builds with Desktop Experience renamed to *dexp.
 * 21.10 - Added RHEL 7 template, plus some other fixes.
 * 21.09.1 - Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
 * 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
+  
 ## Structure
 The following is a tree view of the files in this repository:
 ```
 ├── LICENSE
 ├── README.md
-├── builds
-│   ├── common.pkrvars.hcl
-│   ├── vsphere.pkrvars.hcl
-│   ├── centos7
-│   │   ├── centos7.pkr.hcl
-│   │   ├── config
-│   │   │   └── ks.cfg
-│   │   └── variables.auto.pkrvars.hcl
-│   ├── centos8
-│   │   ├── centos8.pkr.hcl
-│   │   ├── config
-│   │   │   └── ks.cfg
-│   │   └── variables.auto.pkrvars.hcl
-│   ├── photon4
-│   │   ├── config
-│   │   │   ├── packages_minimal.json
-│   │   │   └── photon4.json
-│   │   ├── photon4.pkr.hcl
-│   │   └── variables.auto.pkrvars.hcl
-│   ├── rhel7
-│   │   ├── config
-│   │   │   └── ks.cfg
-│   │   ├── rhel7.pkr.hcl
-│   │   └── variables.auto.pkrvars.hcl
-│   ├── rhel8
-│   │   ├── config
-│   │   │   └── ks.cfg
-│   │   ├── rhel8.pkr.hcl
-│   │   └── variables.auto.pkrvars.hcl
-│   ├── win10vdi
-│   │   ├── config
-│   │   │   └── Autounattend.xml
-│   │   ├── variables.auto.pkrvars.hcl
-│   │   └── win10vdi.pkr.hcl
-│   ├── win2016
-│   │   ├── config
-│   │   │   ├── stddexp
-│   │   │   │   └── Autounattend.xml
-│   │   │   └── stdcore
-│   │   │       └── Autounattend.xml
-│   │   ├── variables.auto.pkrvars.hcl
-│   │   └── win2016.pkr.hcl
-│   ├── win2019
-│   │   ├── config
-│   │   │   ├── stddexp
-│   │   │   │   └── Autounattend.xml
-│   │   │   └── stdcore
-│   │   │       └── Autounattend.xml
-│   │   ├── variables.auto.pkrvars.hcl
-│   │   └── win2019.pkr.hcl
-│   └── win2022
-│       ├── config
-│       │   ├── stddexp
-│       │   │   └── Autounattend.xml
-│       │   └── stdcore
-│       │       └── Autounattend.xml
-│       ├── variables.auto.pkrvars.hcl
-│       └── win2022.pkr.hcl
-└── scripts
-    ├── centos7-config.sh
-    ├── centos8-config.sh
-    ├── photon4-config.sh
-    ├── rhel7-config.sh
-    ├── rhel8-config.sh
-    ├── win10vdi-config.ps1
-    ├── win10vdi-initialise.ps1
-    ├── win2016-config.ps1
-    ├── win2016-initialise.ps1
-    ├── win2019-config.ps1
-    ├── win2019-initialise.ps1
-    ├── win2022-config.ps1
-    └── win2022-initialise.ps1
+└── builds
+    ├── archive
+    │   ├── photon3
+    │   │   ├── config
+    │   │   │   ├── packages_minimal.json
+    │   │   │   └── photon3.json
+    │   │   ├── photon3.pkr.hcl
+    │   │   ├── scripts
+    │   │   │   └── photon3-config.sh
+    │   │   └── variables.auto.pkrvars.hcl
+    │   ├── win10vdi
+    │   │   ├── config
+    │   │   │   └── Autounattend.xml
+    │   │   ├── scripts
+    │   │   │   ├── win10vdi-config.ps1
+    │   │   │   └── win10vdi-initialise.ps1
+    │   │   ├── variables.auto.pkrvars.hcl
+    │   │   └── win10vdi.pkr.hcl
+    │   └── win2016
+    │       ├── config
+    │       │   ├── stdcore
+    │       │   │   └── Autounattend.xml
+    │       │   └── stddexp
+    │       │       └── Autounattend.xml
+    │       ├── definitions.pkr.hcl
+    │       ├── scripts
+    │       │   ├── win2016-config.ps1
+    │       │   └── win2016-initialise.ps1
+    │       ├── win2016.auto.pkrvars.hcl
+    │       └── win2016.pkr.hcl
+    ├── centos7
+    │   ├── centos7.auto.pkrvars.hcl
+    │   ├── centos7.pkr.hcl
+    │   ├── config
+    │   │   └── ks.cfg
+    │   ├── definitions.pkr.hcl
+    │   └── scripts
+    │       └── centos7-config.sh
+    ├── centos8
+    │   ├── centos8.auto.pkrvars.hcl
+    │   ├── centos8.pkr.hcl
+    │   ├── config
+    │   │   └── ks.cfg
+    │   ├── definitions.pkr.hcl
+    │   └── scripts
+    │       └── centos8-config.sh
+    ├── common.pkrvars.hcl
+    ├── photon4
+    │   ├── config
+    │   │   └── photon4.json
+    │   ├── definitions.pkr.hcl
+    │   ├── photon4.auto.pkrvars.hcl
+    │   ├── photon4.pkr.hcl
+    │   └── scripts
+    │       └── photon4-config.sh
+    ├── rhel7
+    │   ├── config
+    │   │   └── ks.cfg
+    │   ├── definitions.pkr.hcl
+    │   ├── rhel7.auto.pkrvars.hcl
+    │   ├── rhel7.pkr.hcl
+    │   └── scripts
+    │       └── rhel7-config.sh
+    ├── rhel8
+    │   ├── config
+    │   │   └── ks.cfg
+    │   ├── definitions.pkr.hcl
+    │   ├── rhel8.auto.pkrvars.hcl
+    │   ├── rhel8.pkr.hcl
+    │   └── scripts
+    │       └── rhel8-config.sh
+    ├── vsphere.pkrvars.hcl
+    ├── win11vdi
+    │   ├── config
+    │   │   └── Autounattend.xml
+    │   ├── definitions.pkr.hcl
+    │   ├── scripts
+    │   │   ├── win11vdi-config.ps1
+    │   │   └── win11vdi-initialise.ps1
+    │   ├── win11vdi.auto.pkrvars.hcl
+    │   └── win11vdi.pkr.hcl
+    ├── win2019
+    │   ├── config
+    │   │   ├── stdcore
+    │   │   │   └── Autounattend.xml
+    │   │   └── stddexp
+    │   │       └── Autounattend.xml
+    │   ├── definitions.pkr.hcl
+    │   ├── scripts
+    │   │   ├── win2019-config.ps1
+    │   │   └── win2019-initialise.ps1
+    │   ├── win2019.auto.pkrvars.hcl
+    │   └── win2019.pkr.hcl
+    └── win2022
+        ├── config
+        │   ├── stdcore
+        │   │   └── Autounattend.xml
+        │   └── stddexp
+        │       └── Autounattend.xml
+        ├── definitions.pkr.hcl
+        ├── scripts
+        │   ├── win2022-config.ps1
+        │   └── win2022-initialise.ps1
+        ├── win2022.auto.pkrvars.hcl
+        └── win2022.pkr.hcl
 ```
-
-The files are divided in to two main directories.
-* The "builds" directory contains the build definitions and variables used by Packer.
-* The "scripts" directory contains scripts that are used to further customise the builds.
 
 All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
 Within the "builds" folder there are two variable definitions files that provide common values to all of the builds:
 #### common.pkrvars.hcl
 This file contains variables that configure some of the Packer functionality and some elements of build customisation. The values in this file can be altered if desired.
 ```
-# Boot Settings
-vm_boot_wait        = "2s"
-vm_boot_order       = "disk,cdrom"
-
 # Build Settings
 build_repo          = "https://github.com/v12n.io/packer"
 build_branch        = "BUILD_BRANCH"
 
-# Packer Settings
+# Packer HTTP Settings
 http_port_min       = 8000
 http_port_max       = 8050
 ```
@@ -113,40 +143,44 @@ http_port_max       = 8050
 This file contains variables that tell Packer how to connect to vCenter and common vSphere objects such as datastores etc. The values in this file should be customised to match your environment.
 ```
 # vCenter Settings
-vcenter_username        = "VCENTER_USER"
-vcenter_password        = "VCENTER_PASS"
+vcenter_username                = "VCENTER_USER"
+vcenter_password                = "VCENTER_PASS"
 
 # vCenter Configuration
-vcenter_server          = "VCENTER_SERVER"
-vcenter_datacenter      = "VCENTER_DC"
-vcenter_cluster         = "VCENTER_CLUSTER"
-vcenter_datastore       = "VCENTER_DS"
-vcenter_network         = "VCENTER_NETWORK"
-vcenter_iso_datastore   = "VCENTER_ISO_DS"
-vcenter_insecure        = true
-vcenter_folder          = "Templates"
+vcenter_server                  = "VCENTER_SERVER"
+vcenter_datacenter              = "VCENTER_DC"
+vcenter_cluster                 = "VCENTER_CLUSTER"
+vcenter_datastore               = "VCENTER_DS"
+vcenter_network                 = "VCENTER_NETWORK"
+os_iso_datastore                = "VCENTER_ISO_DS"
+vcenter_insecure                = true
+vcenter_folder                  = "Templates"
 
 # VM Settings
-vm_cdrom_remove         = true
-vm_convert_template     = true
-vm_ip_timeout           = "20m"
-vm_shutdown_timeout     = "15m"
+vm_ip_timeout                   = "20m"
+vm_shutdown_timeout             = "15m"
+
+# Content Library Settings
+vcenter_content_library         = "VCENTER_CL"
 ```
 
 ### Builds
-Each subfolder contains the build definition and build-specific variables for an OS type and version. As of September 2021 (version 21.09), the following builds are available:
+Each subfolder contains the build definition and build-specific variables for an OS type and version. As of February 2022 (version 22.02), the following builds are available:
 * CentOS 7
 * CentOS 8
 * Photon 4
 * RedHat 7
 * RedHat 8
-* Windows 10
-* Windows Server 2016 (Desktop Experience and Core)
+* Windows 11
 * Windows Server 2019 (Desktop Experience and Core)
 * Windows Server 2022 (Desktop Experience and Core)
 
 Each build contains the following:
-#### variables.auto.pkrvars.hcl
+
+#### definitions.pkr.hcl
+This file defines the variables used in the build as well as providing a description and, in some cases, a default value.
+
+#### {build}.auto.pkrvars.hcl
 This file is automatically processed by Packer and the variable values made available to the build. An example of the contents of one of these files is provided below.
 ```
 # ISO Settings
@@ -222,19 +256,24 @@ This folder contains a file (or sometimes more than one file) that allows the se
 * Administrative user passwords
 
 All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information replaced with placeholder text. Luckily those placeholders can be easily changed. That topic will be covered later.
-### Scripts
+
+#### scripts
 The scripts in the "scripts" directory undertake a number of customisation operations. There is no environment specific information held in any of the scripts (hopefully). They may need editing before they are used or customisation is possible by replacing pieces of placholder text. It depends on your use-case!
+
 ## Placeholders
-To make the various scripts more portable, key configuration items are represented by placeholder text strings. These can easily be replaced with a smattering of grep and sed.
+To make the various scripts and files more portable, key configuration items are represented by placeholder text strings. These can easily be replaced with a smattering of grep and sed.
+
 ### Example: Replace Admin user password
 ```
 grep -rl 'REPLACEWITHADMINPASS' | xargs sed -i 's/REPLACEWITHADMINPASS/<password>/g'
 ```
+
 ### Example: Replace user credentials
 ```
 grep -rl 'REPLACEWITHUSERNAME' | xargs sed -i 's/REPLACEWITHUSERNAME/<nonrootuser>/g'
 grep -rl 'REPLACEWITHUSERPASS' | xargs sed -i 's/REPLACEWITHUSERPASS/<password>/g'
 ```
+
 ### All placeholder replacements
 The following list defines all of the placeholder strings that can be replaced using the two examples above as a guide to customise the builds and scripts for your environment:
 * REPLACEWITHADMINPASS -- Password for root or Administrator users
