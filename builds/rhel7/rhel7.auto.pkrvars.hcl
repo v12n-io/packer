@@ -3,7 +3,7 @@
 # Description:  Common vSphere variables for RHEL 7 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
+# Date:         04/03/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -15,6 +15,9 @@ vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "RHEL"
 vm_os_version                   = "7.9"
+vm_os_language                  = "en_GB"
+vm_os_keyboard                  = "gb"
+vm_os_timezone                  = "UTC"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
@@ -23,7 +26,7 @@ vm_cpu_cores                    = 1
 vm_mem_size                     = 2048
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
-vm_disk_size                    = 16384
+vm_disk_size                    = 32768
 vm_disk_thin                    = true
 vm_cdrom_type                   = "sata"
 

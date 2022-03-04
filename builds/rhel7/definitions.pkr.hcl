@@ -116,6 +116,18 @@ variable "vm_os_version" {
     type        = string
     description = "The major version of the OS (e.g. '7', '8.5', '2022')"
 }
+variable "vm_os_language" {
+    type        = string
+    description = "OS language to be configured"
+}
+variable "vm_os_keyboard" {
+    type        = string
+    description = "OS keyboard layout to be configured"
+}
+variable "vm_os_timezone" {
+    type        = string
+    description = "OS timezone to be configured"
+}
 
 # Virtual Machine OS Settings
 variable "vm_guestos_type" {
