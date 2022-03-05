@@ -46,7 +46,7 @@ sudo groupadd REPLACEWITHANSIBLEUSERNAME
 sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
 echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
 sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+sudo tee /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys >/dev/null << EOF
 REPLACEWITHANSIBLEUSERKEY
 EOF
 sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
@@ -73,7 +73,7 @@ sudo sed -i "/disable_vmware_customization: true/a\\\nnetwork:\n  config: disabl
 sudo sed -i "s@^[a-z] /tmp @# &@" /usr/lib/tmpfiles.d/tmp.conf
 sudo sed -i "/^After=vgauthd.service/a After=dbus.service" /usr/lib/systemd/system/vmtoolsd.service
 sudo sed -i '/^disable_vmware_customization: true/a\datasource_list: [OVF]' /etc/cloud/cloud.cfg
-sudo cat << RUNONCE > /etc/cloud/runonce.sh
+sudo tee /etc/cloud/runonce.sh >/dev/null << RUNONCE
 #!/bin/bash
 # Runonce script for cloud-init on vSphere
 # @author Michael Poore
@@ -102,7 +102,7 @@ echo ' - Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/redhat-release)
 DOCS="https://github.com/v12n-io/packer"
-sudo cat << ISSUE > /etc/issue
+sudo tee /etc/issue >/dev/null << ISSUE
 
            {__   {__ {_            
 {__     {__ {__ {_     {__{__ {__  
@@ -136,12 +136,12 @@ sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 sudo cloud-init clean --logs --seed
 sudo rm -f /etc/ssh/ssh_host_*
 if [ -f /var/log/audit/audit.log ]; then
-    sudo cat /dev/null > /var/log/audit/audit.log
+    echo '' | sudo tee /var/log/audit/audit.log >/dev/null
 fi
 if [ -f /var/log/wtmp ]; then
-    sudo cat /dev/null > /var/log/wtmp
+    echo '' | sudo tee /var/log/wtmp >/dev/null
 fi
 if [ -f /var/log/lastlog ]; then
-    sudo cat /dev/null > /var/log/lastlog
+    echo '' | sudo tee /var/log/lastlog >/dev/null
 fi
 echo ' - Configuration complete'

@@ -116,6 +116,18 @@ variable "vm_os_version" {
     type        = string
     description = "The major version of the OS (e.g. '7', '8.5', '2022')"
 }
+variable "vm_os_language" {
+    type        = string
+    description = "OS language to be configured"
+}
+variable "vm_os_keyboard" {
+    type        = string
+    description = "OS keyboard layout to be configured"
+}
+variable "vm_os_timezone" {
+    type        = string
+    description = "OS timezone to be configured"
+}
 
 # Virtual Machine OS Settings
 variable "vm_guestos_type" {
@@ -277,15 +289,6 @@ variable "build_branch" {
 }
 
 # HTTP Settings
-variable "http_directory" {
-    type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
-}
-variable "http_file" {
-    type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
-}
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"
