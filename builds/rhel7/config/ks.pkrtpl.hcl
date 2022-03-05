@@ -36,9 +36,9 @@ part /boot --fstype xfs --size=1024
 part /boot/efi --fstype vfat --size=512
 part pv.01 --size=1024 --grow
 volgroup sysvg pv.01
-logvol swap --fstype swap --name=lv_swap --vgname=sysvg --size=8192
-logvol / --fstype xfs --name=lv_root --vgname=sysvg --size=16384
-logvol /tmp --fstype xfs --name=lv_tmp --vgname=sysvg --size=4096
+logvol swap --fstype swap --name=lvswap --vgname=sysvg --size=8192
+logvol / --fstype xfs --name=lvroot --vgname=sysvg --size=16384
+logvol /tmp --fstype xfs --name=lvtmp --vgname=sysvg --size=4096
 
 # Software / Package Settings
 skipx
@@ -61,8 +61,6 @@ unzip
 
 # Post-Install Commands
 %post
-/usr/sbin/subscription-manager register --username ${rhsm_user} --password ${rhsm_pass} --autosubscribe --force
-dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm -y
 echo "${build_username} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/${build_username}
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 %end

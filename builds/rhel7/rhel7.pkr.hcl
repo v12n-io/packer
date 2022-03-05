@@ -30,8 +30,6 @@ locals {
                                     {
                                         build_username      = var.build_username
                                         build_password      = var.build_password
-                                        rhsm_user           = var.rhsm_user
-                                        rhsm_pass           = var.rhsm_pass
                                         vm_os_language      = var.vm_os_language
                                         vm_os_keyboard      = var.vm_os_keyboard
                                         vm_os_timezone      = var.vm_os_timezone

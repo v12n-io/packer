@@ -46,7 +46,3 @@ rhsm_pass                       = "REPLACEWITHRHSMPASS"
 # Provisioner Settings
 script_files                    = [ "scripts/rhel7-config.sh" ]
 inline_cmds                     = []
-
-# Packer Settings
-http_directory                  = "config"
-http_file                       = "ks.cfg"
