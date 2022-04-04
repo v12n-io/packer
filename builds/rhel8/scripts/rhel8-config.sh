@@ -8,9 +8,9 @@ export RHSM_USER
 export RHSM_PASS
 
 ## Disable IPv6
-echo ' - Disabling IPv6 in grub ...'
-sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
-sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
+#echo ' - Disabling IPv6 in grub ...'
+#sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+#sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 ## Register with RHSM
 echo ' - Registering with RedHat Subscription Manager ...'
@@ -52,6 +52,7 @@ EOF
 sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
 sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
 sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+echo "REPLACEWITHANSIBLEUSERNAME ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/REPLACEWITHANSIBLEUSERNAME
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
