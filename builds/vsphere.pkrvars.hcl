@@ -7,16 +7,16 @@
 # ----------------------------------------------------------------------------
 
 # vCenter Settings
-vcenter_username                = "VCENTER_USER"
+vcenter_username                = "administrator@vsphere.local"
 vcenter_password                = "VCENTER_PASS"
 
 # vCenter Configuration
-vcenter_server                  = "VCENTER_SERVER"
-vcenter_datacenter              = "VCENTER_DC"
-vcenter_cluster                 = "VCENTER_CLUSTER"
-vcenter_datastore               = "VCENTER_DS"
-vcenter_network                 = "VCENTER_NETWORK"
-os_iso_datastore                = "VCENTER_ISO_DS"
+vcenter_server                  = "vc.hcdlab.local"
+vcenter_datacenter              = "HCD-DC01"
+vcenter_cluster                 = "HCD-Cluster02"
+vcenter_datastore               = "datastore4-r620"
+vcenter_network                 = "dvpg-vlan-20"
+os_iso_datastore                = "datastore2-r620"
 vcenter_insecure                = true
 vcenter_folder                  = "Templates"
 

@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "en_windows_server_2016_updated_feb_2018_x64_dvd_11636692.iso"
-os_iso_path                     = "os/microsoft/server/2016"
+os_iso_file                     = "win2016.iso"
+os_iso_path                     = "ISO"
 
 # OS Meta Data
 vm_os_family                    = "Windows"
@@ -19,19 +19,19 @@ vm_os_version                   = "2016"
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
 vm_cpu_sockets                  = 2
-vm_cpu_cores                    = 1
-vm_mem_size                     = 2048
+vm_cpu_cores                    = 4
+vm_mem_size                     = 4096
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
-vm_disk_size                    = 51200
+vm_disk_size                    = 40000
 vm_disk_thin                    = true
 vm_cdrom_type                   = "sata"
 
 # VM Settings
 vm_cdrom_remove                 = true
-vcenter_convert_template        = false
-vcenter_content_library_ovf     = true
-vcenter_content_library_destroy = true
+vcenter_convert_template        = true
+vcenter_content_library_ovf     = false
+vcenter_content_library_destroy = false
 
 # VM OS Settings
 vm_guestos_type                 = "windows9Server64Guest"
