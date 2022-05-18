@@ -49,18 +49,18 @@ source "vsphere-iso" "win2016stddexp" {
 
     # Content Library and Template Settings
     convert_to_template         = var.vcenter_convert_template
-    create_snapshot             = var.vcenter_snapshot
-    snapshot_name               = var.vcenter_snapshot_name
-    dynamic "content_library_destination" {
-        for_each = var.vcenter_content_library != null ? [1] : []
-            content {
-                library         = var.vcenter_content_library
-                name            = "${ source.name }"
-                ovf             = var.vcenter_content_library_ovf
-                destroy         = var.vcenter_content_library_destroy
-                skip_import     = var.vcenter_content_library_skip
-            }
-    }
+#     create_snapshot             = var.vcenter_snapshot
+#     snapshot_name               = var.vcenter_snapshot_name
+#     dynamic "content_library_destination" {
+#         for_each = var.vcenter_content_library != null ? [1] : []
+#             content {
+#                 library         = var.vcenter_content_library
+#                 name            = "${ source.name }"
+#                 ovf             = var.vcenter_content_library_ovf
+#                 destroy         = var.vcenter_content_library_destroy
+#                 skip_import     = var.vcenter_content_library_skip
+#             }
+#     }
 
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
@@ -113,18 +113,18 @@ source "vsphere-iso" "win2016stdcore" {
 
     # Content Library and Template Settings
     convert_to_template         = var.vcenter_convert_template
-    create_snapshot             = var.vcenter_snapshot
-    snapshot_name               = var.vcenter_snapshot_name
-    dynamic "content_library_destination" {
-        for_each = var.vcenter_content_library != null ? [1] : []
-            content {
-                library         = var.vcenter_content_library
-                name            = "${ source.name }"
-                ovf             = var.vcenter_content_library_ovf
-                destroy         = var.vcenter_content_library_destroy
-                skip_import     = var.vcenter_content_library_skip
-            }
-    }
+#   create_snapshot             = var.vcenter_snapshot
+#   snapshot_name               = var.vcenter_snapshot_name
+#   dynamic "content_library_destination" {
+#       for_each = var.vcenter_content_library != null ? [1] : []
+#           content {
+#               library         = var.vcenter_content_library
+#               name            = "${ source.name }"
+#               ovf             = var.vcenter_content_library_ovf
+#               destroy         = var.vcenter_content_library_destroy
+#               skip_import     = var.vcenter_content_library_skip
+#           }
+#   }
 
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
