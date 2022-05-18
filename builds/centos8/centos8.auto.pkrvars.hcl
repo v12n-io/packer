@@ -7,19 +7,19 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "CentOS-8.5.2111-x86_64-dvd1.iso"
-os_iso_path                     = "os/centos/8"
+os_iso_file                     = "CentOS-8.3.2011-x86_64-dvd1.iso"
+os_iso_path                     = "ISO"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "CentOS"
-vm_os_version                   = "8.5"
+vm_os_version                   = "8.3"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
 vm_cpu_sockets                  = 1
-vm_cpu_cores                    = 1
+vm_cpu_cores                    = 2
 vm_mem_size                     = 2048
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
