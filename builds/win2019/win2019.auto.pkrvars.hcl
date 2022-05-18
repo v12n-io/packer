@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "en-us_windows_server_2019_updated_aug_2021_x64_dvd_a6431a28.iso"
-os_iso_path                     = "os/microsoft/server/2019"
+os_iso_file                     = "en_windows_server_2019_x64_dvd_3c2cf1202.iso"
+os_iso_path                     = "ISO"
 
 # OS Meta Data
 vm_os_family                    = "Windows"
@@ -19,11 +19,11 @@ vm_os_version                   = "2019"
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
 vm_cpu_sockets                  = 2
-vm_cpu_cores                    = 1
-vm_mem_size                     = 2048
+vm_cpu_cores                    = 4
+vm_mem_size                     = 8192
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
-vm_disk_size                    = 51200
+vm_disk_size                    = 40000
 vm_disk_thin                    = true
 vm_cdrom_type                   = "sata"
 
