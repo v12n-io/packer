@@ -91,7 +91,7 @@ curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/m
 
 ## Setup MoTD
 echo ' - Setting login banner ...'
-BUILDDATE=$(date +"%y%m")
+BUILDDATE=$(date +"%y%m%d")
 RELEASE=$(cat /etc/centos-release)
 #DOCS="https://github.com/v12n-io/packer"
 sudo cat << ISSUE > /etc/issue
