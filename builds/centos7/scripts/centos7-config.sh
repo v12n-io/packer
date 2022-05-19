@@ -89,25 +89,38 @@ echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | 
 echo ' - Installing cloud-init-vmware-guestinfo ...'
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
-# ## Setup MoTD
-# echo ' - Setting login banner ...'
-# BUILDDATE=$(date +"%y%m")
-# RELEASE=$(cat /etc/centos-release)
-# DOCS="https://github.com/v12n-io/packer"
-# sudo cat << ISSUE > /etc/issue
+## Setup MoTD
+echo ' - Setting login banner ...'
+BUILDDATE=$(date +"%y%m")
+RELEASE=$(cat /etc/centos-release)
+#DOCS="https://github.com/v12n-io/packer"
+sudo cat << ISSUE > /etc/issue
 
- #__  __ ____  ____  
- #|  \/  |  _ \|  _ \ 
- #| \  / | |_) | |_) |
- #| |\/| |  _ <|  _ < 
- #| |  | | |_) | |_) |
- #|_|  |_|____/|____/                                                             
- #                                                              
-        # $RELEASE ($BUILDDATE)
-        # $DOCS
+ __  __ ____  ____  
+ |  \/  |  _ \|  _ \ 
+ | \  / | |_) | |_) |
+ | |\/| |  _ <|  _ < 
+ | |  | | |_) | |_) |
+ |_|  |_|____/|____/                                                             
+                                                              
+        $RELEASE ($BUILDDATE)
 
-# ISSUE
-# sudo ln -sf /etc/issue /etc/issue.net
+ISSUE
+sudo ln -sf /etc/issue /etc/issue.net
+
+echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config
+
+sudo cat << ISSUE > /etc/motd
+
+ __  __ ____  ____  
+ |  \/  |  _ \|  _ \ 
+ | \  / | |_) | |_) |
+ | |\/| |  _ <|  _ < 
+ | |  | | |_) | |_) |
+ |_|  |_|____/|____/                                                             
+                                                              
+        $RELEASE ($BUILDDATE)
+ISSUE
 
 ## Final cleanup actions
 echo ' - Executing final cleanup tasks ...'
