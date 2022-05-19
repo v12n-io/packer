@@ -19,8 +19,8 @@ sudo yum install -y -q ca-certificates &>/dev/null
 sudo yum install -y -q cloud-init perl python-pip cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
-echo ' - Adding repositories ...'
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+# echo ' - Adding repositories ...'
+# sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
 echo ' - Clearing yum cache ...'
@@ -95,7 +95,6 @@ BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/centos-release)
 #DOCS="https://github.com/v12n-io/packer"
 sudo cat << ISSUE > /etc/issue
-
  __  __ ____  ____  
  |  \/  |  _ \|  _ \ 
  | \  / | |_) | |_) |
@@ -111,7 +110,6 @@ sudo ln -sf /etc/issue /etc/issue.net
 echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config
 
 sudo cat << ISSUE > /etc/motd
-
  __  __ ____  ____  
  |  \/  |  _ \|  _ \ 
  | \  / | |_) | |_) |

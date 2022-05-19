@@ -23,7 +23,7 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version               = formatdate("YY.MM", timestamp())
+    build_version               = formatdate("YYYY.MM.DD", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     config_file                 = {
                                     "/ks.cfg" = templatefile("config/ks.pkrtpl.hcl",

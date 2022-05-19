@@ -7,8 +7,8 @@
 # ----------------------------------------------------------------------------
 
 # Build Settings
-build_repo          = "https://github.com/v12n.io/packer"
-build_branch        = "BUILD_BRANCH"
+build_repo          = "https://vcf.local"
+build_branch        = "DEV"
 
 # Packer HTTP Settings
 http_port_min       = 8000
