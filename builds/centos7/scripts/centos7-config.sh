@@ -32,28 +32,28 @@ sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
 sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
-## Create Ansible user
-echo ' - Creating local user for Ansible integration ...'
-sudo groupadd REPLACEWITHANSIBLEUSERNAME
-sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
-echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-REPLACEWITHANSIBLEUSERKEY
-EOF
-sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+# ## Create Ansible user
+# echo ' - Creating local user for Ansible integration ...'
+# sudo groupadd REPLACEWITHANSIBLEUSERNAME
+# sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
+# echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
+# sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
+# sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+# REPLACEWITHANSIBLEUSERKEY
+# EOF
+# sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
+# sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
+# sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
 
-## Install trusted SSL CA certificates
-echo ' - Installing trusted SSL CA certificates ...'
-pkiServer="REPLACEWITHPKISERVER"
-pkiCerts=("root.crt" "issuing.crt")
-cd /etc/pki/ca-trust/source/anchors
-for cert in ${pkiCerts[@]}; do
-    sudo wget -q $pkiServer/$cert
-done
-sudo update-ca-trust extract
+# ## Install trusted SSL CA certificates
+# echo ' - Installing trusted SSL CA certificates ...'
+# pkiServer="REPLACEWITHPKISERVER"
+# pkiCerts=("root.crt" "issuing.crt")
+# cd /etc/pki/ca-trust/source/anchors
+# for cert in ${pkiCerts[@]}; do
+    # sudo wget -q $pkiServer/$cert
+# done
+# sudo update-ca-trust extract
 
 ## Configure cloud-init
 echo ' - Installing cloud-init ...'
@@ -95,14 +95,13 @@ curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/m
 # RELEASE=$(cat /etc/centos-release)
 # DOCS="https://github.com/v12n-io/packer"
 # sudo cat << ISSUE > /etc/issue
-
-           # {__   {__ {_            
-# {__     {__ {__ {_     {__{__ {__  
- # {__   {__  {__      {__   {__  {__
-  # {__ {__   {__    {__     {__  {__
-   # {_{__    {__  {__       {__  {__
-    # {__    {____{________ {___  {__
-        
+ __  __ ____  ____  
+ |  \/  |  _ \|  _ \ 
+ | \  / | |_) | |_) |
+ | |\/| |  _ <|  _ < 
+ | |  | | |_) | |_) |
+ |_|  |_|____/|____/                                                             
+                                                               
         # $RELEASE ($BUILDDATE)
         # $DOCS
 
