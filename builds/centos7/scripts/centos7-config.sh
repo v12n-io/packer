@@ -95,13 +95,14 @@ curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/m
 # RELEASE=$(cat /etc/centos-release)
 # DOCS="https://github.com/v12n-io/packer"
 # sudo cat << ISSUE > /etc/issue
- __  __ ____  ____  
- |  \/  |  _ \|  _ \ 
- | \  / | |_) | |_) |
- | |\/| |  _ <|  _ < 
- | |  | | |_) | |_) |
- |_|  |_|____/|____/                                                             
-                                                               
+
+ #__  __ ____  ____  
+ #|  \/  |  _ \|  _ \ 
+ #| \  / | |_) | |_) |
+ #| |\/| |  _ <|  _ < 
+ #| |  | | |_) | |_) |
+ #|_|  |_|____/|____/                                                             
+ #                                                              
         # $RELEASE ($BUILDDATE)
         # $DOCS
 
