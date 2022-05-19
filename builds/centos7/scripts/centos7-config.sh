@@ -89,25 +89,25 @@ echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | 
 echo ' - Installing cloud-init-vmware-guestinfo ...'
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
-## Setup MoTD
-echo ' - Setting login banner ...'
-BUILDDATE=$(date +"%y%m")
-RELEASE=$(cat /etc/centos-release)
-DOCS="https://github.com/v12n-io/packer"
-sudo cat << ISSUE > /etc/issue
+# ## Setup MoTD
+# echo ' - Setting login banner ...'
+# BUILDDATE=$(date +"%y%m")
+# RELEASE=$(cat /etc/centos-release)
+# DOCS="https://github.com/v12n-io/packer"
+# sudo cat << ISSUE > /etc/issue
 
-           {__   {__ {_            
-{__     {__ {__ {_     {__{__ {__  
- {__   {__  {__      {__   {__  {__
-  {__ {__   {__    {__     {__  {__
-   {_{__    {__  {__       {__  {__
-    {__    {____{________ {___  {__
+           # {__   {__ {_            
+# {__     {__ {__ {_     {__{__ {__  
+ # {__   {__  {__      {__   {__  {__
+  # {__ {__   {__    {__     {__  {__
+   # {_{__    {__  {__       {__  {__
+    # {__    {____{________ {___  {__
         
-        $RELEASE ($BUILDDATE)
-        $DOCS
+        # $RELEASE ($BUILDDATE)
+        # $DOCS
 
-ISSUE
-sudo ln -sf /etc/issue /etc/issue.net
+# ISSUE
+# sudo ln -sf /etc/issue /etc/issue.net
 
 ## Final cleanup actions
 echo ' - Executing final cleanup tasks ...'
