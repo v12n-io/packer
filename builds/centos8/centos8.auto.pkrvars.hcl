@@ -7,20 +7,20 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "CentOS-8.3.2011-x86_64-dvd1.iso"
+os_iso_file                     = "CentOS-8.5.2111-x86_64-dvd1.iso"
 os_iso_path                     = "ISO"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "CentOS"
-vm_os_version                   = "8.3"
+vm_os_version                   = "8.5"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
-vm_cpu_sockets                  = 1
-vm_cpu_cores                    = 2
-vm_mem_size                     = 2048
+vm_cpu_sockets                  = 2
+vm_cpu_cores                    = 4
+vm_mem_size                     = 4096
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
 vm_disk_size                    = 16384
@@ -29,9 +29,9 @@ vm_cdrom_type                   = "sata"
 
 # VM Settings
 vm_cdrom_remove                 = true
-vcenter_convert_template        = false
-vcenter_content_library_ovf     = true
-vcenter_content_library_destroy = true
+vcenter_convert_template        = true
+vcenter_content_library_ovf     = false
+vcenter_content_library_destroy = false
 
 # VM OS Settings
 vm_guestos_type                 = "centos8_64Guest"
