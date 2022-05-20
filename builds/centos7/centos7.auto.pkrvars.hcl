@@ -29,9 +29,9 @@ vm_cdrom_type                   = "sata"
 
 # VM Settings
 vm_cdrom_remove                 = true
-vcenter_convert_template        = true
-vcenter_content_library_ovf     = false
-vcenter_content_library_destroy = false
+vcenter_convert_template        = false
+vcenter_content_library_ovf     = true
+vcenter_content_library_destroy = true
 
 # VM OS Settings
 vm_guestos_type                 = "centos7_64Guest"
