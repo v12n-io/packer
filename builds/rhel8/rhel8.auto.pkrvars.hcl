@@ -8,7 +8,7 @@
 
 # ISO Settings
 os_iso_file                     = "rhel-8.5-x86_64-dvd.iso"
-os_iso_path                     = "os/redhat/8"
+os_iso_path                     = "ISO"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
@@ -18,9 +18,9 @@ vm_os_version                   = "8.5"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
-vm_cpu_sockets                  = 1
-vm_cpu_cores                    = 1
-vm_mem_size                     = 2048
+vm_cpu_sockets                  = 2
+vm_cpu_cores                    = 4
+vm_mem_size                     = 4096
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
 vm_disk_size                    = 16384
