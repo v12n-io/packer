@@ -23,7 +23,7 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM.DD-hh.mm", timestamp())
+    build_version   = formatdate("YYYY.MM.DD-hh.mm", timestamp())
     build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
 }
 
