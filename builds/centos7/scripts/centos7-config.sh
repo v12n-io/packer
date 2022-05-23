@@ -29,7 +29,7 @@ sudo grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg &>/dev/null
 # ## Configure SSH server
 # echo ' - Configuring SSH server daemon ...'
 # sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
-# sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+# sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication no/g" /etc/ssh/sshd_config
 # sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 # # ## Create Ansible user

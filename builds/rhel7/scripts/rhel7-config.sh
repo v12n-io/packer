@@ -37,6 +37,7 @@ sudo yum clean all &>/dev/null
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
 sudo sed -i '/^PermitRootLogin/s/no/yes/' /etc/ssh/sshd_config
+sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication no/g" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 # ## Create Ansible user
@@ -65,6 +66,7 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/
 ## Configure cloud-init
 echo ' - Installing cloud-init ...'
 sudo touch /etc/cloud/cloud-init.disabled
+sudo sed -i 's/disable_root: 1/disable_root: 0/g' /etc/cloud/cloud.cfg
 sudo sed -i 's/^ssh_pwauth:   0/ssh_pwauth:   1/g' /etc/cloud/cloud.cfg
 sudo sed -i -e 1,3d /etc/cloud/cloud.cfg
 sudo sed -i "s/^disable_vmware_customization: false/disable_vmware_customization: true/" /etc/cloud/cloud.cfg
