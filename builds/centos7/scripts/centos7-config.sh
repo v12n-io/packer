@@ -5,8 +5,8 @@
 
 ## Disable IPv6
 echo ' - Disabling IPv6 in grub ...'
-# sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
-# sudo grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg &>/dev/null
+sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+sudo grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg &>/dev/null
 
 # ## Apply updates
 # echo ' - Applying package updates ...'
