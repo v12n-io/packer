@@ -21,7 +21,7 @@ network --bootproto=dhcp
 firewall --enabled --ssh
 
 # Account Settings
-rootpw --lock
+rootpw --plaintext ${build_password}
 user --name=${build_username} --plaintext --password=${build_password} --groups=wheel
 
 # Security Settings
