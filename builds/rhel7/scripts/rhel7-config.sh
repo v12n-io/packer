@@ -24,7 +24,7 @@ sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 # echo ' - Installing additional packages ...'
 # sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm &>/dev/null
 # sudo yum install -y -q ca-certificates &>/dev/null
-# sudo yum install -y -q cloud-init perl python3 python-pip openssl cloud-utils-growpart &>/dev/null
+# sudo yum install -y -q cloud-init perl python3 python-pip openssl cloud-utils-growpart gdisk &>/dev/null
 
 # ## Adding additional repositories
 # echo ' - Adding repositories ...'
@@ -36,8 +36,7 @@ sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 # ## Configure SSH server
 # echo ' - Configuring SSH server daemon ...'
-# sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
-# sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+# sudo sed -i '/^PermitRootLogin/s/no/yes/' /etc/ssh/sshd_config
 # sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 # # ## Create Ansible user
@@ -73,6 +72,7 @@ sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 # sudo sed -i "s@^[a-z] /tmp @# &@" /usr/lib/tmpfiles.d/tmp.conf
 # sudo sed -i "/^After=vgauthd.service/a After=dbus.service" /usr/lib/systemd/system/vmtoolsd.service
 # sudo sed -i '/^disable_vmware_customization: true/a\datasource_list: [OVF]' /etc/cloud/cloud.cfg
+
 # sudo tee /etc/cloud/runonce.sh >/dev/null << RUNONCE
 # #!/bin/bash
 # # Runonce script for cloud-init on vSphere
