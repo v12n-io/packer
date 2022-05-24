@@ -158,7 +158,7 @@ if [ -f /var/log/lastlog ]; then
 fi
 
 sudo echo "growpart /dev/sda 3 > /dev/null 2>&1" >> /etc/rc.local
-sudo echo "pvresize /dev/sda4 > /dev/null 2>&1" >> /etc/rc.local
+sudo echo "pvresize /dev/sda3 > /dev/null 2>&1" >> /etc/rc.local
 sudo echo "lvextend -l +100%FREE -r /dev/mapper/sysvg-lvroot > resize.txt 2>&1" >> /etc/rc.local
 
 sudo echo ' - Configuration complete'
