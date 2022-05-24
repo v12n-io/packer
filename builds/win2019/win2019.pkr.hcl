@@ -191,13 +191,6 @@ build {
         scripts             = var.script_files
     }
 
-    # PowerShell Provisioner to execute commands
-    provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
-        inline              = var.inline_cmds
-    }
-
     post-processor "manifest" {
         output              = "manifest.txt"
         strip_path          = true
