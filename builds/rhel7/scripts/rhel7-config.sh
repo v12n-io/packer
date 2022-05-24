@@ -173,9 +173,9 @@ sudo tee /etc/rc.local >/dev/null << ISSUE
 touch /var/lock/subsys/local
 
 
-growpart /dev/sda 3 > /dev/null 2>&1
-pvresize /dev/sda3 > /dev/null 2>&1
-lvextend -l +100%FREE -r /dev/mapper/sysvg-lvroot > resize.txt
+sudo growpart /dev/sda 3 > /dev/null 2>&1
+sudo pvresize /dev/sda3 > /dev/null 2>&1
+sudo lvextend -l +100%FREE -r /dev/mapper/sysvg-lvroot > resize.txt
 ISSUE
 
 sudo echo ' - Configuration complete'
