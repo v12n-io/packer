@@ -101,35 +101,33 @@ echo "$(echo '@reboot ( sleep 30 ; sh /etc/cloud/runonce.sh )' ; crontab -l)" | 
 
 ## Setup MoTD
 echo ' - Setting login banner ...'
-BUILDDATE=$(date +"%Y%m%d")
-RELEASE=$(cat /etc/centos-release)
-#DOCS="https://github.com/v12n-io/packer"
-sudo cat << ISSUE > /etc/issue
+BUILDDATE=$(date +"%Y%m")
+RELEASE=$(cat /etc/redhat-release)
+sudo tee /etc/issue >/dev/null << ISSUE
  __  __ ____  ____  
  |  \/  |  _ \|  _ \ 
  | \  / | |_) | |_) |
  | |\/| |  _ <|  _ < 
  | |  | | |_) | |_) |
- |_|  |_|____/|____/                                                             
-                                                              
-        $RELEASE ($BUILDDATE)
-
+ |_|  |_|____/|____/    
+ 
+   $RELEASE ($BUILDDATE)
 ISSUE
+
 sudo ln -sf /etc/issue /etc/issue.net
 
-echo "Banner /etc/issue.net" >> /etc/ssh/sshd_config
+sudo sed -i 's/#Banner none/Banner \/etc\/issue.net/g' /etc/ssh/sshd_config
 
-sudo cat << ISSUE > /etc/motd
+sudo tee /etc/motd >/dev/null << ISSUE
  __  __ ____  ____  
  |  \/  |  _ \|  _ \ 
  | \  / | |_) | |_) |
  | |\/| |  _ <|  _ < 
  | |  | | |_) | |_) |
- |_|  |_|____/|____/                                                             
-                                                              
-        $RELEASE ($BUILDDATE)
+ |_|  |_|____/|____/    
+ 
+   $RELEASE ($BUILDDATE)
 ISSUE
-
 
 ## Unregister from RHSM
 echo ' - Unregistering from Red Hat Subscription Manager ...'
