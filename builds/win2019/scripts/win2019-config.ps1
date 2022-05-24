@@ -47,20 +47,20 @@ Add-Type -AssemblyName 'System.Web'
 $secureString = ConvertTo-SecureString $pass -AsPlainText -Force
 New-LocalUser -Name $user -Password $secureString | Out-Null
 
-# Importing trusted CA certificates
-Write-Host " - Importing trusted CA certificates ..."
-$webserver = "REPLACEWITHPKISERVER"
-$url = "http://" + $webserver
-$certRoot = "root.crt"
-$certIssuing = "issuing.crt"
-ForEach ($cert in $certRoot,$certIssuing) {
-  Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
-}
-Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
-Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA' | Out-Null
-ForEach ($cert in $certRoot,$certIssuing) {
-  Remove-Item C:\$cert -Confirm:$false
-}
+# # Importing trusted CA certificates
+# Write-Host " - Importing trusted CA certificates ..."
+# $webserver = "REPLACEWITHPKISERVER"
+# $url = "http://" + $webserver
+# $certRoot = "root.crt"
+# $certIssuing = "issuing.crt"
+# ForEach ($cert in $certRoot,$certIssuing) {
+  # Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
+# }
+# Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
+# Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA' | Out-Null
+# ForEach ($cert in $certRoot,$certIssuing) {
+  # Remove-Item C:\$cert -Confirm:$false
+# }
 
 # # Install OpenSSH
 # Write-Host " - Installing OpenSSH ..."
