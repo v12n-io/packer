@@ -36,7 +36,7 @@ sudo yum clean all &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
-sudo sed -i '/^PermitRootLogin/s/no/yes/' /etc/ssh/sshd_config
+sudo sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication no/g" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
