@@ -28,7 +28,6 @@ vm_disk_controller              = ["pvscsi"]
 vm_disk_size                    = 102400
 vm_disk_thin                    = true
 vm_cdrom_type                   = "sata"
-vm_vtpm                         = true
 
 # VM Settings
 vm_cdrom_remove                 = true

@@ -54,7 +54,6 @@ source "vsphere-iso" "win10" {
     notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
     firmware                    = var.vm_firmware
     video_ram                   = var.vm_video_ram
-    vTPM                        = var.vm_vtpm         
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
     CPU_hot_plug                = var.vm_cpu_hotadd
