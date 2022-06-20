@@ -32,9 +32,7 @@ vm_vtpm                         = true
 
 # VM Settings
 vm_cdrom_remove                 = true
-vcenter_convert_template        = false
-vcenter_content_library_ovf     = true
-vcenter_content_library_destroy = true
+vcenter_convert_template        = true
 
 # VM OS Settings
 vm_guestos_type                 = "windows9_64Guest"
