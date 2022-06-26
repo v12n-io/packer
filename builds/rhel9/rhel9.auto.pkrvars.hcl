@@ -34,7 +34,7 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-vm_guestos_type                 = "rhel9_64Guest"
+vm_guestos_type                 = "rhel8_64Guest"
 build_username                  = "REPLACEWITHUSERNAME"
 build_password                  = "REPLACEWITHUSERPASS"
 rhsm_user                       = "REPLACEWITHRHSMUSER"
