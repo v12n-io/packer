@@ -42,16 +42,6 @@ variable "admin_password" {
     sensitive   = true
     default     = "password"
 }
-variable "rhsm_user" {
-    type        = string
-    description = "RedHat Subscription Manager username"
-    sensitive   = true
-}
-variable "rhsm_pass" {
-    type        = string
-    description = "RedHat Subscription Manager password"
-    sensitive   = true
-}
 
 # vCenter Configuration
 variable "vcenter_server" {
