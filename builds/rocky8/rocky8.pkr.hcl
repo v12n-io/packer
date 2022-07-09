@@ -13,7 +13,7 @@ packer {
     required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.2"
+            version = ">= v1.0.6"
             source  = "github.com/hashicorp/vsphere"
         }
     }
@@ -23,8 +23,19 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM", timestamp())
-    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    build_version               = formatdate("YY.MM", timestamp())
+    build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    data_source_content         = {
+                                    "/ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                        build_username            = var.build_username
+                                        build_password            = var.build_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                    })
+                                }
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+
 }
 
 # -------------------------------------------------------------------------- #
@@ -50,6 +61,7 @@ source "vsphere-iso" "rocky8" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -59,7 +71,7 @@ source "vsphere-iso" "rocky8" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -82,14 +94,14 @@ source "vsphere-iso" "rocky8" {
     iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
 
     # Boot and Provisioner
-    http_directory              = var.http_directory
+    http_content                = local.data_source_content
     http_port_min               = var.http_port_min
     http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
     boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file }",
+                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"

@@ -112,6 +112,18 @@ variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
 }
+variable "vm_guestos_language" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_keyboard" {
+    type        = string
+    description = "The keyboard type that the guest OS will use"
+}
+variable "vm_guestos_timezone" {
+    type        = string
+    description = "The timezone the guest OS will be set to"
+}
 
 # Virtual Machine Hardware Settings
 variable "vm_firmware" {
