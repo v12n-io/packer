@@ -94,6 +94,16 @@ skipx
 %packages --ignoremissing --excludedocs
 @core
 -iwl*firmware
+sudo
+net-tools
+ntp
+ntpdate
+vim
+wget
+curl
+perl
+git
+unzip
 %end
 
 ### Post-installation commands.
