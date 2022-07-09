@@ -10,21 +10,20 @@
 
 ## Apply updates
 echo ' - Applying package updates ...'
-sudo yum update -y -q &>/dev/null
+sudo dnf update -y -q &>/dev/null
 
 ## Install core packages
 echo ' - Installing additional packages ...'
-sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm &>/dev/null
-sudo yum install -y -q ca-certificates &>/dev/null
-sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
+sudo dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
+sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
 echo ' - Adding repositories ...'
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
 echo ' - Clearing yum cache ...'
-sudo yum clean all &>/dev/null
+sudo dnf clean all &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
