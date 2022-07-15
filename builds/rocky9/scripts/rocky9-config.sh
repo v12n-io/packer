@@ -117,8 +117,6 @@ fi
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 sudo truncate -s 0 /etc/machine-id
-sudo rm -f /var/lib/dbus/machine-id
-sudo ln -s /etc/machine-id /var/lib/dbus/machine-id
 sudo cloud-init clean --logs --seed
 sudo rm -f /etc/ssh/ssh_host_*
 if [ -f /var/log/audit/audit.log ]; then
