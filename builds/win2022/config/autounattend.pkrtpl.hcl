@@ -14,7 +14,7 @@
             </SetupUILanguage>
             <InputLocale>${vm_guestos_keyboard}</InputLocale>
             <SystemLocale>en-US</SystemLocale>
-            <UILanguage>${vm_guestos_language}</UILanguage>
+            <UILanguage>en-US</UILanguage>
             <UILanguageFallback>en-US</UILanguageFallback>
             <UserLocale>${vm_guestos_language}</UserLocale>
         </component>
