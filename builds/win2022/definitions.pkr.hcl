@@ -3,7 +3,6 @@
 # Description:  Variable definitions for Windows 2022
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -111,6 +110,38 @@ variable "vm_os_version" {
 variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
+}
+variable "vm_guestos_language" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_keyboard" {
+    type        = string
+    description = "The keyboard type that the guest OS will use"
+}
+variable "vm_guestos_timezone" {
+    type        = string
+    description = "The timezone the guest OS will be set to"
+}
+variable "vm_guestos_image_core" {
+    type        = string
+    description = "The Windows image used to install Server Core"
+}
+variable "vm_guestos_image_dexp" {
+    type        = string
+    description = "The Windows image used to install Server with Desktop Experience"
+}
+variable "vm_guestos_product_key" {
+    type        = string
+    description = "The Microsoft Product Key for the installation"
+}
+variable "vm_guestos_owner_name" {
+    type        = string
+    description = "The 'owner' name for the installation"
+}
+variable "vm_guestos_owner_org" {
+    type        = string
+    description = "The 'owner' organization for the installation"
 }
 
 # Virtual Machine Hardware Settings
