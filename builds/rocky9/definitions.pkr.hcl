@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
 # Name:         definitions.pkr.hcl
-# Description:  Variable definitions for Windows 2022
+# Description:  Variable definitions for Rocky 9
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
     sensitive   = true
-    default     = "Administrator"
+    default     = "root"
 }
 variable "admin_password" {
     type        = string
@@ -122,26 +122,6 @@ variable "vm_guestos_keyboard" {
 variable "vm_guestos_timezone" {
     type        = string
     description = "The timezone the guest OS will be set to"
-}
-variable "vm_guestos_image_core" {
-    type        = string
-    description = "The Windows image used to install Server Core"
-}
-variable "vm_guestos_image_dexp" {
-    type        = string
-    description = "The Windows image used to install Server with Desktop Experience"
-}
-variable "vm_guestos_product_key" {
-    type        = string
-    description = "The Microsoft Product Key for the installation"
-}
-variable "vm_guestos_owner_name" {
-    type        = string
-    description = "The 'owner' name for the installation"
-}
-variable "vm_guestos_owner_org" {
-    type        = string
-    description = "The 'owner' organization for the installation"
 }
 
 # Virtual Machine Hardware Settings
@@ -298,16 +278,6 @@ variable "build_branch" {
 }
 
 # HTTP Settings
-variable "http_directory" {
-    type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
-}
-variable "http_file" {
-    type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
-    default     = "ks.cfg"
-}
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"

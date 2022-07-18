@@ -3,7 +3,6 @@
 # Description:  Build definition for Windows 2022
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -13,13 +12,13 @@ packer {
     required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.2"
+            version = ">= v1.0.6"
             source  = "github.com/hashicorp/vsphere"
         }
     }
     required_plugins {
         windows-update = {
-            version = ">= 0.14.0"
+            version = ">= 0.14.1"
             source  = "github.com/rgl/windows-update"
         }
     }
@@ -29,8 +28,9 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM", timestamp())
-    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    build_version       = formatdate("YY.MM", timestamp())
+    build_date          = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    vm_description      = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 
 # -------------------------------------------------------------------------- #
@@ -65,7 +65,7 @@ source "vsphere-iso" "win2022stddexp" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -86,8 +86,18 @@ source "vsphere-iso" "win2022stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stddexp/Autounattend.xml",
-                                    "scripts/win2022-initialise.ps1" ]
+    floppy_files                = [ "scripts/win2022-initialise.ps1" ]
+    floppy_content              = { "autounattend.xml" = templatefile("${abspath(path.root)}/config/autounattend.pkrtpl.hcl", {
+                                        admin_password          = var.admin_password
+                                        build_username          = var.build_username
+                                        build_password          = var.build_password
+                                        vm_guestos_language     = var.vm_guestos_language
+                                        vm_guestos_keyboard     = var.vm_guestos_keyboard
+                                        vm_guestos_timezone     = var.vm_guestos_timezone
+                                        vm_guestos_image        = var.vm_guestos_image_dexp
+                                        vm_guestos_product_key  = var.vm_guestos_product_key
+                                        vm_guestos_owner_name   = var.vm_guestos_owner_name
+                                        vm_guestos_owner_org    = var.vm_guestos_owner_org }) }
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -151,8 +161,18 @@ source "vsphere-iso" "win2022stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml",
-                                    "scripts/win2022-initialise.ps1" ]
+    floppy_files                = [ "scripts/win2022-initialise.ps1" ]
+    floppy_content              = { "autounattend.xml" = templatefile("${abspath(path.root)}/config/autounattend.pkrtpl.hcl", {
+                                        admin_password          = var.admin_password
+                                        build_username          = var.build_username
+                                        build_password          = var.build_password
+                                        vm_guestos_language     = var.vm_guestos_language
+                                        vm_guestos_keyboard     = var.vm_guestos_keyboard
+                                        vm_guestos_timezone     = var.vm_guestos_timezone
+                                        vm_guestos_image        = var.vm_guestos_image_core
+                                        vm_guestos_product_key  = var.vm_guestos_product_key
+                                        vm_guestos_owner_name   = var.vm_guestos_owner_name
+                                        vm_guestos_owner_org    = var.vm_guestos_owner_org }) }
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order

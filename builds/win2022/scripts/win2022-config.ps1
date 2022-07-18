@@ -39,14 +39,6 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "Enabled" -Value 0 | Out-Null
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
 
-# Create additional user account user
-Write-Host " - Creating non-administrator user ..."
-$user = "REPLACEWITHUSERNAME"
-$pass = "REPLACEWITHUSERPASS"
-Add-Type -AssemblyName 'System.Web'
-$secureString = ConvertTo-SecureString $pass -AsPlainText -Force
-New-LocalUser -Name $user -Password $secureString | Out-Null
-
 # Importing trusted CA certificates
 Write-Host " - Importing trusted CA certificates ..."
 $webserver = "REPLACEWITHPKISERVER"
