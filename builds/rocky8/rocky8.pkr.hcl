@@ -3,17 +3,16 @@
 # Description:  Build definition for Rocky Linux 8
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         30/06/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
 #                           Packer Configuration                             #
 # -------------------------------------------------------------------------- #
 packer {
-    required_version = ">= 1.7.7"
+    required_version = ">= 1.8.3"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.6"
+            version = ">= v1.0.8"
             source  = "github.com/hashicorp/vsphere"
         }
     }
@@ -91,17 +90,22 @@ source "vsphere-iso" "rocky8" {
     }
 
     # Removeable Media
-    iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
+    cd_files                    = [ local.data_source_content ]
 
     # Boot and Provisioner
-    http_content                = local.data_source_content
-    http_port_min               = var.http_port_min
-    http_port_max               = var.http_port_max
+    #http_content                = local.data_source_content
+    #http_port_min               = var.http_port_min
+    #http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
+    #boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
+    #                                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+    #                                "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
+    #                                "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
+                                    "quiet text inst.ks=cdrom",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
