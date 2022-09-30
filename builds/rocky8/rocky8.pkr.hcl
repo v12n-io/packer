@@ -91,7 +91,7 @@ source "vsphere-iso" "rocky8" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
-    cd_files                    = [ local.data_source_content ]
+    cd_files                    = local.data_source_content
 
     # Boot and Provisioner
     #http_content                = local.data_source_content
