@@ -37,9 +37,14 @@ vm_guestos_type                 = "rhel8_64Guest"
 vm_guestos_language             = "en_GB"
 vm_guestos_keyboard             = "gb"
 vm_guestos_timezone             = "UTC"
-#build_username                  = "REPLACEWITHUSERNAME"
-#build_password                  = "REPLACEWITHUSERPASS"
+build_username                  = "REPLACEWITHUSERNAME"
+build_password                  = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
 #script_files                    = [ "scripts/rocky8-config.sh" ]
 inline_cmds                     = []
+
+# Build Settings
+build_pkiserver                 = "REPLACEWITHPKISERVER"
+build_ansible_user              = "REPLACEWITHANSIBLEUSERNAME"
+build_ansible_key               = "REPLACEWITHANSIBLEUSERKEY"
