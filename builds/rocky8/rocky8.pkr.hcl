@@ -37,8 +37,8 @@ locals {
     script_content              = {
                                     "config.sh" = templatefile("${abspath(path.root)}/scripts/script.pkrtpl.hcl", {
                                         build_pkiserver           = var.build_pkiserver
-                                        build_ansibleuser         = var.build_ansibleuser
-                                        build_ansiblekey          = var.build_ansiblekey
+                                        build_ansibleuser         = var.build_ansible_user
+                                        build_ansiblekey          = var.build_ansible_key
                                     })
                                 }
 }

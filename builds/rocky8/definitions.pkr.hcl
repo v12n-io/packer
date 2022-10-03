@@ -290,3 +290,13 @@ variable "build_pkiserver" {
     type        = string
     description = "URL for acquiring SSL certificates"
 }
+variable "http_port_min" {
+    type        = number
+    description = "Minimum TCP port number to use for the built-in HTTP server"
+    default     = 8000
+}
+variable "http_port_max" {
+    type        = number
+    description = "Maximum TCP port number to use for the built-in HTTP server"
+    default     = 8050
+}
