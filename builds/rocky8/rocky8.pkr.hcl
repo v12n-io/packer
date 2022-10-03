@@ -24,8 +24,8 @@ packer {
 locals { 
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
-    data_source_content         = {
-                                    "/ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+    ks_content                  = {
+                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
                                         build_username            = var.build_username
                                         build_password            = var.build_password
                                         vm_guestos_language       = var.vm_guestos_language
@@ -34,7 +34,13 @@ locals {
                                     })
                                 }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
-
+    script_content              = {
+                                    "config.sh" = templatefile("${abspath(path.root)}/scripts/script.pkrtpl.hcl", {
+                                        build_pkiserver           = var.build_pkiserver
+                                        build_ansibleuser         = var.build_ansibleuser
+                                        build_ansiblekey          = var.build_ansiblekey
+                                    })
+                                }
 }
 
 # -------------------------------------------------------------------------- #
@@ -91,18 +97,11 @@ source "vsphere-iso" "rocky8" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
-    cd_content                  = local.data_source_content
+    cd_content                  = local.ks_content
 
     # Boot and Provisioner
-    #http_content                = local.data_source_content
-    #http_port_min               = var.http_port_min
-    #http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    #boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
-    #                                "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-    #                                "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
-    #                                "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
                                     "quiet text inst.ks=cdrom",
@@ -125,7 +124,7 @@ build {
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
-        scripts             = var.script_files
+        scripts             = local.script_content
     }
 
     post-processor "manifest" {

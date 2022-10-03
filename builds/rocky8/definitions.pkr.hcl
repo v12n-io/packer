@@ -1,9 +1,8 @@
 # ----------------------------------------------------------------------------
 # Name:         definitions.pkr.hcl
-# Description:  Variable definitions for RHEL 8
+# Description:  Variable definitions for Rocky 8
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -276,16 +275,4 @@ variable "build_repo" {
 variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
-}
-
-# HTTP Settings
-variable "http_port_min" {
-    type        = number
-    description = "Minimum TCP port number to use for the built-in HTTP server"
-    default     = 8000
-}
-variable "http_port_max" {
-    type        = number
-    description = "Maximum TCP port number to use for the built-in HTTP server"
-    default     = 8050
 }

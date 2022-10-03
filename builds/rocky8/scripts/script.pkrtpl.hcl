@@ -8,6 +8,10 @@
 #sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
 #sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
+PKISERVER=${build_pkiserver}
+ANSIBLEUSER=${build_ansible_user}
+ANSIBLEKEY=${build_ansible_key}
+
 ## Apply updates
 echo ' - Applying package updates ...'
 sudo dnf update -y -q &>/dev/null
@@ -33,25 +37,24 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/
 
 ## Create Ansible user
 echo ' - Creating local user for Ansible integration ...'
-sudo groupadd REPLACEWITHANSIBLEUSERNAME
-sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
-echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-REPLACEWITHANSIBLEUSERKEY
+sudo groupadd $ANSIBLEUSER
+sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
+echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
+sudo mkdir /home/$ANSIBLEUSER/.ssh
+sudo cat << EOF > /home/$ANSIBLEUSER/.ssh/authorized_keys
+$ANSIBLEKEY
 EOF
-sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-echo "REPLACEWITHANSIBLEUSERNAME ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/REPLACEWITHANSIBLEUSERNAME
+sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
+sudo chmod 700 /home/$ANSIBLEUSER/.ssh
+sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
+echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
-pkiServer="REPLACEWITHPKISERVER"
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q $pkiServer/$cert
+    sudo wget -q $PKISERVER/$cert
 done
 sudo update-ca-trust extract
 
