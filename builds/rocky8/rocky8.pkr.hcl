@@ -118,9 +118,9 @@ build {
     provisioner "shell" {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
-        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
-                                "ANSIBLEUSER=${ var.build_ansible_user }",
-                                "ANSIBLEKEY=${ var.build_ansible_key }" ]
+        environment_vars    = [ "PKISERVER='${ var.build_pkiserver }'",
+                                "ANSIBLEUSER='${ var.build_ansible_user }'",
+                                "ANSIBLEKEY='${ var.build_ansible_key }'" ]
     }
 
     post-processor "manifest" {
