@@ -34,13 +34,6 @@ locals {
                                     })
                                 }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
-    script_content              = {
-                                    "config.sh" = templatefile("${abspath(path.root)}/scripts/script.pkrtpl.hcl", {
-                                        build_pkiserver           = var.build_pkiserver
-                                        build_ansibleuser         = var.build_ansible_user
-                                        build_ansiblekey          = var.build_ansible_key
-                                    })
-                                }
 }
 
 # -------------------------------------------------------------------------- #
@@ -125,6 +118,9 @@ build {
     provisioner "shell" {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = local.script_content
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }" ]
     }
 
     post-processor "manifest" {

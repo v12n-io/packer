@@ -8,9 +8,9 @@
 #sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
 #sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
-PKISERVER=${build_pkiserver}
-ANSIBLEUSER=${build_ansible_user}
-ANSIBLEKEY=${build_ansible_key}
+PKISERVER=$(<PKISERVER)
+ANSIBLEUSER=$(<ANSIBLEUSER)
+ANSIBLEKEY=$(<ANSIBLEKEY)
 
 ## Apply updates
 echo ' - Applying package updates ...'

@@ -41,7 +41,7 @@ build_username                  = "REPLACEWITHUSERNAME"
 build_password                  = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
-#script_files                    = [ "scripts/rocky8-config.sh" ]
+script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []
 
 # Build Settings
