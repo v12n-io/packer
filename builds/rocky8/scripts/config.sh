@@ -8,9 +8,6 @@
 #sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
 #sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
-echo "pkiserver :: $PKISERVER"
-echo "ansibleuser :: $ANSIBLEUSER"
-
 ## Apply updates
 echo ' - Applying package updates ...'
 sudo dnf update -y -q &>/dev/null
@@ -46,7 +43,7 @@ EOF
 sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
 sudo chmod 700 /home/$ANSIBLEUSER/.ssh
 sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
-echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER
+echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
