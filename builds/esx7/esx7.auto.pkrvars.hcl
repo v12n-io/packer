@@ -33,7 +33,7 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-vm_guestos_type                 = "vmkernel7"
+vm_guestos_type                 = "vmkernel7Guest"
 vm_guestos_keyboard             = "US Default"
 
 # Provisioner Settings
