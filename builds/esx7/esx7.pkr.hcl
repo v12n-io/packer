@@ -24,7 +24,7 @@ packer {
 locals { 
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
-    data_source_content         = {
+    ks_content                  = {
                                     "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
