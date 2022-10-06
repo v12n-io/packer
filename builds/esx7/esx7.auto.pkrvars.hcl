@@ -37,5 +37,6 @@ vm_guestos_type                 = "vmkernel7"
 vm_guestos_keyboard             = "US Default"
 
 # Provisioner Settings
-script_files                    = [ "scripts/config.sh" ]
-inline_cmds                     = []
+script_files                    = [ ]
+inline_cmds                     = [ "sed -i 's#/system/uuid.*##' /etc/vmware/esx.conf"
+                                    "/sbin/auto-backup.sh" ]

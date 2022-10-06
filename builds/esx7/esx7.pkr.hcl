@@ -117,8 +117,7 @@ build {
     
     # Shell Provisioner to execute scripts 
     provisioner "shell" {
-        execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
-        scripts             = var.script_files
+        inline              = var.inline_cmds
     }
 
     post-processor "manifest" {
