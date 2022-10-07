@@ -39,6 +39,3 @@ esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
 # Enable remote ESXi Shell (SSH)
 vim-cmd hostsvc/enable_ssh
 vim-cmd hostsvc/start_ssh
-
-# Final reboot
-reboot
