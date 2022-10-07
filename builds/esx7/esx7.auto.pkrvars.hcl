@@ -17,8 +17,8 @@ vm_os_version                   = "7.0U3G"
 
 # VM Hardware Settings
 vm_firmware                     = "efi"
-vm_cpu_sockets                  = 1
-vm_cpu_cores                    = 2
+vm_cpu_sockets                  = 2
+vm_cpu_cores                    = 1
 vm_mem_size                     = 8192
 vm_nic_type                     = "vmxnet3"
 vm_disk_controller              = ["pvscsi"]
