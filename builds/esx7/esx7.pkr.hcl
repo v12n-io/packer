@@ -93,14 +93,15 @@ source "vsphere-iso" "esx7" {
 
     # Removeable Media
     iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    cd_content                  = local.ks_content
 
     # Boot and Provisioner
-    http_content                = local.ks_content
-    http_port_min               = var.http_port_min
-    http_port_max               = var.http_port_max
+    #http_content                = local.ks_content
+    #http_port_min               = var.http_port_min
+    #http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<enter><wait>O<wait> ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter>" ]
+    boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/ks.cfg<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
     ssh_username                = "root"
