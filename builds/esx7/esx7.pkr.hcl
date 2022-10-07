@@ -96,9 +96,6 @@ source "vsphere-iso" "esx7" {
     cd_content                  = local.ks_content
 
     # Boot and Provisioner
-    #http_content                = local.ks_content
-    #http_port_min               = var.http_port_min
-    #http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
     boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/KS.CFG<enter>" ]
