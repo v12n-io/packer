@@ -15,7 +15,7 @@ install --firstdisk
 rootpw ${admin_password}
 
 # Keyboard
-keyboardType '${vm_guestos_keyboard}'
+#keyboardType '${vm_guestos_keyboard}'
 
 # Set network to DHCP
 network --bootproto=dhcp --device=vmnic0
