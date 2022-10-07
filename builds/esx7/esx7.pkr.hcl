@@ -105,7 +105,7 @@ source "vsphere-iso" "esx7" {
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
     ssh_username                = "root"
-    ssh_password                = var.admin_password
+    ssh_password                = "CHyT7CxX^UddZBz%4rVt"
     shutdown_command            = "esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
