@@ -23,19 +23,41 @@ network --bootproto=dhcp --device=vmnic0
 # Post-install reboot
 reboot
 
-# First boot section
+# Firstboot section 1
 %firstboot --interpreter=busybox
-sleep 20
-esxcli network vswitch standard uplink add --uplink-name vmnic1 --vswitch-name vSwitch0
-esxcli system maintenanceMode set -e true
-# Suppress shell warning
-esxcli system settings advanced set -o /UserVars/SuppressShellWarning -i 1
-# Disable IPv6
-esxcli network ip set --ipv6-enabled=false
-# Disable CEIP
-esxcli system settings advanced set -o /UserVars/HostClientCEIPOptIn -i 2
-# Enable ESXi vmkernel ports to use MAC ID from vmnic
-esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
-# Enable remote ESXi Shell (SSH)
+
+sleep 30
+
+# Enter Maintenance mode
+vim-cmd hostsvc/maintenance_mode_enter
+
+# Enable & start remote ESXi Shell (SSH)
 vim-cmd hostsvc/enable_ssh
 vim-cmd hostsvc/start_ssh
+
+# Enable & start ESXi Shell (TSM)
+vim-cmd hostsvc/enable_esx_shell
+vim-cmd hostsvc/start_esx_shell
+
+# Suppress Shell Warning
+esxcli system settings advanced set -o /UserVars/SuppressShellWarning -i 1
+esxcli system settings advanced set -o /UserVars/ESXiShellTimeOut -i 1
+
+# Enable ESXi vmkernel ports to use MAC ID from vmnic
+esxcli system settings advanced set -o /Net/FollowHardwareMac -i 1
+
+# Firstboot Section 2
+%firstboot --interpreter=busybox
+
+# Disable IPv6
+esxcli network ip set --ipv6-enabled=false
+
+# Disable CEIP
+esxcli system settings advanced set -o /UserVars/HostClientCEIPOptIn -i 2
+
+# Exit Maintenance Mode
+vim-cmd hostsvc/maintenance_mode_exit
+
+# Reboot
+sleep 30
+reboot
