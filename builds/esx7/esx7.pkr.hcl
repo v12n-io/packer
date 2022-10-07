@@ -25,11 +25,11 @@ locals {
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     ks_content                  = {
-                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                    "KS.CFG" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                     })
-                                }
+                                  }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 
 }
@@ -101,7 +101,7 @@ source "vsphere-iso" "esx7" {
     #http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/ks.cfg<enter>" ]
+    boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/KS.CFG<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
     ssh_username                = "root"
