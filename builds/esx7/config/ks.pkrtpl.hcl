@@ -12,7 +12,7 @@ accepteula
 install --firstdisk
 
 # Set root password, either encrypted or unencrypted
-rootpw ${admin_password}
+#rootpw ${admin_password}
 
 # Keyboard
 #keyboardType '${vm_guestos_keyboard}'
