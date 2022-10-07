@@ -106,7 +106,7 @@ source "vsphere-iso" "esx7" {
     communicator                = "ssh"
     ssh_username                = "root"
     ssh_password                = "CHyT7CxX^UddZBz%4rVt"
-    shutdown_command            = "esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\""
+    shutdown_command            = "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
