@@ -32,7 +32,7 @@ locals {
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
                                     })
-                                }
+                                  }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 

@@ -29,6 +29,16 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
+    sensitive   = true
+}
 variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
@@ -276,8 +286,10 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
+variable "build_pkiserver" {
+    type        = string
+    description = "URL for acquiring SSL certificates"
+}
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"
