@@ -50,7 +50,7 @@ echo ' - Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q $PKISERVER/$cert
+    sudo wget -q $PKISERVER/$cert &>/dev/null
 done
 sudo update-ca-trust extract
 
