@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
 # Name:         rocky8.auto.pkrvars.hcl
-# Description:  Common vSphere variables for Rocky 8 Packer builds
+# Description:  Required vSphere variables for Rocky 8 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
@@ -37,14 +37,7 @@ vm_guestos_type                 = "rhel8_64Guest"
 vm_guestos_language             = "en_GB"
 vm_guestos_keyboard             = "gb"
 vm_guestos_timezone             = "UTC"
-build_username                  = "REPLACEWITHUSERNAME"
-build_password                  = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
 script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []
-
-# Build Settings
-#build_pkiserver                 = "REPLACEWITHPKISERVER"
-#build_ansible_user              = "REPLACEWITHANSIBLEUSERNAME"
-#build_ansible_key               = "REPLACEWITHANSIBLEUSERKEY"

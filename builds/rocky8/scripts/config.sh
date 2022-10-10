@@ -49,7 +49,6 @@ echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBL
 echo ' - Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
-echo $PKISERVER
 for cert in ${pkiCerts[@]}; do
     sudo wget -q ${PKISERVER}/$cert &>/dev/null
 done
