@@ -45,6 +45,6 @@ script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []
 
 # Build Settings
-build_pkiserver                 = "REPLACEWITHPKISERVER"
-build_ansible_user              = "REPLACEWITHANSIBLEUSERNAME"
-build_ansible_key               = "REPLACEWITHANSIBLEUSERKEY"
+#build_pkiserver                 = "REPLACEWITHPKISERVER"
+#build_ansible_user              = "REPLACEWITHANSIBLEUSERNAME"
+#build_ansible_key               = "REPLACEWITHANSIBLEUSERKEY"
