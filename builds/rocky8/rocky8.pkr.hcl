@@ -127,11 +127,13 @@ build {
         output              = "manifest.txt"
         strip_path          = true
         custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }
