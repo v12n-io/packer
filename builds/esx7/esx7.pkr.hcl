@@ -101,8 +101,8 @@ source "vsphere-iso" "esx7" {
     boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/KS.CFG<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
-    ssh_username                = "root"
-    ssh_password                = "CHyT7CxX^UddZBz%4rVt"
+    ssh_username                = var.admin_username
+    ssh_password                = var.admin_password
     shutdown_command            = "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -123,11 +123,13 @@ build {
         output              = "manifest.txt"
         strip_path          = true
         custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }

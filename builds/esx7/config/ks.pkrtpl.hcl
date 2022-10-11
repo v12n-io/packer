@@ -12,10 +12,10 @@ accepteula
 install --firstdisk
 
 # Set root password, either encrypted or unencrypted
-rootpw CHyT7CxX^UddZBz%4rVt
+rootpw ${admin_password}
 
 # Keyboard
-#keyboardType '${vm_guestos_keyboard}'
+keyboard '${vm_guestos_keyboard}'
 
 # Set network to DHCP
 network --bootproto=dhcp --device=vmnic0

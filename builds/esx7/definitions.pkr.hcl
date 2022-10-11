@@ -258,8 +258,6 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"
