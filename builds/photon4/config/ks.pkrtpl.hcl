@@ -3,7 +3,7 @@
     "password":
         {
             "crypted": false,
-            "text": "REPLACEWITHADMINPASS"
+            "text": "${admin_password}"
         },
     "disk": "/dev/sda",
     "partitions": [
@@ -19,15 +19,16 @@
         "initramfs",
         "sudo",
         "vim",
-        "cloud-utils"
+        "cloud-utils",
+        "openssl-c_rehash"
     ],
     "postinstall": [
         "#!/bin/sh",
-        "useradd -m -G sudo REPLACEWITHUSERNAME",
-        "echo \"REPLACEWITHUSERNAME:REPLACEWITHUSERPASS\" | chpasswd",
-        "echo \"REPLACEWITHUSERNAME  ALL=(ALL)  NOPASSWD:SETENV: ALL\" >> /etc/sudoers.d/REPLACEWITHUSERNAME",
-        "chage -I -1 -m 0 -M 99999 -E -1 root",
-        "chage -I -1 -m 0 -M 99999 -E -1 REPLACEWITHUSERNAME",
+        "useradd -m -G sudo ${build_username}",
+        "echo \"${build_username}:${build_password}\" | chpasswd",
+        "echo \"${build_username}  ALL=(ALL)  NOPASSWD:SETENV: ALL\" >> /etc/sudoers.d/${build_username}",
+        "chage -I -1 -m 0 -M 99999 -E -1 ${admin_username}",
+        "chage -I -1 -m 0 -M 99999 -E -1 ${build_username}",
         "iptables -A INPUT -p tcp --dport 22 -j ACCEPT",
         "iptables -A INPUT -p ICMP -j ACCEPT",
         "iptables -A OUTPUT -p ICMP -j ACCEPT",
