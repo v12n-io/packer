@@ -103,6 +103,7 @@ open-vm-tools
 perl
 git
 unzip
+yum-utils
 %end
 
 ### Post-installation commands.
