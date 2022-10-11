@@ -4,40 +4,40 @@
 # @website https://blog.v12n.io
 
 ## Disable IPv6
-#echo ' - Disabling IPv6 in grub ...'
-#sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
-#sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
+echo '-- Disabling IPv6 in grub ...'
+sudo sed -i 's|^\(GRUB_CMDLINE_LINUX.*\)"$|\1 ipv6.disable=1"|' /etc/default/grub
+sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 ## Register with RHSM
-echo ' - Registering with RedHat Subscription Manager ...'
-sudo subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto-attach &>/dev/null
+echo '-- Registering with RedHat Subscription Manager ...'
+sudo subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto-attach
 
 ## Apply updates
-echo ' - Applying package updates ...'
+echo '-- Applying package updates ...'
 sudo dnf update -y -q &>/dev/null
 
 ## Install core packages
-echo ' - Installing additional packages ...'
+echo '-- Installing additional packages ...'
 sudo dnf install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm &>/dev/null
 sudo dnf install -y -q ca-certificates &>/dev/null
 sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
-echo ' - Adding repositories ...'
+echo '-- Adding repositories ...'
 sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
-echo ' - Clearing yum cache ...'
+echo '-- Clearing yum cache ...'
 sudo dnf clean all &>/dev/null
 
 ## Configure SSH server
-echo ' - Configuring SSH server daemon ...'
+echo '-- Configuring SSH server daemon ...'
 sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
 sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 ## Create Ansible user
-echo ' - Creating local user for Ansible integration ...'
+echo '-- Creating local user for Ansible integration ...'
 sudo groupadd $ANSIBLEUSER
 sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
 echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
@@ -51,7 +51,7 @@ sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
 echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
-echo ' - Installing trusted SSL CA certificates ...'
+echo '-- Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
@@ -60,7 +60,7 @@ done
 sudo update-ca-trust extract
 
 ## Configure cloud-init
-echo ' - Installing cloud-init ...'
+echo '-- Installing cloud-init ...'
 sudo touch /etc/cloud/cloud-init.disabled
 sudo sed -i 's/^ssh_pwauth:   0/ssh_pwauth:   1/g' /etc/cloud/cloud.cfg
 sudo sed -i -e 1,3d /etc/cloud/cloud.cfg
@@ -94,7 +94,7 @@ echo ' - Installing cloud-init-vmware-guestinfo ...'
 curl -sSL https://raw.githubusercontent.com/vmware/cloud-init-vmware-guestinfo/master/install.sh | sudo sh - &>/dev/null
 
 ## Setup MoTD
-echo ' - Setting login banner ...'
+echo '-- Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/redhat-release)
 DOCS="https://github.com/v12n-io/packer"
@@ -114,13 +114,13 @@ ISSUE
 sudo ln -sf /etc/issue /etc/issue.net
 
 ## Unregister from RHSM
-echo ' - Unregistering from Red Hat Subscription Manager ...'
-sudo subscription-manager unsubscribe --all &>/dev/null
-sudo subscription-manager unregister &>/dev/null
-sudo subscription-manager clean &>/dev/null
+echo '-- Unregistering from Red Hat Subscription Manager ...'
+sudo subscription-manager remove --all
+sudo subscription-manager unregister
+sudo subscription-manager clean
 
 ## Final cleanup actions
-echo ' - Executing final cleanup tasks ...'
+echo '-- Executing final cleanup tasks ...'
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
     sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
@@ -140,4 +140,4 @@ fi
 if [ -f /var/log/lastlog ]; then
     sudo cat /dev/null > /var/log/lastlog
 fi
-echo ' - Configuration complete'
+echo '-- Configuration complete'

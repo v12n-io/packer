@@ -5,7 +5,7 @@
 
 ## Disable IPv6
 echo '-- Disabling IPv6 in grub ...'
-sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
+sudo sed -i 's|^\(GRUB_CMDLINE_LINUX.*\)"$|\1 ipv6.disable=1"|' /etc/default/grub
 sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 ## Register with RHSM
@@ -115,7 +115,7 @@ sudo ln -sf /etc/issue /etc/issue.net
 
 ## Unregister from RHSM
 echo '-- Unregistering from Red Hat Subscription Manager ...'
-sudo subscription-manager unsubscribe --all
+sudo subscription-manager remove --all
 sudo subscription-manager unregister
 sudo subscription-manager clean
 
