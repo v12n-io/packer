@@ -24,7 +24,7 @@ sudo yum install -y -q cloud-init perl python3 python-pip openssl cloud-utils-gr
 
 ## Adding additional repositories
 echo ' - Adding repositories ...'
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
 
 ## Cleanup yum
 echo ' - Clearing yum cache ...'
