@@ -3,10 +3,6 @@
 # @author Michael Poore
 # @website https://blog.v12n.io
 
-## Set required environment variables
-export RHSM_USER
-export RHSM_PASS
-
 ## Disable IPv6
 echo ' - Disabling IPv6 in grub ...'
 sudo sed -i 's/quiet"/quiet ipv6.disable=1"/' /etc/default/grub
@@ -42,24 +38,24 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/
 
 ## Create Ansible user
 echo ' - Creating local user for Ansible integration ...'
-sudo groupadd REPLACEWITHANSIBLEUSERNAME
-sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
-echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo tee /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys >/dev/null << EOF
-REPLACEWITHANSIBLEUSERKEY
+sudo groupadd $ANSIBLEUSER
+sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
+echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
+sudo mkdir /home/$ANSIBLEUSER/.ssh
+sudo cat << EOF > /home/$ANSIBLEUSER/.ssh/authorized_keys
+$ANSIBLEKEY
 EOF
-sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
+sudo chmod 700 /home/$ANSIBLEUSER/.ssh
+sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
+echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
-pkiServer="REPLACEWITHPKISERVER"
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q $pkiServer/$cert
+    sudo wget -q ${PKISERVER}/$cert &>/dev/null
 done
 sudo update-ca-trust extract
 
@@ -73,7 +69,7 @@ sudo sed -i "/disable_vmware_customization: true/a\\\nnetwork:\n  config: disabl
 sudo sed -i "s@^[a-z] /tmp @# &@" /usr/lib/tmpfiles.d/tmp.conf
 sudo sed -i "/^After=vgauthd.service/a After=dbus.service" /usr/lib/systemd/system/vmtoolsd.service
 sudo sed -i '/^disable_vmware_customization: true/a\datasource_list: [OVF]' /etc/cloud/cloud.cfg
-sudo tee /etc/cloud/runonce.sh >/dev/null << RUNONCE
+sudo cat << RUNONCE > /etc/cloud/runonce.sh
 #!/bin/bash
 # Runonce script for cloud-init on vSphere
 # @author Michael Poore
@@ -102,7 +98,7 @@ echo ' - Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/redhat-release)
 DOCS="https://github.com/v12n-io/packer"
-sudo tee /etc/issue >/dev/null << ISSUE
+sudo cat << ISSUE > /etc/issue
 
            {__   {__ {_            
 {__     {__ {__ {_     {__{__ {__  
