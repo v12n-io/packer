@@ -32,7 +32,7 @@ echo ' - Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/ssl/certs
 for cert in ${pkiCerts[@]}; do
-    sudo wget -O $cert.pem -q ${PKISERVER}/$cert &>/dev/null
+    sudo wget -O $cert.pem -q ${PKISERVER}/$cert
 done
 sudo /usr/bin/rehash_ca_certificates.sh
 
