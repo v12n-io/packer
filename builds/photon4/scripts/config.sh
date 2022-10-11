@@ -5,8 +5,8 @@
 
 ## Apply updates
 echo ' - Updating the guest operating system ...'
-sudo tdnf upgrade tdnf -y --refresh 2>&-
-sudo tdnf distro-sync -y 2>&-
+sudo tdnf upgrade tdnf -y --refresh &>/dev/null
+sudo tdnf distro-sync -y &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
@@ -32,7 +32,7 @@ echo ' - Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/ssl/certs
 for cert in ${pkiCerts[@]}; do
-    sudo wget -O $cert.pem -q ${PKISERVER}/$cert
+    sudo wget -O $cert.pem -q ${PKISERVER}/$cert &>/dev/null
 done
 sudo /usr/bin/rehash_ca_certificates.sh
 
