@@ -25,7 +25,7 @@ locals {
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     ks_content                  = {
-                                    "photon4.json" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
                                         build_username            = var.build_username
                                         build_password            = var.build_password
                                         admin_username            = var.admin_username
@@ -95,7 +95,7 @@ source "vsphere-iso" "photon4" {
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
     boot_command                = [ "<esc><wait>c",
-                                    "linux /isolinux/vmlinuz root=/dev/ram0 loglevel=3 insecure_installation=1 ks=cdrom:/photon4.json photon.media=cdrom",
+                                    "linux /isolinux/vmlinuz root=/dev/ram0 loglevel=3 insecure_installation=1 ks=/dev/sr1:/ks.cfg photon.media=cdrom",
                                     "<enter>", "initrd /isolinux/initrd.img",
                                     "<enter>",
                                     "boot",
