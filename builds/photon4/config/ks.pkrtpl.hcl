@@ -20,7 +20,8 @@
         "sudo",
         "vim",
         "cloud-utils",
-        "openssl-c_rehash"
+        "openssl-c_rehash",
+        "wget"
     ],
     "postinstall": [
         "#!/bin/sh",
