@@ -1,11 +1,7 @@
 #!/bin/bash
-# Prepare RHEL 8 template for vSphere cloning
+# Prepare RedHat Linux 9 template for vSphere cloning
 # @author Michael Poore
 # @website https://blog.v12n.io
-
-## Set required environment variables
-export RHSM_USER
-export RHSM_PASS
 
 ## Disable IPv6
 #echo ' - Disabling IPv6 in grub ...'
@@ -18,21 +14,20 @@ sudo subscription-manager register --username $RHSM_USER --password $RHSM_PASS -
 
 ## Apply updates
 echo ' - Applying package updates ...'
-sudo yum update -y -q &>/dev/null
+sudo dnf update -y -q &>/dev/null
 
 ## Install core packages
 echo ' - Installing additional packages ...'
-sudo yum install -y -q https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm &>/dev/null
-sudo yum install -y -q ca-certificates &>/dev/null
-sudo yum install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
+sudo dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
+sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
 echo ' - Adding repositories ...'
-sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
 
 ## Cleanup yum
 echo ' - Clearing yum cache ...'
-sudo yum clean all &>/dev/null
+sudo dnf clean all &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
@@ -42,25 +37,24 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/
 
 ## Create Ansible user
 echo ' - Creating local user for Ansible integration ...'
-sudo groupadd REPLACEWITHANSIBLEUSERNAME
-sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
-echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-REPLACEWITHANSIBLEUSERKEY
+sudo groupadd $ANSIBLEUSER
+sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
+echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
+sudo mkdir /home/$ANSIBLEUSER/.ssh
+sudo cat << EOF > /home/$ANSIBLEUSER/.ssh/authorized_keys
+$ANSIBLEKEY
 EOF
-sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-echo "REPLACEWITHANSIBLEUSERNAME ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/REPLACEWITHANSIBLEUSERNAME
+sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
+sudo chmod 700 /home/$ANSIBLEUSER/.ssh
+sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
+echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
-pkiServer="REPLACEWITHPKISERVER"
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q $pkiServer/$cert
+    sudo wget -q ${PKISERVER}/$cert &>/dev/null
 done
 sudo update-ca-trust extract
 
