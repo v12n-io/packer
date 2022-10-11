@@ -114,7 +114,7 @@ sudo ln -sf /etc/issue /etc/issue.net
 
 ## Unregister from RHSM
 echo '-- Unregistering from Red Hat Subscription Manager ...'
-sudo subscription-manager unsubscribe --all
+sudo subscription-manager remove --all
 sudo subscription-manager unregister
 sudo subscription-manager clean
 
