@@ -280,17 +280,9 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
-variable "http_directory" {
+variable "build_pkiserver" {
     type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
-}
-variable "http_file" {
-    type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
-    default     = "ks.cfg"
+    description = "URL for acquiring SSL certificates"
 }
 variable "http_port_min" {
     type        = number
