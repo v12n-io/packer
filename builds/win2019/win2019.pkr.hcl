@@ -36,7 +36,8 @@ locals {
                                         vm_guestos_language       = var.vm_guestos_language
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
-                                    })
+                                    }),
+                                    "initialise.ps1" = templatefile("${abspath(path.root)}/scripts/initialise.ps1", {})
                                   }
     dexp_floppy_content         = {
                                     "Autounattend.xml" = templatefile("${abspath(path.root)}/config/stddexp/Autounattend.pkrtpl.hcl", {
@@ -44,7 +45,8 @@ locals {
                                         vm_guestos_language       = var.vm_guestos_language
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
-                                    })
+                                    }),
+                                    "initialise.ps1" = templatefile("${abspath(path.root)}/scripts/initialise.ps1", {})
                                   }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
@@ -103,7 +105,7 @@ source "vsphere-iso" "win2019stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ ${local.dexp_floppy_content["Autounattend.xml"], "scripts/initialise.ps1" ]
+    floppy_files                = local.dexp_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -168,7 +170,7 @@ source "vsphere-iso" "win2019stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ ${local.core_floppy_content["Autounattend.xml"], "scripts/initialise.ps1" ]
+    floppy_files                = local.core_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
