@@ -13,9 +13,8 @@
                 <UILanguage>en-US</UILanguage>
             </SetupUILanguage>
             <InputLocale>${vm_guestos_keyboard}</InputLocale>
-            <SystemLocale>en-US</SystemLocale>
-            <UILanguage>en-US</UILanguage>
-            <UILanguageFallback>en-US</UILanguageFallback>
+            <SystemLocale>${vm_guestos_systemlocale}</SystemLocale>
+            <UILanguage>${vm_guestos_systemlocale}</UILanguage>
             <UserLocale>${vm_guestos_language}</UserLocale>
         </component>
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -86,7 +85,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
-                            <Value>${vm_guestos_image}</Value>
+                            <Value>Windows Server 2022 ${vm_windows_image}</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -101,10 +100,10 @@
 			    <AcceptEula>true</AcceptEula>
                 <ProductKey>
                     <WillShowUI>OnError</WillShowUI>
-                    <Key>${vm_guestos_product_key}</Key>
+                    <Key>VDYBN-27WPP-V4HQT-9VMD4-VMK7H</Key>
                 </ProductKey>
-                <FullName>${vm_guestos_owner_name}</FullName>
-                <Organization>${vm_guestos_owner_org}</Organization>
+                <FullName>v12n</FullName>
+                <Organization>v12n</Organization>
             </UserData>
             <EnableFirewall>false</EnableFirewall>
         </component>
@@ -160,7 +159,7 @@
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\win2022-initialise.ps1</CommandLine>
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\initialise.ps1</CommandLine>
                     <Description>Basic configuration</Description>
                     <Order>99</Order>
                 </SynchronousCommand>
@@ -194,5 +193,5 @@
             </UserAccounts>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/wims/install.wim#Windows Server 2022 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/wims/install.wim#Windows Server 2022 ${vm_windows_image}" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>

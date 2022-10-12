@@ -28,9 +28,33 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version       = formatdate("YY.MM", timestamp())
-    build_date          = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
-    vm_description      = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    build_version               = formatdate("YY.MM", timestamp())
+    build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    core_floppy_content         = {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
+                                        build_username            = var.build_username
+                                        build_password            = var.build_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARDCORE"
+                                    })
+                                  }
+    dexp_floppy_content         = {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
+                                        build_username            = var.build_username
+                                        build_password            = var.build_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARD"
+                                    })
+                                  }
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 
 # -------------------------------------------------------------------------- #
@@ -56,6 +80,7 @@ source "vsphere-iso" "win2022stddexp" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -86,18 +111,8 @@ source "vsphere-iso" "win2022stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "scripts/win2022-initialise.ps1" ]
-    floppy_content              = { "autounattend.xml" = templatefile("${abspath(path.root)}/config/autounattend.pkrtpl.hcl", {
-                                        admin_password          = var.admin_password
-                                        build_username          = var.build_username
-                                        build_password          = var.build_password
-                                        vm_guestos_language     = var.vm_guestos_language
-                                        vm_guestos_keyboard     = var.vm_guestos_keyboard
-                                        vm_guestos_timezone     = var.vm_guestos_timezone
-                                        vm_guestos_image        = var.vm_guestos_image_dexp
-                                        vm_guestos_product_key  = var.vm_guestos_product_key
-                                        vm_guestos_owner_name   = var.vm_guestos_owner_name
-                                        vm_guestos_owner_org    = var.vm_guestos_owner_org }) }
+    floppy_files                = [ "scripts/initialise.ps1" ]
+    floppy_content              = local.dexp_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -105,8 +120,8 @@ source "vsphere-iso" "win2022stddexp" {
     boot_command                = [ "<spacebar>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
+    winrm_username              = var.admin_username
+    winrm_password              = var.admin_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -131,6 +146,7 @@ source "vsphere-iso" "win2022stdcore" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -140,7 +156,7 @@ source "vsphere-iso" "win2022stdcore" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -161,18 +177,8 @@ source "vsphere-iso" "win2022stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "scripts/win2022-initialise.ps1" ]
-    floppy_content              = { "autounattend.xml" = templatefile("${abspath(path.root)}/config/autounattend.pkrtpl.hcl", {
-                                        admin_password          = var.admin_password
-                                        build_username          = var.build_username
-                                        build_password          = var.build_password
-                                        vm_guestos_language     = var.vm_guestos_language
-                                        vm_guestos_keyboard     = var.vm_guestos_keyboard
-                                        vm_guestos_timezone     = var.vm_guestos_timezone
-                                        vm_guestos_image        = var.vm_guestos_image_core
-                                        vm_guestos_product_key  = var.vm_guestos_product_key
-                                        vm_guestos_owner_name   = var.vm_guestos_owner_name
-                                        vm_guestos_owner_org    = var.vm_guestos_owner_org }) }
+    floppy_files                = [ "scripts/initialise.ps1" ]
+    floppy_content              = local.core_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -180,8 +186,8 @@ source "vsphere-iso" "win2022stdcore" {
     boot_command                = [ "<spacebar>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
+    winrm_username              = var.admin_username
+    winrm_password              = var.admin_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -208,15 +214,20 @@ build {
     
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
+        elevated_user       = var.admin_username
+        elevated_password   = var.admin_password
         scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }",
+                                "BUILDUSER=${ var.build_username }",
+                                "BUILDPASS=${ var.build_password }" ]
     }
 
     # PowerShell Provisioner to execute commands
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
+        elevated_user       = var.admin_username
+        elevated_password   = var.admin_password
         inline              = var.inline_cmds
     }
 
@@ -224,11 +235,13 @@ build {
         output              = "manifest.txt"
         strip_path          = true
         custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }
