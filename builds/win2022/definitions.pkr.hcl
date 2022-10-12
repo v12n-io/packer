@@ -123,26 +123,6 @@ variable "vm_guestos_timezone" {
     type        = string
     description = "The timezone the guest OS will be set to"
 }
-variable "vm_guestos_image_core" {
-    type        = string
-    description = "The Windows image used to install Server Core"
-}
-variable "vm_guestos_image_dexp" {
-    type        = string
-    description = "The Windows image used to install Server with Desktop Experience"
-}
-variable "vm_guestos_product_key" {
-    type        = string
-    description = "The Microsoft Product Key for the installation"
-}
-variable "vm_guestos_owner_name" {
-    type        = string
-    description = "The 'owner' name for the installation"
-}
-variable "vm_guestos_owner_org" {
-    type        = string
-    description = "The 'owner' organization for the installation"
-}
 
 # Virtual Machine Hardware Settings
 variable "vm_firmware" {
