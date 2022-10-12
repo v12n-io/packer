@@ -34,6 +34,7 @@ locals {
                                     "Autounattend.xml" = templatefile("${abspath(path.root)}/config/stdcore/Autounattend.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
                                     })
@@ -42,6 +43,7 @@ locals {
                                     "Autounattend.xml" = templatefile("${abspath(path.root)}/config/stddexp/Autounattend.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
                                     })
