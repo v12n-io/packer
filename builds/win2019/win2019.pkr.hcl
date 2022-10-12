@@ -103,7 +103,7 @@ source "vsphere-iso" "win2019stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "${lookup(local.dexp_floppy_content, "Autounattend.xml")}", "scripts/initialise.ps1" ]
+    floppy_files                = [ ${local.dexp_floppy_content["Autounattend.xml"], "scripts/initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -168,7 +168,7 @@ source "vsphere-iso" "win2019stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "${lookup(local.core_floppy_content, "Autounattend.xml")}", "scripts/initialise.ps1" ]
+    floppy_files                = [ ${local.core_floppy_content["Autounattend.xml"], "scripts/initialise.ps1" ]
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
