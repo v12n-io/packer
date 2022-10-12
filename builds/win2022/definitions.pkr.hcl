@@ -29,6 +29,16 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
+    sensitive   = true
+}
 variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
