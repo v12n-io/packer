@@ -290,7 +290,7 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-variable "build_pkiserver" {
+variable "build_pkiserverrrr" {
     type        = string
     description = "URL for acquiring SSL certificates"
 }
