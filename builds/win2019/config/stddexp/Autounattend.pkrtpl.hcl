@@ -14,7 +14,7 @@
             </SetupUILanguage>
             <InputLocale>${vm_guestos_keyboard}</InputLocale>
             <SystemLocale>${vm_guestos_systemlocale}</SystemLocale>
-            <UILanguage>${vm_guestos_language}</UILanguage>
+            <UILanguage>${vm_guestos_systemlocale}</UILanguage>
             <UserLocale>${vm_guestos_language}</UserLocale>
         </component>
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
