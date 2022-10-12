@@ -31,21 +31,23 @@ locals {
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     core_floppy_content         = {
-                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/stdcore/Autounattend.pkrtpl.hcl", {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_language       = var.vm_guestos_language
                                         vm_guestos_systemlocale   = var.vm_guestos_systemlocale
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARDCORE"
                                     })
                                   }
     dexp_floppy_content         = {
-                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/stddexp/Autounattend.pkrtpl.hcl", {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
                                         admin_password            = var.admin_password
                                         vm_guestos_language       = var.vm_guestos_language
                                         vm_guestos_systemlocale   = var.vm_guestos_systemlocale
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARD"
                                     })
                                   }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
