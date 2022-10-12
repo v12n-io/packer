@@ -213,6 +213,11 @@ build {
         elevated_user       = var.admin_username
         elevated_password   = var.admin_password
         scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }",
+                                "BUILDUSER=${ var.build_username }",
+                                "BUILDPASS=${ var.build_password }" ]
     }
 
     # PowerShell Provisioner to execute commands
