@@ -85,7 +85,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
-                            <Value>Windows Server 2019 SERVERSTANDARDCORE</Value>
+                            <Value>Windows Server 2019 SERVERSTANDARD</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -116,7 +116,7 @@
         <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <AutoLogon>
                 <Password>
-                    <Value>REPLACEWITHADMINPASS</Value>
+                    <Value>${admin_password}</Value>
                     <PlainText>true</PlainText>
                 </Password>
                 <LogonCount>1</LogonCount>
@@ -158,11 +158,11 @@
             </OOBE>
             <UserAccounts>
                 <AdministratorPassword>
-                    <Value>REPLACEWITHADMINPASS</Value>
+                    <Value>${admin_password}</Value>
                     <PlainText>true</PlainText>
                 </AdministratorPassword>
             </UserAccounts>
         </component>
     </settings>
-    <cpi:offlineImage cpi:source="wim:c:/wim/install.wim#Windows Server 2019 SERVERSTANDARDCORE" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
+    <cpi:offlineImage cpi:source="wim:c:/wim/install.wim#Windows Server 2019 SERVERSTANDARD" xmlns:cpi="urn:schemas-microsoft-com:cpi" />
 </unattend>

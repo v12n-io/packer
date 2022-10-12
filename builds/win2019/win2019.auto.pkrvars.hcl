@@ -1,9 +1,8 @@
 # ----------------------------------------------------------------------------
 # Name:         variables.auto.pkrvars.hcl
-# Description:  Common vSphere variables for Windows 2019 Packer builds
+# Description:  Required vSphere variables for Windows 2019 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -35,9 +34,10 @@ vcenter_content_library_destroy = true
 
 # VM OS Settings
 vm_guestos_type                 = "windows2019srv_64Guest"
-build_username                  = "Administrator"
-build_password                  = "REPLACEWITHADMINPASS"
+vm_guestos_language             = "en-GB"
+vm_guestos_keyboard             = "en-GB"
+vm_guestos_timezone             = "GMT Standard Time"
 
 # Provisioner Settings
-script_files                    = [ "scripts/win2019-config.ps1" ]
+script_files                    = [ "scripts/config.ps1" ]
 inline_cmds                     = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]
