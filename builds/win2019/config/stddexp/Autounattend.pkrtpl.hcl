@@ -13,7 +13,7 @@
                 <UILanguage>en-US</UILanguage>
             </SetupUILanguage>
             <InputLocale>${vm_guestos_keyboard}</InputLocale>
-            <SystemLocale>${vm_guestos_language}</SystemLocale>
+            <SystemLocale>${vm_guestos_systemlocale}</SystemLocale>
             <UILanguage>${vm_guestos_language}</UILanguage>
             <UserLocale>${vm_guestos_language}</UserLocale>
         </component>

@@ -125,6 +125,10 @@ variable "vm_guestos_language" {
     type        = string
     description = "The language that the guest OS will be configured with"
 }
+variable "vm_guestos_systemlocale" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
 variable "vm_guestos_keyboard" {
     type        = string
     description = "The keyboard type that the guest OS will use"

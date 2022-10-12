@@ -36,6 +36,7 @@ vcenter_content_library_destroy = true
 vm_guestos_type                 = "windows2019srv_64Guest"
 vm_guestos_language             = "en-GB"
 vm_guestos_keyboard             = "en-GB"
+vm_guestos_systemlocale         = "en-US"
 vm_guestos_timezone             = "GMT Standard Time"
 
 # Provisioner Settings
