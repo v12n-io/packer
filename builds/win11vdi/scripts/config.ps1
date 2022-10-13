@@ -95,9 +95,9 @@ Write-Host "-- Installing Horizon Agent ..."
 $uri = ($intranetServer + "/" + $horizonPath)
 $listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
 Invoke-WebRequest -Uri ($uri + "/" + $horizonAgent) -OutFile ("C:\" + $horizonAgent)
-Unblock-File ("C:\" + $horizonAgent) -Confirm:$false -ErrorAction Stop | Out-Null
+Unblock-File ("C:\" + $horizonAgent) -Confirm:$false -ErrorAction Stop
 Try {
-   Start-Process ("C:\" + $horizonAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process ("C:\" + $horizonAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install the Horizon Agent"
@@ -110,9 +110,9 @@ Remove-Item ("C:\" + $horizonAgent) -Confirm:$false
 Write-Host "-- Installing AppVols Agent ..."
 $listConfig = '/i "C:\' + $appvolsAgent + '" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appvolsServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
 Invoke-WebRequest -Uri ($uri + "/" + $appvolsAgent) -OutFile C:\$appvolsAgent
-Unblock-File ("C:\" + $appvolsAgent) -Confirm:$false -ErrorAction Stop | Out-Null
+Unblock-File ("C:\" + $appvolsAgent) -Confirm:$false -ErrorAction Stop
 Try {
-   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait | Out-Null
+   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait
 }
 Catch {
    Write-Error "Failed to install the AppVolumes Agent"
@@ -125,9 +125,9 @@ Remove-Item ("C:\" + $appvolsAgent) -Confirm:$false
 Write-Host "-- Installing FSLogix ..."
 $listConfig = "/install /quiet /norestart"
 Invoke-WebRequest -Uri ($uri + "/" + $fslogixAgent) -OutFile ("C:\" + $fslogixAgent)
-Unblock-File ("C:\" + $fslogixAgent) -Confirm:$false -ErrorAction Stop | Out-Null
+Unblock-File ("C:\" + $fslogixAgent) -Confirm:$false -ErrorAction Stop
 Try {
-   Start-Process ("C:\" + $fslogixAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process ("C:\" + $fslogixAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install FSLogix"
