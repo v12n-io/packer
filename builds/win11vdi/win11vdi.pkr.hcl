@@ -111,8 +111,8 @@ build {
 
     # PowerShell Provisioner to install RSAT and remove bloat
     provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
+        elevated_user           = var.admin_username
+        elevated_password       = var.admin_password
         inline                  = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
                                     "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online | Out-Null",
                                     "Get-WindowsCapability -Name Browser.InternetExplorer* -Online | Remove-WindowsCapability -Online | Out-Null",
