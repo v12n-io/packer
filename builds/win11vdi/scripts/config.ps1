@@ -93,24 +93,24 @@ Invoke-WebRequest -Uri ($uri + "/" + $bginfoFile) -OutFile ($targetFolder + "\" 
 # Install Horizon Agent
 Write-Host "-- Installing Horizon Agent ..."
 $uri = ($intranetServer + "/" + $horizonPath)
-$listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
-Invoke-WebRequest -Uri ($uri + "/" + $horizonAgent) -OutFile C:\$horizonAgent
-Unblock-File C:\$horizonAgent -Confirm:$false -ErrorAction Stop | Out-Null
+$listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
+Invoke-WebRequest -Uri ($uri + "/" + $horizonAgent) -OutFile ("C:\" + $horizonAgent)
+Unblock-File ("C:\" + $horizonAgent) -Confirm:$false -ErrorAction Stop | Out-Null
 Try {
-   Start-Process C:\$horizonAgent -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process ("C:\" + $horizonAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to install the Horizon Agent"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$horizonAgent -Confirm:$false
+Remove-Item ("C:\" + $horizonAgent) -Confirm:$false
 
 # Install Horizon AppVols Agent
 Write-Host "-- Installing AppVols Agent ..."
-$listConfig = "/i ""C:\$appvolsAgent"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appvolsServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0"
+$listConfig = '/i "C:\' + $appvolsAgent + '" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appvolsServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
 Invoke-WebRequest -Uri ($uri + "/" + $appvolsAgent) -OutFile C:\$appvolsAgent
-Unblock-File C:\$appvolsAgent -Confirm:$false -ErrorAction Stop | Out-Null
+Unblock-File ("C:\" + $appvolsAgent) -Confirm:$false -ErrorAction Stop | Out-Null
 Try {
    Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait | Out-Null
 }
@@ -119,27 +119,27 @@ Catch {
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$appvolsAgent -Confirm:$false
+Remove-Item ("C:\" + $appvolsAgent) -Confirm:$false
 
 # Install FSLogix
 Write-Host "-- Installing FSLogix ..."
 $listConfig = "/install /quiet /norestart"
-Invoke-WebRequest -Uri ($uri + "/" + $fslogixAgent) -OutFile C:\$fslogixAgent
-Unblock-File C:\$fslogixAgent -Confirm:$false -ErrorAction Stop | Out-Null
+Invoke-WebRequest -Uri ($uri + "/" + $fslogixAgent) -OutFile ("C:\" + $fslogixAgent)
+Unblock-File ("C:\" + $fslogixAgent) -Confirm:$false -ErrorAction Stop | Out-Null
 Try {
-   Start-Process C:\$fslogixAgent -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process ("C:\" + $fslogixAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to install FSLogix"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$fslogixAgent -Confirm:$false
+Remove-Item ("C:\" + $fslogixAgent) -Confirm:$false
 
 # Execute Horizon OS Optimization Tool
 Write-Host "-- Executing OS Optimization Tool ..."
 $arg = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
-Invoke-WebRequest -Uri ($uri + "/" + $osotAgent) -OutFile $env:TEMP\$osotAgent
+Invoke-WebRequest -Uri ($uri + "/" + $osotAgent) -OutFile ($env:TEMP + "\" $osotAgent)
 Set-Location $env:TEMP | Out-Null
 Try {
    Start-Process $osotAgent -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
@@ -149,7 +149,7 @@ Catch {
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item -Path $env:TEMP\$osotAgent -Confirm:$false
+Remove-Item -Path ($env:TEMP + "\" $osotAgent) -Confirm:$false
 
 # Perform sdelete to reduce disk size
 Write-Host "-- Executing SDELETE ..."
