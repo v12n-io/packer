@@ -41,7 +41,7 @@ vcenter_snapshot_name           = "VDI snapshot"
 vm_guestos_type                 = "windows9_64Guest"
 vm_guestos_language             = "en-GB"
 vm_guestos_keyboard             = "en-GB"
-vm_guestos_systemlocale         = "en-US"
+vm_guestos_systemlocale         = "en-GB"
 vm_guestos_timezone             = "GMT Standard Time"
 
 # Horizon Desktop Settings
