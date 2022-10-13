@@ -3,7 +3,6 @@
 # Description:  Variable definitions for Windows 11 VDI
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -28,6 +27,16 @@ variable "build_username" {
 variable "build_password" {
     type        = string
     description = "Password for the non-administrative user"
+    sensitive   = true
+}
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
     sensitive   = true
 }
 variable "admin_username" {
@@ -111,6 +120,22 @@ variable "vm_os_version" {
 variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
+}
+variable "vm_guestos_language" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_systemlocale" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_keyboard" {
+    type        = string
+    description = "The keyboard type that the guest OS will use"
+}
+variable "vm_guestos_timezone" {
+    type        = string
+    description = "The timezone the guest OS will be set to"
 }
 
 # Virtual Machine Hardware Settings
@@ -282,15 +307,17 @@ variable "build_branch" {
 }
 
 # HTTP Settings
-variable "http_directory" {
+variable "build_repo" {
     type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
+    description = "Source control respository this build comes from"
 }
-variable "http_file" {
+variable "build_branch" {
     type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
-    default     = "ks.cfg"
+    description = "Branch of the source control respository this build comes from"
+}
+variable "build_pkiserver" {
+    type        = string
+    description = "URL for acquiring SSL certificates"
 }
 variable "http_port_min" {
     type        = number
@@ -301,4 +328,50 @@ variable "http_port_max" {
     type        = number
     description = "Maximum TCP port number to use for the built-in HTTP server"
     default     = 8050
+}
+
+# Horizon Settings
+variable "hz_bginfo_path" {
+    type        = string
+    description = "Relative path on the Intranet Server to BG Info files"
+}
+variable "hz_bginfo_img" {
+    type        = string
+    description = "Desktop background image for BG Info"
+}
+variable "hz_bginfo_file" {
+    type        = string
+    description = "BG Info EXE file"
+}
+variable "hz_agent_path" {
+    type        = string
+    description = "Relative path on the Intranet Server to Horizon Agent files"
+}
+variable "hz_agent_file" {
+    type        = string
+    description = "Horizon Agent installation file name"
+}
+variable "hz_appvols_file" {
+    type        = string
+    description = "AppVolumes agent installation file name"
+}
+variable "hz_fslogix_file" {
+    type        = string
+    description = "FSLogix agent installation file name"
+}
+variable "hz_osot_file" {
+    type        = string
+    description = "Horizon OS Optimization Tool installation file name"
+}
+variable "hz_osot_template" {
+    type        = string
+    description = "OSOT template to be used"
+}
+variable "intranet_server" {
+    type        = string
+    description = "Intranet server HTTP(S) location for acquiring Horizon files"
+}
+variable "hz_appvols_server" {
+    type        = string
+    description = "App Volumes Server FQDN"
 }
