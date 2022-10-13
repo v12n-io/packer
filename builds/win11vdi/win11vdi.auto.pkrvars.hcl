@@ -53,7 +53,7 @@ hz_agent_file                   = "VMware-Horizon-Agent-x86_64-2111.1-8.4.0-1906
 hz_appvols_file                 = "App Volumes Agent.msi"                                   # AppVolumes agent installation file name
 hz_fslogix_file                 = "FSLogixAppsSetup.exe"                                    # FSLogix agent installation file name
 hz_osot_file                    = "VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe"     # Horizon OS Optimization Tool installation file name
-hz_osot_template                = "VMware Templates\Windows 10 and Server 2016 or later"    # OSOT template to be used
+hz_osot_template                = "VMware Templates\\Windows 10 and Server 2016 or later"    # OSOT template to be used
 
 # Provisioner Settings
 script_files                    = [ "scripts/config.ps1" ]

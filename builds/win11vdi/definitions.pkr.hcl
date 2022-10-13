@@ -296,16 +296,6 @@ variable "inline_cmds" {
     default     = []
 }
 
-# Build Settings
-variable "build_repo" {
-    type        = string
-    description = "Source control respository this build comes from"
-}
-variable "build_branch" {
-    type        = string
-    description = "Branch of the source control respository this build comes from"
-}
-
 # HTTP Settings
 variable "build_repo" {
     type        = string
