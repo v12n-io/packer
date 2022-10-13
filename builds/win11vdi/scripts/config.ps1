@@ -139,7 +139,7 @@ Remove-Item ("C:\" + $fslogixAgent) -Confirm:$false
 # Execute Horizon OS Optimization Tool
 Write-Host "-- Executing OS Optimization Tool ..."
 $arg = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
-Invoke-WebRequest -Uri ($uri + "/" + $osotAgent) -OutFile ($env:TEMP + "\" $osotAgent)
+Invoke-WebRequest -Uri ($uri + "/" + $osotAgent) -OutFile ($env:TEMP + "\" + $osotAgent)
 Set-Location $env:TEMP | Out-Null
 Try {
    Start-Process $osotAgent -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
@@ -149,7 +149,7 @@ Catch {
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item -Path ($env:TEMP + "\" $osotAgent) -Confirm:$false
+Remove-Item -Path ($env:TEMP + "\" + $osotAgent) -Confirm:$false
 
 # Perform sdelete to reduce disk size
 Write-Host "-- Executing SDELETE ..."
@@ -158,9 +158,9 @@ $zip = "SDelete.zip"
 $exe = "sdelete64.exe"
 $arg = "-z c: /accepteula"
 Invoke-WebRequest -Uri ($url + "/" + $zip) -OutFile C:\$zip
-Expand-Archive -LiteralPath "C:\$zip" -DestinationPath C:\ -Confirm:$false | Out-Null
+Expand-Archive -LiteralPath ("C:\" + $zip) -DestinationPath C:\ -Confirm:$false | Out-Null
 Try {
-   Start-Process C:\$exe -ArgumentList $arg -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process ("C:\" + $exe) -ArgumentList $arg -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to run SDelete"
@@ -171,10 +171,10 @@ Catch {
 $source = [IO.Compression.ZipFile]::OpenRead("C:\$zip")
 $entries = $source.Entries
 ForEach ($file in $entries) {
-   Remove-Item -Path C:\$file -Confirm:$false
+   Remove-Item -Path ("C:\" + $file) -Confirm:$false
 }
 $source.Dispose()
-Remove-Item C:\$zip -Confirm:$false
+Remove-Item ("C:\" + $zip) -Confirm:$false
 
 # Enabling RDP connections
 Write-Host "-- Enabling RDP connections ..."
