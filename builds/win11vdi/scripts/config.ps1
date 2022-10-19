@@ -94,17 +94,17 @@ Invoke-WebRequest -Uri ($uri + "/" + $bginfoFile) -OutFile ($targetFolder + "\" 
 Write-Host "-- Installing Horizon Agent ..."
 $uri = ($intranetServer + "/" + $horizonPath)
 $listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
-Invoke-WebRequest -Uri ($uri + "/" + $horizonAgent) -OutFile ("C:\" + $horizonAgent)
-Unblock-File ("C:\" + $horizonAgent) -Confirm:$false -ErrorAction Stop
-Try {
-   Start-Process ("C:\" + $horizonAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
-}
-Catch {
-   Write-Error "Failed to install the Horizon Agent"
-   Write-Error $_.Exception
-   Exit -1 
-}
-Remove-Item ("C:\" + $horizonAgent) -Confirm:$false
+Invoke-WebRequest -Uri ($uri + "/" + $horizonAgent) -OutFile ("C:\Windows\Temp\" + $horizonAgent)
+Unblock-File ("C:\Windows\Temp\" + $horizonAgent) -Confirm:$false -ErrorAction Stop
+#Try {
+   Start-Process ("C:\Windows\Temp\" + $horizonAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
+#}
+#Catch {
+   #Write-Error "Failed to install the Horizon Agent"
+   #Write-Error $_.Exception
+   #Exit -1 
+#}
+Remove-Item ("C:\Windows\Temp\" + $horizonAgent) -Confirm:$false
 
 # Install Horizon AppVols Agent
 Write-Host "-- Installing AppVols Agent ..."
