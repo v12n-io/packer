@@ -135,7 +135,7 @@ Remove-Item $target -Confirm:$false
 Write-Host "-- Installing AppVols Agent ..."
 $uri = $intranetServer + "/" + $horizonPath + "/" + $appvolsAgent
 $target = Join-Path C:\ $appvolsAgent
-$listConfig = '/i ' + $target + ' "/qn REBOOT=ReallySuppress MANAGER_ADDR=' + $appvolsServer + ' MANAGER_PORT=443 EnforceSSLCertificateValidation=0"'
+$listConfig = '/i ' + $target + ' /qn REBOOT=ReallySuppress MANAGER_ADDR=' + $appvolsServer + ' MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
 Try {
    File-Handler $uri $target
    Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
