@@ -3,6 +3,37 @@
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
+# FileHandler Function
+function File-Handler {
+   param( [string]$source, [string]$destination )
+
+   # Download file
+   Try {
+      $response = Invoke-WebRequest -Uri $source -OutFile $destination
+      $statusCode = $response.$statusCode
+      $file = Get-ChildItem $destination | Out-Null
+      $fileLength = $file.Length
+      $fileSize = [math]::Round($fileLength / 1MB, 4)
+      Write-Host "Response Code: $statusCode"
+      Write-Host "File Length (Mb): $fileSize"
+   }
+   Catch {
+      $statusCode = $_.Exception.Response.StatusCode.value__
+      Write-Host "File download failed for: $source"
+      Write-Host "Response Code: $statusCode"
+      Exit -1
+   }
+
+   # Unblock file
+   Try {
+      Unblock-File $destination -Confirm:$false -ErrorAction Stop | Out-Null
+   }
+   Catch {
+      Write-Host "Unable to unblock file: $destination"
+      Exit -1
+   }
+}
+
 # SettingSet Explorer view options
 Write-Host "-- Setting default Explorer view options ..."
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Hidden" 1 | Out-Null
@@ -95,16 +126,15 @@ Write-Host "-- Installing Horizon Agent ..."
 $uri = $intranetServer + "/" + $horizonPath + "/" + $horizonAgent
 $target = Join-Path C:\ $horizonAgent
 $listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
-Invoke-WebRequest -Uri $uri -OutFile $target
-Unblock-File $target -Confirm:$false -ErrorAction Stop
-#Try {
+Try {
+   File-Handler $uri $target
    Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
-#}
-#Catch {
-   #Write-Error "Failed to install the Horizon Agent"
-   #Write-Error $_.Exception
-   #Exit -1 
-#}
+}
+Catch {
+   Write-Error "Failed to install the Horizon Agent"
+   Write-Error $_.Exception
+   Exit -1 
+}
 Remove-Item $target -Confirm:$false
 
 # Install Horizon AppVols Agent
