@@ -109,7 +109,73 @@ build {
     # Build sources
     sources                     = [ "source.vsphere-iso.win11vdi" ]
 
+    # PowerShell Provisioner to install RSAT and remove bloat
+    provisioner "powershell" {
+        elevated_user           = var.admin_username
+        elevated_password       = var.admin_password
+        inline                  = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
+                                    "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Browser.InternetExplorer* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Hello.Face* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Media.WindowsMediaPlayer* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Microsoft.Windows.PowerShell.ISE* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Microsoft.Windows.WordPad* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-WindowsCapability -Name Microsoft.Windows.Wifi* -Online | Remove-WindowsCapability -Online | Out-Null",
+                                    "Get-AppxPackage *WindowsAlarms* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *AV1VideoExtension* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WindowsCalculator* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Microsoft.549981C3F5F10* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WindowsFeedbackHub* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *HEIFImageExtension* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *GetHelp* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WindowsMaps* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Todos* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *ZuneVideo* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *MicrosoftOfficeHub* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Paint* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *ZuneMusic* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *BingNews* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WindowsNotepad* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *OneDriveSync* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage Microsoft.People -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Windows.Photos* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *PowerAutomateDesktop* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *SkypeApp* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *MicrosoftSolitaireCollection* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *SpotifyAB.SpotifyMusic* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *MicrosoftStickyNotes* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Teams* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WindowsSoundRecorder* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *BingWeather* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *WebpImageExtension* -AllUsers | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *Xbox* -AllUsers | Where-Object -Property NonRemovable -eq $false | Remove-AppxPackage | Out-Null",
+                                    "Get-AppxPackage *YourPhone* -AllUsers | Remove-AppxPackage | Out-Null" ]
+    }
+
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
+    }
     
+    # Windows Update using https://github.com/rgl/packer-provisioner-windows-update
+    provisioner "windows-update" {
+        pause_before            = "30s"
+        search_criteria         = "IsInstalled=0"
+        filters                 = [ "exclude:$_.Title -like '*VMware*'",
+                                    "exclude:$_.Title -like '*Preview*'",
+                                    "exclude:$_.Title -like '*Defender*'",
+                                    "exclude:$_.InstallationBehavior.CanRequestUserInput",
+                                    "include:$true" ]
+        restart_timeout         = "120m"
+    }
+
+    # Restart Provisioner
+    provisioner "windows-restart" {
+        pause_before            = "30s"
+        restart_timeout         = "30m"
+        restart_check_command   = "powershell -command \"& {Write-Output 'restarted.'}\""
+    }   
     
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {

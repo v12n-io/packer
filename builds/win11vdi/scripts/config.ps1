@@ -122,7 +122,7 @@ $target = Join-Path C:\ $horizonAgent
 $listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
 Try {
    File-Handler $uri $target
-   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install the Horizon Agent"
@@ -138,7 +138,7 @@ $target = Join-Path C:\ $appvolsAgent
 $listConfig = '/i ' + $target + ' /qn REBOOT=ReallySuppress MANAGER_ADDR=' + $appvolsServer + ' MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
 Try {
    File-Handler $uri $target
-   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install the AppVolumes Agent"
@@ -154,7 +154,7 @@ $target = Join-Path C:\ $fslogixAgent
 $listConfig = "/install /quiet /norestart"
 Try {
    File-Handler $uri $target
-   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install FSLogix"
@@ -170,7 +170,7 @@ $target = Join-Path C:\ $osotAgent
 $listConfig = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
 Try {
    File-Handler $uri $target
-   Start-Process $target -ArgumentList $listConfig -Passthru -Wait -ErrorAction stop | Out-Null
+   Start-Process $target -ArgumentList $listConfig -Passthru -Wait -ErrorAction stop
 }
 Catch {
    Write-Error "Failed to run OSOT"
@@ -188,7 +188,7 @@ $listConfig = "-z c: /accepteula"
 Try {
    File-Handler $uri $target
    Expand-Archive -LiteralPath $target -DestinationPath C:\ -Confirm:$false | Out-Null
-   Start-Process $exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   Start-Process $exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to run SDelete"
