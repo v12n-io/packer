@@ -9,24 +9,18 @@ function File-Handler {
 
    # Download file
    Try {
-      $response = Invoke-WebRequest -Uri $source -OutFile $destination
-      $statusCode = $response.$statusCode
-      $file = Get-ChildItem $destination | Out-Null
-      $fileLength = $file.Length
-      $fileSize = [math]::Round($fileLength / 1MB, 4)
-      Write-Host "Response Code: $statusCode"
-      Write-Host "File Length (Mb): $fileSize"
+      Invoke-WebRequest -Uri $source -OutFile $destination | Out-Null
+      Write-Host "File Downloaded: $destination"
    }
    Catch {
-      $statusCode = $_.Exception.Response.StatusCode.value__
       Write-Host "File download failed for: $source"
-      Write-Host "Response Code: $statusCode"
       Exit -1
    }
 
    # Unblock file
    Try {
       Unblock-File $destination -Confirm:$false -ErrorAction Stop | Out-Null
+      Write-Host "File Unblocked: $destination"
    }
    Catch {
       Write-Host "Unable to unblock file: $destination"
@@ -128,7 +122,7 @@ $target = Join-Path C:\ $horizonAgent
 $listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
 Try {
    File-Handler $uri $target
-   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to install the Horizon Agent"
@@ -139,59 +133,62 @@ Remove-Item $target -Confirm:$false
 
 # Install Horizon AppVols Agent
 Write-Host "-- Installing AppVols Agent ..."
-$listConfig = '/i "C:\' + $appvolsAgent + '" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appvolsServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
-Invoke-WebRequest -Uri ($uri + "/" + $appvolsAgent) -OutFile C:\$appvolsAgent
-Unblock-File ("C:\" + $appvolsAgent) -Confirm:$false -ErrorAction Stop
+$uri = $intranetServer + "/" + $horizonPath + "/" + $appvolsAgent
+$target = Join-Path C:\ $appvolsAgent
+$listConfig = '/i ' + $target + ' "/qn REBOOT=ReallySuppress MANAGER_ADDR=' + $appvolsServer + ' MANAGER_PORT=443 EnforceSSLCertificateValidation=0"'
 Try {
-   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait
+   File-Handler $uri $target
+   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to install the AppVolumes Agent"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item ("C:\" + $appvolsAgent) -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Install FSLogix
 Write-Host "-- Installing FSLogix ..."
+$uri = $intranetServer + "/" + $horizonPath + "/" + $fslogixAgent
+$target = Join-Path C:\ $fslogixAgent
 $listConfig = "/install /quiet /norestart"
-Invoke-WebRequest -Uri ($uri + "/" + $fslogixAgent) -OutFile ("C:\" + $fslogixAgent)
-Unblock-File ("C:\" + $fslogixAgent) -Confirm:$false -ErrorAction Stop
 Try {
-   Start-Process ("C:\" + $fslogixAgent) -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
+   File-Handler $uri $target
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to install FSLogix"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item ("C:\" + $fslogixAgent) -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Execute Horizon OS Optimization Tool
 Write-Host "-- Executing OS Optimization Tool ..."
-$arg = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
-Invoke-WebRequest -Uri ($uri + "/" + $osotAgent) -OutFile ($env:TEMP + "\" + $osotAgent)
-Set-Location $env:TEMP | Out-Null
+$uri = $intranetServer + "/" + $horizonPath + "/" + $osotAgent
+$target = Join-Path C:\ $osotAgent
+$listConfig = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
 Try {
-   Start-Process $osotAgent -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
+   File-Handler $uri $target
+   Start-Process $target -ArgumentList $listConfig -Passthru -Wait -ErrorAction stop | Out-Null
 }
 Catch {
    Write-Error "Failed to run OSOT"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item -Path ($env:TEMP + "\" + $osotAgent) -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Perform sdelete to reduce disk size
 Write-Host "-- Executing SDELETE ..."
-$url = "https://download.sysinternals.com/files"
-$zip = "SDelete.zip"
-$exe = "sdelete64.exe"
-$arg = "-z c: /accepteula"
-Invoke-WebRequest -Uri ($url + "/" + $zip) -OutFile C:\$zip
-Expand-Archive -LiteralPath ("C:\" + $zip) -DestinationPath C:\ -Confirm:$false | Out-Null
+$uri = "https://download.sysinternals.com/files/SDelete.zip"
+$target = "C:\SDelete.zip"
+$exe = "C:\sdelete64.exe"
+$listConfig = "-z c: /accepteula"
 Try {
-   Start-Process ("C:\" + $exe) -ArgumentList $arg -PassThru -Wait -ErrorAction Stop | Out-Null
+   File-Handler $uri $target
+   Expand-Archive -LiteralPath $target -DestinationPath C:\ -Confirm:$false | Out-Null
+   Start-Process $exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
 }
 Catch {
    Write-Error "Failed to run SDelete"
@@ -199,13 +196,13 @@ Catch {
    Exit -1 
 }
 [Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
-$source = [IO.Compression.ZipFile]::OpenRead("C:\$zip")
+$source = [IO.Compression.ZipFile]::OpenRead($target)
 $entries = $source.Entries
 ForEach ($file in $entries) {
-   Remove-Item -Path ("C:\" + $file) -Confirm:$false
+   Remove-Item -Path (Join-Path C:\ $file) -Confirm:$false
 }
 $source.Dispose()
-Remove-Item ("C:\" + $zip) -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Enabling RDP connections
 Write-Host "-- Enabling RDP connections ..."
