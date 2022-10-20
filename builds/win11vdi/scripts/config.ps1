@@ -82,8 +82,8 @@ $certIssuing = "issuing.crt"
 ForEach ($cert in $certRoot,$certIssuing) {
   Invoke-WebRequest -Uri ($webserver + "/" + $cert) -OutFile C:\$cert
 }
-Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root'
-Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA'
+Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
+Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA' | Out-Null
 ForEach ($cert in $certRoot,$certIssuing) {
   Remove-Item C:\$cert -Confirm:$false
 }
