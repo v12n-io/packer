@@ -16,12 +16,12 @@
 #vcenter_datastore               = "VCENTER_DS"
 #vcenter_network                 = "VCENTER_NETWORK"
 #os_iso_datastore                = "VCENTER_ISO_DS"
-vcenter_insecure                = true
+#vcenter_insecure                = true
 #vcenter_folder                  = "Templates"
 
 # VM Settings
-vm_ip_timeout                   = "20m"
-vm_shutdown_timeout             = "15m"
+#vm_ip_timeout                   = "20m"
+#vm_shutdown_timeout             = "15m"
 
 # Content Library Settings
 #vcenter_content_library         = "VCENTER_CL"

@@ -40,7 +40,7 @@ variable "vcenter_server" {
 variable "vcenter_insecure" {
     type        = bool
     description = "Validate the SSL connection to vCenter"
-    default     = false
+    default     = true
 }
 variable "vcenter_datacenter" {
     type        = string
