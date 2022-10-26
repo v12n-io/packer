@@ -3,7 +3,6 @@
 # Description:  Build definition for Windows 2019
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -13,13 +12,13 @@ packer {
     required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.2"
+            version = ">= v1.0.6"
             source  = "github.com/hashicorp/vsphere"
         }
     }
     required_plugins {
         windows-update = {
-            version = ">= 0.14.0"
+            version = ">= 0.14.1"
             source  = "github.com/rgl/windows-update"
         }
     }
@@ -29,8 +28,29 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM", timestamp())
-    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    build_version               = formatdate("YY.MM", timestamp())
+    build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    core_floppy_content         = {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARDCORE"
+                                    })
+                                  }
+    dexp_floppy_content         = {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "SERVERSTANDARD"
+                                    })
+                                  }
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 
 # -------------------------------------------------------------------------- #
@@ -56,6 +76,7 @@ source "vsphere-iso" "win2019stddexp" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -65,7 +86,7 @@ source "vsphere-iso" "win2019stddexp" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -86,7 +107,8 @@ source "vsphere-iso" "win2019stddexp" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stddexp/Autounattend.xml", "scripts/win2019-initialise.ps1" ]
+    floppy_files                = [ "scripts/initialise.ps1" ]
+    floppy_content              = local.dexp_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -94,8 +116,8 @@ source "vsphere-iso" "win2019stddexp" {
     boot_command                = [ "<spacebar>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
+    winrm_username              = var.admin_username
+    winrm_password              = var.admin_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -120,6 +142,7 @@ source "vsphere-iso" "win2019stdcore" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -129,7 +152,7 @@ source "vsphere-iso" "win2019stdcore" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -150,7 +173,8 @@ source "vsphere-iso" "win2019stdcore" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/stdcore/Autounattend.xml", "scripts/win2019-initialise.ps1" ]
+    floppy_files                = [ "scripts/initialise.ps1" ]
+    floppy_content              = local.core_floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -158,8 +182,8 @@ source "vsphere-iso" "win2019stdcore" {
     boot_command                = [ "<spacebar>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
+    winrm_username              = var.admin_username
+    winrm_password              = var.admin_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -186,15 +210,20 @@ build {
     
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
+        elevated_user       = var.admin_username
+        elevated_password   = var.admin_password
         scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }",
+                                "BUILDUSER=${ var.build_username }",
+                                "BUILDPASS=${ var.build_password }" ]
     }
 
     # PowerShell Provisioner to execute commands
     provisioner "powershell" {
-        elevated_user       = var.build_username
-        elevated_password   = var.build_password
+        elevated_user       = var.admin_username
+        elevated_password   = var.admin_password
         inline              = var.inline_cmds
     }
 
@@ -202,11 +231,13 @@ build {
         output              = "manifest.txt"
         strip_path          = true
         custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }

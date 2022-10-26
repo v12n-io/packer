@@ -3,7 +3,6 @@
 # Description:  Variable definitions for Windows 2019
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -30,6 +29,16 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
+    sensitive   = true
+}
 variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
@@ -51,7 +60,7 @@ variable "vcenter_server" {
 variable "vcenter_insecure" {
     type        = bool
     description = "Validate the SSL connection to vCenter"
-    default     = false
+    default     = true
 }
 variable "vcenter_datacenter" {
     type        = string
@@ -111,6 +120,22 @@ variable "vm_os_version" {
 variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
+}
+variable "vm_guestos_language" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_systemlocale" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_keyboard" {
+    type        = string
+    description = "The keyboard type that the guest OS will use"
+}
+variable "vm_guestos_timezone" {
+    type        = string
+    description = "The timezone the guest OS will be set to"
 }
 
 # Virtual Machine Hardware Settings
@@ -265,17 +290,9 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
-variable "http_directory" {
+variable "build_pkiserver" {
     type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
-}
-variable "http_file" {
-    type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
-    default     = "ks.cfg"
+    description = "URL for acquiring SSL certificates"
 }
 variable "http_port_min" {
     type        = number

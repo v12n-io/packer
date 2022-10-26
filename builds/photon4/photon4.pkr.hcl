@@ -3,7 +3,6 @@
 # Description:  Build definition for Photon 4
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         29/10/2021
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -13,7 +12,7 @@ packer {
     required_version = ">= 1.7.7"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.2"
+            version = ">= v1.0.6"
             source  = "github.com/hashicorp/vsphere"
         }
     }
@@ -23,8 +22,17 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM", timestamp())
-    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    build_version               = formatdate("YY.MM", timestamp())
+    build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    ks_content                  = {
+                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                        build_username            = var.build_username
+                                        build_password            = var.build_password
+                                        admin_username            = var.admin_username
+                                        admin_password            = var.admin_password
+                                    })
+                                  }
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 
 # -------------------------------------------------------------------------- #
@@ -50,7 +58,7 @@ source "vsphere-iso" "photon4" {
             content {
                 library         = var.vcenter_content_library
                 name            = "${ source.name }"
-                description     = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+                description     = local.vm_description
                 ovf             = var.vcenter_content_library_ovf
                 destroy         = var.vcenter_content_library_destroy
                 skip_import     = var.vcenter_content_library_skip
@@ -60,7 +68,7 @@ source "vsphere-iso" "photon4" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     CPUs                        = var.vm_cpu_sockets
     cpu_cores                   = var.vm_cpu_cores
@@ -80,16 +88,14 @@ source "vsphere-iso" "photon4" {
     }
 
     # Removeable Media
-    iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
+    cd_content                  = local.ks_content
 
     # Boot and Provisioner
-    http_directory              = var.http_directory
-    http_port_min               = var.http_port_min
-    http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
     boot_command                = [ "<esc><wait>c",
-                                    "linux /isolinux/vmlinuz root=/dev/ram0 loglevel=3 insecure_installation=1 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/${ var.http_file } photon.media=cdrom",
+                                    "linux /isolinux/vmlinuz root=/dev/ram0 loglevel=3 insecure_installation=1 ks=/dev/sr1:/ks.cfg photon.media=cdrom",
                                     "<enter>", "initrd /isolinux/initrd.img",
                                     "<enter>",
                                     "boot",
@@ -109,21 +115,26 @@ build {
     # Build sources
     sources                     = [ "source.vsphere-iso.photon4" ]
     
-    # Shell Provisioner to execute scripts 
+    # Shell Provisioner to execute scripts
     provisioner "shell" {
-        execute_command         = "echo '${var.build_password}' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
-        scripts                 = var.script_files
-        valid_exit_codes        = [ 0,245,1535 ]
+        execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
+        scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }" ]
     }
 
     post-processor "manifest" {
-        output                  = "manifest.txt"
-        strip_path              = true
-        custom_data             = { vcenter_fqdn    = "${ var.vcenter_server }"
-                                    vcenter_folder  = "${ var.vcenter_folder }"
-                                    iso_file        = "${ var.os_iso_file }"
-                                    build_repo      = "${ var.build_repo }"
-                                    build_branch    = "${ var.build_branch }"
+        output              = "manifest.txt"
+        strip_path          = true
+        custom_data         = {
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }

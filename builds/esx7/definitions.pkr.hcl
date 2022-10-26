@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
 # Name:         definitions.pkr.hcl
-# Description:  Variable definitions for Windows 2022
+# Description:  Variable definitions for ESX 7.x
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
@@ -19,31 +19,11 @@ variable "vcenter_password" {
     description = "Password used by Packer to connect to vCenter"
     sensitive   = true
 }
-variable "build_username" {
-    type        = string
-    description = "Non-administrative username for this OS"
-    sensitive   = true
-}
-variable "build_password" {
-    type        = string
-    description = "Password for the non-administrative user"
-    sensitive   = true
-}
-variable "build_ansible_user" {
-    type        = string
-    description = "Name of the user to be used by Ansible"
-    sensitive   = true
-}
-variable "build_ansible_key" {
-    type        = string
-    description = "SSH key for the Ansible user"
-    sensitive   = true
-}
 variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
     sensitive   = true
-    default     = "Administrator"
+    default     = "root"
 }
 variable "admin_password" {
     type        = string
@@ -121,21 +101,9 @@ variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
 }
-variable "vm_guestos_language" {
-    type        = string
-    description = "The language that the guest OS will be configured with"
-}
-variable "vm_guestos_systemlocale" {
-    type        = string
-    description = "The language that the guest OS will be configured with"
-}
 variable "vm_guestos_keyboard" {
     type        = string
     description = "The keyboard type that the guest OS will use"
-}
-variable "vm_guestos_timezone" {
-    type        = string
-    description = "The timezone the guest OS will be set to"
 }
 
 # Virtual Machine Hardware Settings
@@ -289,10 +257,6 @@ variable "build_repo" {
 variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
-}
-variable "build_pkiserver" {
-    type        = string
-    description = "URL for acquiring SSL certificates"
 }
 variable "http_port_min" {
     type        = number

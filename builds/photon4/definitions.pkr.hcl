@@ -3,7 +3,6 @@
 # Description:  Variable definitions for Photon 4
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -30,6 +29,16 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
+    sensitive   = true
+}
 variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
@@ -51,7 +60,7 @@ variable "vcenter_server" {
 variable "vcenter_insecure" {
     type        = bool
     description = "Validate the SSL connection to vCenter"
-    default     = false
+    default     = true
 }
 variable "vcenter_datacenter" {
     type        = string
@@ -265,16 +274,9 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
-variable "http_directory" {
+variable "build_pkiserver" {
     type        = string
-    description = "Relative directory to serve files via Packer's built-in HTTP server"
-    default     = "config"
-}
-variable "http_file" {
-    type        = string
-    description = "Name of a file in the http_directory that will be provided in the boot command"
+    description = "URL for acquiring SSL certificates"
 }
 variable "http_port_min" {
     type        = number

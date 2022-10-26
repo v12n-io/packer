@@ -33,13 +33,11 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-vm_guestos_type                 = "rhel8_64Guest"
+vm_guestos_type                 = "rhel9_64Guest"
 vm_guestos_language             = "en_GB"
 vm_guestos_keyboard             = "gb"
 vm_guestos_timezone             = "UTC"
-build_username                  = "REPLACEWITHUSERNAME"
-build_password                  = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
-script_files                    = [ "scripts/rocky9-config.sh" ]
+script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []

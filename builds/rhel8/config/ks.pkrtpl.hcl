@@ -3,7 +3,7 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# RedHat Linux 7
+# RedHat Linux 8
 
 ### Installs from the first attached CD-ROM/DVD on the system.
 cdrom
@@ -42,7 +42,9 @@ user --name=${build_username} --password=${build_password} --groups=wheel
 firewall --enabled --ssh
 
 ### Sets up the authentication options for the system.
-auth --passalgo=sha512 --useshadow
+### The SSDD profile sets sha512 to hash passwords. Passwords are shadowed by default
+### See the manual page for authselect-profile for a complete list of possible options.
+authselect select sssd
 
 ### Sets the state of SELinux on the installed system.
 ### Defaults to enforcing.
@@ -99,15 +101,17 @@ ntpdate
 vim
 wget
 curl
-open-vm-tools
 perl
 git
 unzip
-yum-utils
 %end
 
 ### Post-installation commands.
 %post
+dnf makecache
+dnf install epel-release -y
+dnf makecache
+dnf install -y sudo open-vm-tools perl
 echo "${build_username} ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/${build_username}
 sed -i "s/^.*requiretty/#Defaults requiretty/" /etc/sudoers
 %end

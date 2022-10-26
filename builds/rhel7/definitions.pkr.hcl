@@ -3,7 +3,6 @@
 # Description:  Variable definitions for RHEL 7
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
@@ -28,6 +27,16 @@ variable "build_username" {
 variable "build_password" {
     type        = string
     description = "Password for the non-administrative user"
+    sensitive   = true
+}
+variable "build_ansible_user" {
+    type        = string
+    description = "Name of the user to be used by Ansible"
+    sensitive   = true
+}
+variable "build_ansible_key" {
+    type        = string
+    description = "SSH key for the Ansible user"
     sensitive   = true
 }
 variable "admin_username" {
@@ -61,7 +70,7 @@ variable "vcenter_server" {
 variable "vcenter_insecure" {
     type        = bool
     description = "Validate the SSL connection to vCenter"
-    default     = false
+    default     = true
 }
 variable "vcenter_datacenter" {
     type        = string
@@ -116,23 +125,23 @@ variable "vm_os_version" {
     type        = string
     description = "The major version of the OS (e.g. '7', '8.5', '2022')"
 }
-variable "vm_os_language" {
-    type        = string
-    description = "OS language to be configured"
-}
-variable "vm_os_keyboard" {
-    type        = string
-    description = "OS keyboard layout to be configured"
-}
-variable "vm_os_timezone" {
-    type        = string
-    description = "OS timezone to be configured"
-}
 
 # Virtual Machine OS Settings
 variable "vm_guestos_type" {
     type        = string
     description = "The type of guest operating system (or guestid) in vSphere"
+}
+variable "vm_guestos_language" {
+    type        = string
+    description = "The language that the guest OS will be configured with"
+}
+variable "vm_guestos_keyboard" {
+    type        = string
+    description = "The keyboard type that the guest OS will use"
+}
+variable "vm_guestos_timezone" {
+    type        = string
+    description = "The timezone the guest OS will be set to"
 }
 
 # Virtual Machine Hardware Settings
@@ -287,8 +296,10 @@ variable "build_branch" {
     type        = string
     description = "Branch of the source control respository this build comes from"
 }
-
-# HTTP Settings
+variable "build_pkiserver" {
+    type        = string
+    description = "URL for acquiring SSL certificates"
+}
 variable "http_port_min" {
     type        = number
     description = "Minimum TCP port number to use for the built-in HTTP server"

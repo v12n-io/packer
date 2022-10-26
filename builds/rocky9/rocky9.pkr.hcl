@@ -24,17 +24,16 @@ packer {
 locals { 
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
-    data_source_content         = {
-                                    "/ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+    ks_content                  = {
+                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
                                         build_username            = var.build_username
                                         build_password            = var.build_password
                                         vm_guestos_language       = var.vm_guestos_language
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
                                         vm_guestos_timezone       = var.vm_guestos_timezone
                                     })
-                                }
+                                  }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
-
 }
 
 # -------------------------------------------------------------------------- #
@@ -91,16 +90,14 @@ source "vsphere-iso" "rocky9" {
 
     # Removeable Media
     iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    cd_content                  = local.ks_content
 
     # Boot and Provisioner
-    http_content                = local.data_source_content
-    http_port_min               = var.http_port_min
-    http_port_max               = var.http_port_max
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
     boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
                                     "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-                                    "quiet text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
+                                    "quiet text inst.ks=cdrom",
                                     "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
@@ -121,17 +118,22 @@ build {
     provisioner "shell" {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }" ]
     }
 
     post-processor "manifest" {
         output              = "manifest.txt"
         strip_path          = true
         custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+            vcenter_fqdn    = var.vcenter_server
+            vcenter_folder  = var.vcenter_folder
+            iso_file        = var.os_iso_file
+            build_repo      = var.build_repo
+            build_branch    = var.build_branch
+            build_version   = local.build_version
+            build_date      = local.build_date
         }
     }
 }

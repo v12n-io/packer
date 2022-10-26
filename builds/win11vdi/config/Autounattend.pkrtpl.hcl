@@ -55,7 +55,7 @@
                     <InstallFrom>
                         <MetaData wcm:action="add">
                             <Key>/IMAGE/NAME</Key>
-                            <Value>Windows 10 Enterprise</Value>
+                            <Value>Windows 10 ${vm_windows_image}</Value>
                         </MetaData>
                     </InstallFrom>
                     <InstallTo>
@@ -80,17 +80,17 @@
 			<SetupUILanguage>
 				<UILanguage>en-US</UILanguage>
 			</SetupUILanguage>
-			<InputLocale>0409:00000409</InputLocale>
-			<SystemLocale>en-GB</SystemLocale>
-			<UILanguage>en-GB</UILanguage>
-			<UserLocale>en-GB</UserLocale>
+			<InputLocale>${vm_guestos_keyboard}</InputLocale>
+            <SystemLocale>${vm_guestos_systemlocale}</SystemLocale>
+            <UILanguage>${vm_guestos_systemlocale}</UILanguage>
+            <UserLocale>${vm_guestos_language}</UserLocale>
 		</component>
 	</settings>
 	<settings pass="oobeSystem">
 		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<AutoLogon>
 				<Password>
-					<Value>REPLACEWITHADMINPASS</Value>
+					<Value>${admin_password}</Value>
 					<PlainText>true</PlainText>
 				</Password>
 				<Enabled>true</Enabled>
@@ -116,7 +116,7 @@
                     <Description>Install VMware Tools</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>powershell -ExecutionPolicy Bypass -File a:\win11vdi-initialise.ps1</CommandLine>
+                    <CommandLine>powershell -ExecutionPolicy Bypass -File a:\initialise.ps1</CommandLine>
                     <Description>Basic configuration</Description>
                     <Order>99</Order>
                 </SynchronousCommand>
@@ -132,7 +132,7 @@
 			</OOBE>
 			<UserAccounts>
 				<AdministratorPassword>
-					<Value>REPLACEWITHADMINPASS</Value> 
+					<Value>${admin_password}</Value> 
 					<PlainText>true</PlainText> 
 				</AdministratorPassword>
 			</UserAccounts>

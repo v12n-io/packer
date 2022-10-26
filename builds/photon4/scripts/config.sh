@@ -5,8 +5,8 @@
 
 ## Apply updates
 echo ' - Updating the guest operating system ...'
-sudo tdnf upgrade tdnf -y --refresh 2>&-
-sudo tdnf distro-sync -y 2>&-
+sudo tdnf upgrade tdnf -y --refresh &>/dev/null
+sudo tdnf distro-sync -y &>/dev/null
 
 ## Configure SSH server
 echo ' - Configuring SSH server daemon ...'
@@ -16,26 +16,25 @@ sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/
 
 ## Create Ansible user
 echo ' - Creating local user for Ansible integration ...'
-sudo groupadd REPLACEWITHANSIBLEUSERNAME
-sudo useradd -g REPLACEWITHANSIBLEUSERNAME -G wheel -m -s /bin/bash REPLACEWITHANSIBLEUSERNAME
-echo REPLACEWITHANSIBLEUSERNAME:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo cat << EOF > /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
-REPLACEWITHANSIBLEUSERKEY
+sudo groupadd $ANSIBLEUSER
+sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
+echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
+sudo mkdir /home/$ANSIBLEUSER/.ssh
+sudo cat << EOF > /home/$ANSIBLEUSER/.ssh/authorized_keys
+$ANSIBLEKEY
 EOF
-sudo chown -R REPLACEWITHANSIBLEUSERNAME:REPLACEWITHANSIBLEUSERNAME /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 700 /home/REPLACEWITHANSIBLEUSERNAME/.ssh
-sudo chmod 600 /home/REPLACEWITHANSIBLEUSERNAME/.ssh/authorized_keys
+sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
+sudo chmod 700 /home/$ANSIBLEUSER/.ssh
+sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
 
 ## Install trusted SSL CA certificates
 echo ' - Installing trusted SSL CA certificates ...'
-pkiServer="REPLACEWITHPKISERVER"
 pkiCerts=("root.crt" "issuing.crt")
-#cd /etc/pki/ca-trust/source/anchors
-#for cert in ${pkiCerts[@]}; do
-    #sudo wget -q $pkiServer/$cert
-#done
-#sudo update-ca-trust extract
+cd /etc/ssl/certs
+for cert in ${pkiCerts[@]}; do
+    sudo wget -O $cert.pem -q ${PKISERVER}/$cert &>/dev/null
+done
+sudo /usr/bin/rehash_ca_certificates.sh
 
 ## Setup MoTD
 OS=$(head -n 1 /etc/photon-release)

@@ -3,24 +3,49 @@
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
+# FileHandler Function
+function File-Handler {
+   param( [string]$source, [string]$destination )
+
+   # Download file
+   Try {
+      Invoke-WebRequest -Uri $source -OutFile $destination | Out-Null
+      Write-Host "File Downloaded: $destination"
+   }
+   Catch {
+      Write-Host "File download failed for: $source"
+      Exit -1
+   }
+
+   # Unblock file
+   Try {
+      Unblock-File $destination -Confirm:$false -ErrorAction Stop | Out-Null
+      Write-Host "File Unblocked: $destination"
+   }
+   Catch {
+      Write-Host "Unable to unblock file: $destination"
+      Exit -1
+   }
+}
+
 # SettingSet Explorer view options
-Write-Host " - Setting default Explorer view options ..."
+Write-Host "-- Setting default Explorer view options ..."
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Hidden" 1 | Out-Null
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideFileExt" 0 | Out-Null
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideDrivesWithNoMedia" 0 | Out-Null
 Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "ShowSyncProviderNotifications" 0 | Out-Null
 
 # Disable system hibernation
-Write-Host " - Disabling system hibernation ..."
+Write-Host "-- Disabling system hibernation ..."
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HiberFileSizePercent" -Value 0 | Out-Null
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HibernateEnabled" -Value 0 | Out-Null
 
 # Disable password expiration for Administrator
-Write-Host " - Disabling password expiration for local Administrator user ..."
+Write-Host "-- Disabling password expiration for local Administrator user ..."
 Set-LocalUser Administrator -PasswordNeverExpires $true
 
 # Disable TLS 1.0
-Write-Host " - Disabling TLS 1.0 ..."
+Write-Host "-- Disabling TLS 1.0 ..."
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.0" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Server" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Client" | Out-Null
@@ -30,7 +55,7 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
  
 # Disable TLS 1.1
-Write-Host " - Disabling TLS 1.1 ..."
+Write-Host "-- Disabling TLS 1.1 ..."
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.1" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Server" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Client" | Out-Null
@@ -40,7 +65,7 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
 
 # Enabling TLS 1.2
-Write-Host " - Enabling TLS 1.2 ..."
+Write-Host "-- Enabling TLS 1.2 ..."
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.2" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2" -Name "Server" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2" -Name "Client" | Out-Null
@@ -50,13 +75,12 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.2\Server" -Name "DisabledByDefault" -Value 0 | Out-Null
 
 # Importing trusted CA certificates
-Write-Host " - Importing trusted CA certificates ..."
-$webserver = "REPLACEWITHPKISERVER"
-$url = "http://" + $webserver
+Write-Host "-- Importing trusted CA certificates ..."
+$webserver = $env:PKISERVER
 $certRoot = "root.crt"
 $certIssuing = "issuing.crt"
 ForEach ($cert in $certRoot,$certIssuing) {
-  Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
+  Invoke-WebRequest -Uri ($webserver + "/" + $cert) -OutFile C:\$cert
 }
 Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
 Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA' | Out-Null
@@ -64,101 +88,107 @@ ForEach ($cert in $certRoot,$certIssuing) {
   Remove-Item C:\$cert -Confirm:$false
 }
 
+# Set Intranet server location and other filenames
+$intranetServer = $env:INTRANETSERVER
+$bginfoPath = $env:BGINFOPATH
+$bginfoImg = $env:BGINFOIMG
+$bginfoFile = $env:BGINFOFILE
+$horizonPath = $env:HORIZONPATH
+$horizonAgent = $env:HORIZONAGENT
+$appvolsAgent = $env:APPVOLSAGENT
+$appvolsServer = $env:APPVOLSSERVER
+$fslogixAgent = $env:FSLOGIXAGENT
+$osotAgent = $env:OSOTAGENT
+$osotTemplate = $env:OSOTTEMPLATE
+
 # Download standard wallpaper
-Write-Host " - Importing Wallpaper ..."
-New-Item -Path "C:\Windows\Web" -Name "v12n" -ItemType "directory" | Out-Null
-$uri = ("REPLACEWITHINTRANET" + "/other/bginfo")
-$sourcefile = "v12n-screen.jpg"
-$targetFolder = "C:\Windows\Web\v12n"
-Invoke-WebRequest -Uri ($uri + "/" + $sourcefile) -OutFile ($targetFolder + "\" + $sourcefile)
+Write-Host "-- Importing Wallpaper ..."
+New-Item -Path "C:\Windows\Web" -Name "bginfo" -ItemType "directory" | Out-Null
+$targetFolder = "C:\Windows\Web\bginfo"
+$uri = ($intranetServer + "/" + $bginfoPath)
+Invoke-WebRequest -Uri ($uri + "/" + $bginfoImg) -OutFile ($targetFolder + "\" + $bginfoImg)
 
 # Install Bginfo
-Write-Host " - Installing BGinfo ..."
-$uri = ("REPLACEWITHINTRANET" + "/other/bginfo")
+Write-Host "-- Installing BGinfo ..."
 $targetFolder = "C:\Program Files\Bginfo"
 New-Item $targetFolder -Itemtype Directory | Out-Null
 Invoke-WebRequest -Uri ($uri + "/Bginfo64.exe") -OutFile $targetFolder\Bginfo64.exe
-Invoke-WebRequest -Uri ($uri + "/v12n.bgi") -OutFile $targetFolder\v12n.bgi
+Invoke-WebRequest -Uri ($uri + "/" + $bginfoFile) -OutFile ($targetFolder + "\" + $bginfoFile)
 
 # Install Horizon Agent
-Write-Host " - Installing Horizon Agent ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
-$installer = "VMware-Horizon-Agent-x86_64-2111.1-8.4.0-19066669.exe"
-$listConfig = "/s /v ""/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"""
-Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
-Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop | Out-Null
+Write-Host "-- Installing Horizon Agent ..."
+$uri = $intranetServer + "/" + $horizonPath + "/" + $horizonAgent
+$target = Join-Path C:\ $horizonAgent
+$listConfig = '/s /v "/qn REBOOT=ReallySuppress ADDLOCAL=Core,NGVC,RTAV,ClientDriveRedirection,V4V,VmwVaudio,PerfTracker"'
 Try {
-   Start-Process C:\$installer -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   File-Handler $uri $target
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install the Horizon Agent"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$installer -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Install Horizon AppVols Agent
-Write-Host " - Installing AppVols Agent ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
-$installer = "App Volumes Agent.msi"
-$appVolumesServer = "REPLACEWITHAPPVOLSERVER"
-$listConfig = "/i ""C:\$installer"" /qn REBOOT=ReallySuppress MANAGER_ADDR=$appVolumesServer MANAGER_PORT=443 EnforceSSLCertificateValidation=0"
-Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
-Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop | Out-Null
+Write-Host "-- Installing AppVols Agent ..."
+$uri = $intranetServer + "/" + $horizonPath + "/" + $appvolsAgent
+$target = Join-Path C:\ $appvolsAgent
+$listConfig = '/i ' + $target + ' /qn REBOOT=ReallySuppress MANAGER_ADDR=' + $appvolsServer + ' MANAGER_PORT=443 EnforceSSLCertificateValidation=0'
 Try {
-   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait | Out-Null
+   File-Handler $uri $target
+   Start-Process msiexec.exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install the AppVolumes Agent"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$installer -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Install FSLogix
-Write-Host " - Installing FSLogix ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
-$installer = "FSLogixAppsSetup.exe"
+Write-Host "-- Installing FSLogix ..."
+$uri = $intranetServer + "/" + $horizonPath + "/" + $fslogixAgent
+$target = Join-Path C:\ $fslogixAgent
 $listConfig = "/install /quiet /norestart"
-Invoke-WebRequest -Uri ($uri + "/" + $installer) -OutFile C:\$installer
-Unblock-File C:\$installer -Confirm:$false -ErrorAction Stop | Out-Null
 Try {
-   Start-Process C:\$installer -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop | Out-Null
+   File-Handler $uri $target
+   Start-Process $target -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to install FSLogix"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item C:\$installer -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Execute Horizon OS Optimization Tool
-Write-Host " - Executing OS Optimization Tool ..."
-$uri = ("REPLACEWITHINTRANET" + "/vmware/horizon/2111")
-$exe = "VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe"
-$arg = '-o -t "VMware Templates\Windows 10 and Server 2016 or later" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
-Invoke-WebRequest -Uri ($uri + "/" + $exe) -OutFile $env:TEMP\$exe
-Set-Location $env:TEMP | Out-Null
+Write-Host "-- Executing OS Optimization Tool ..."
+$uri = $intranetServer + "/" + $horizonPath + "/" + $osotAgent
+$target = Join-Path C:\ $osotAgent
+$listConfig = '-o -t "' + $osotTemplate + '" -visualeffect performance -notification disable -windowsupdate disable -officeupdate disable -storeapp remove-all -antivirus disable -securitycenter disable -f 0 1 2 3 4 5 6 7 8 9 10'
 Try {
-   Start-Process $exe -ArgumentList $arg -Passthru -Wait -ErrorAction stop | Out-Null
+   File-Handler $uri $target
+   Start-Process $target -ArgumentList $listConfig -Passthru -Wait -ErrorAction stop
 }
 Catch {
    Write-Error "Failed to run OSOT"
    Write-Error $_.Exception
    Exit -1 
 }
-Remove-Item -Path $env:TEMP\$exe -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Perform sdelete to reduce disk size
-Write-Host " - Executing SDELETE ..."
-$url = "https://download.sysinternals.com/files"
-$zip = "SDelete.zip"
-$exe = "sdelete64.exe"
-$arg = "-z c: /accepteula"
-Invoke-WebRequest -Uri ($url + "/" + $zip) -OutFile C:\$zip
-Expand-Archive -LiteralPath "C:\$zip" -DestinationPath C:\ -Confirm:$false | Out-Null
+Write-Host "-- Executing SDELETE ..."
+$uri = "https://download.sysinternals.com/files/SDelete.zip"
+$target = "C:\SDelete.zip"
+$exe = "C:\sdelete64.exe"
+$listConfig = "-z c: /accepteula"
 Try {
-   Start-Process C:\$exe -ArgumentList $arg -PassThru -Wait -ErrorAction Stop | Out-Null
+   File-Handler $uri $target
+   Expand-Archive -LiteralPath $target -DestinationPath C:\ -Confirm:$false | Out-Null
+   Start-Process $exe -ArgumentList $listConfig -PassThru -Wait -ErrorAction Stop
 }
 Catch {
    Write-Error "Failed to run SDelete"
@@ -166,17 +196,17 @@ Catch {
    Exit -1 
 }
 [Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
-$source = [IO.Compression.ZipFile]::OpenRead("C:\$zip")
+$source = [IO.Compression.ZipFile]::OpenRead($target)
 $entries = $source.Entries
 ForEach ($file in $entries) {
-   Remove-Item -Path C:\$file -Confirm:$false
+   Remove-Item -Path (Join-Path C:\ $file) -Confirm:$false
 }
 $source.Dispose()
-Remove-Item C:\$zip -Confirm:$false
+Remove-Item $target -Confirm:$false
 
 # Enabling RDP connections
-Write-Host " - Enabling RDP connections ..."
+Write-Host "-- Enabling RDP connections ..."
 Start-Process netsh -ArgumentList 'advfirewall firewall set rule group="Remote Desktop" new enable=yes' -wait | Out-Null
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
 
-Write-Host " - Configuration complete ..."
+Write-Host "-- Configuration complete ..."

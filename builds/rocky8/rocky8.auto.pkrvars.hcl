@@ -1,9 +1,8 @@
 # ----------------------------------------------------------------------------
-# Name:         rhel8.auto.pkrvars.hcl
-# Description:  Common vSphere variables for RHEL 8 Packer builds
+# Name:         rocky8.auto.pkrvars.hcl
+# Description:  Required vSphere variables for Rocky 8 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -38,9 +37,7 @@ vm_guestos_type                 = "rhel8_64Guest"
 vm_guestos_language             = "en_GB"
 vm_guestos_keyboard             = "gb"
 vm_guestos_timezone             = "UTC"
-build_username                  = "REPLACEWITHUSERNAME"
-build_password                  = "REPLACEWITHUSERPASS"
 
 # Provisioner Settings
-script_files                    = [ "scripts/rocky8-config.sh" ]
+script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []

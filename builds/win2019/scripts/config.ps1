@@ -3,17 +3,24 @@
 # @website https://blog.v12n.io
 $ErrorActionPreference = "Stop"
 
+# SettingSet Explorer view options
+Write-Host "-- Setting default Explorer view options ..."
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Hidden" 1 | Out-Null
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideFileExt" 0 | Out-Null
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideDrivesWithNoMedia" 0 | Out-Null
+Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "ShowSyncProviderNotifications" 0 | Out-Null
+
 # Disable system hibernation
-Write-Host " - Disabling system hibernation ..."
+Write-Host "-- Disabling system hibernation ..."
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HiberFileSizePercent" -Value 0 | Out-Null
 Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Power\" -Name "HibernateEnabled" -Value 0 | Out-Null
 
 # Disable password expiration for Administrator
-Write-Host " - Disabling password expiration for local Administrator user ..."
+Write-Host "-- Disabling password expiration for local Administrator user ..."
 Set-LocalUser Administrator -PasswordNeverExpires $true
 
 # Disable TLS 1.0
-Write-Host " - Disabling TLS 1.0 ..."
+Write-Host "-- Disabling TLS 1.0 ..."
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.0" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Server" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0" -Name "Client" | Out-Null
@@ -23,7 +30,7 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.0\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
  
 # Disable TLS 1.1
-Write-Host " - Disabling TLS 1.1 ..."
+Write-Host "-- Disabling TLS 1.1 ..."
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols" -Name "TLS 1.1" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Server" | Out-Null
 New-Item -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1" -Name "Client" | Out-Null
@@ -32,14 +39,21 @@ New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "Enabled" -Value 0 | Out-Null
 New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Protocols\TLS 1.1\Server" -Name "DisabledByDefault" -Value 1 | Out-Null
 
+# Create additional user account user
+Write-Host "-- Creating non-administrator user ..."
+$user = $env:BUILDUSER
+$pass = $env:BUILDPASS
+Add-Type -AssemblyName 'System.Web'
+$secureString = ConvertTo-SecureString $pass -AsPlainText -Force
+New-LocalUser -Name $user -Password $secureString | Out-Null
+
 # Importing trusted CA certificates
-Write-Host " - Importing trusted CA certificates ..."
-$webserver = "REPLACEWITHPKISERVER"
-$url = "http://" + $webserver
+Write-Host "-- Importing trusted CA certificates ..."
+$webserver = $env:PKISERVER
 $certRoot = "root.crt"
 $certIssuing = "issuing.crt"
 ForEach ($cert in $certRoot,$certIssuing) {
-  Invoke-WebRequest -Uri ($url + "/" + $cert) -OutFile C:\$cert
+  Invoke-WebRequest -Uri ($webserver + "/" + $cert) -OutFile C:\$cert
 }
 Import-Certificate -FilePath C:\$certRoot -CertStoreLocation 'Cert:\LocalMachine\Root' | Out-Null
 Import-Certificate -FilePath C:\$certIssuing -CertStoreLocation 'Cert:\LocalMachine\CA' | Out-Null
@@ -48,19 +62,18 @@ ForEach ($cert in $certRoot,$certIssuing) {
 }
 
 # Install OpenSSH
-Write-Host " - Installing OpenSSH ..."
+Write-Host "-- Installing OpenSSH ..."
 Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 | Out-Null
 Set-Service sshd -StartupType Automatic | Out-Null
 New-ItemProperty -Path "HKLM:\SOFTWARE\OpenSSH" -Name DefaultShell -Value "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -PropertyType String -Force | Out-Null
 
-# Variables
+# Creating Ansible user
+Write-Host "-- Creating user for Ansible access ..."
 $passwordLength = 20
 $nonAlphaChars = 5
-$ansibleUser = "REPLACEWITHANSIBLEUSERNAME"
+$ansibleUser = $env:ANSIBLEUSER
+$ansibleKey = $env:ANSIBLEKEY
 Add-Type -AssemblyName 'System.Web'
-
-# Creating Ansible user
-Write-Host " - Creating user for Ansible access ..."
 $ansiblePass = ([System.Web.Security.Membership]::GeneratePassword($passwordLength, $nonAlphaChars))
 $secureString = ConvertTo-SecureString $ansiblePass -AsPlainText -Force
 New-LocalUser -Name $ansibleUser -Password $secureString | Out-Null
@@ -71,12 +84,12 @@ $newSecureString = ConvertTo-SecureString $newPass -AsPlainText -Force
 Set-LocalUser -Name $ansibleUser -Password $newSecureString | Out-Null
 New-Item -Path "C:\Users\$ansibleUser" -Name ".ssh" -ItemType Directory | Out-Null
 $content = @"
-REPLACEWITHANSIBLEUSERKEY REPLACEWITHANSIBLEUSERNAME
+$ansibleKey $ansibleUser
 "@ 
 $content | Set-Content -Path "c:\users\$ansibleUser\.ssh\authorized_keys" | Out-Null
 
 # Installing Cloudbase-Init
-Write-Host " - Installing Cloudbase-Init ..."
+Write-Host "-- Installing Cloudbase-Init ..."
 $msiLocation = 'https://cloudbase.it/downloads'
 $msiFileName = 'CloudbaseInitSetup_Stable_x64.msi'
 Invoke-WebRequest -Uri ($msiLocation + '/' + $msiFileName) -OutFile C:\$msiFileName
@@ -105,8 +118,8 @@ Remove-Item -Path ($confPath + "Unattend.xml") -Confirm:$false
 Remove-Item C:\$msiFileName -Confirm:$false
 
 # Enabling RDP connections
-Write-Host " - Enabling RDP connections ..."
+Write-Host "-- Enabling RDP connections ..."
 Start-Process netsh -ArgumentList 'advfirewall firewall set rule group="Remote Desktop" new enable=yes' -wait | Out-Null
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0 | Out-Null
 
-Write-Host " - Configuration complete ..."
+Write-Host "-- Configuration complete ..."

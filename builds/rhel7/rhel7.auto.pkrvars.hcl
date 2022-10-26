@@ -1,9 +1,8 @@
 # ----------------------------------------------------------------------------
 # Name:         rhel7.auto.pkrvars.hcl
-# Description:  Common vSphere variables for RHEL 7 Packer builds
+# Description:  Required vSphere variables for RHEL 7 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         04/03/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -15,9 +14,6 @@ vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "RHEL"
 vm_os_version                   = "7.9"
-vm_os_language                  = "en_GB"
-vm_os_keyboard                  = "gb"
-vm_os_timezone                  = "UTC"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
@@ -38,11 +34,10 @@ vcenter_content_library_destroy = true
 
 # VM OS Settings
 vm_guestos_type                 = "rhel7_64Guest"
-build_username                  = "REPLACEWITHUSERNAME"
-build_password                  = "REPLACEWITHUSERPASS"
-rhsm_user                       = "REPLACEWITHRHSMUSER"
-rhsm_pass                       = "REPLACEWITHRHSMPASS"
+vm_guestos_language             = "en_GB"
+vm_guestos_keyboard             = "gb"
+vm_guestos_timezone             = "UTC"
 
 # Provisioner Settings
-script_files                    = [ "scripts/rhel7-config.sh" ]
+script_files                    = [ "scripts/config.sh" ]
 inline_cmds                     = []

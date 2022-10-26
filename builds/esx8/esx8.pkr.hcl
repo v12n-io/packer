@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# Name:         rhel9.pkr.hcl
-# Description:  Build definition for RedHat Enterprise Linux 9
+# Name:         esx8.pkr.hcl
+# Description:  Build definition for ESX 8
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
@@ -25,21 +25,19 @@ locals {
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     ks_content                  = {
-                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
-                                        build_username            = var.build_username
-                                        build_password            = var.build_password
-                                        vm_guestos_language       = var.vm_guestos_language
+                                    "KS.CFG" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
                                         vm_guestos_keyboard       = var.vm_guestos_keyboard
-                                        vm_guestos_timezone       = var.vm_guestos_timezone
                                     })
                                   }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+
 }
 
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "rhel9" {
+source "vsphere-iso" "esx8" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -75,6 +73,7 @@ source "vsphere-iso" "rhel9" {
     cpu_cores                   = var.vm_cpu_cores
     CPU_hot_plug                = var.vm_cpu_hotadd
     RAM                         = var.vm_mem_size
+    NestedHV                    = true
     RAM_hot_plug                = var.vm_mem_hotadd
     cdrom_type                  = var.vm_cdrom_type
     remove_cdrom                = var.vm_cdrom_remove
@@ -87,23 +86,24 @@ source "vsphere-iso" "rhel9" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
+    network_adapters {
+        network                 = var.vcenter_network
+        network_card            = var.vm_nic_type
+    }
 
     # Removeable Media
-    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
+    iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
     cd_content                  = local.ks_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "up", "wait", "e", "<down><down><end><wait>",
-                                    "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-                                    "quiet text inst.ks=cdrom",
-                                    "<enter><wait><leftCtrlOn>x<leftCtrlOff>" ]
+    boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/KS.CFG<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
-    ssh_username                = var.build_username
-    ssh_password                = var.build_password
-    shutdown_command            = "sudo shutdown -P now"
+    ssh_username                = var.admin_username
+    ssh_password                = var.admin_password
+    shutdown_command            = "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
@@ -112,17 +112,11 @@ source "vsphere-iso" "rhel9" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.rhel9" ]
+    sources                 = [ "source.vsphere-iso.esx8" ]
     
-    # Shell Provisioner to execute scripts
+    # Shell Provisioner to execute scripts 
     provisioner "shell" {
-        execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
-        scripts             = var.script_files
-        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
-                                "ANSIBLEUSER=${ var.build_ansible_user }",
-                                "ANSIBLEKEY=${ var.build_ansible_key }",
-                                "RHSM_USER=${ var.rhsm_user }",
-                                "RHSM_PASS=${ var.rhsm_pass }" ]
+        inline              = var.inline_cmds
     }
 
     post-processor "manifest" {

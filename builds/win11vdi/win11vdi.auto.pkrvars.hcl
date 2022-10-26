@@ -1,9 +1,8 @@
 # ----------------------------------------------------------------------------
 # Name:         win11vdi.auto.pkrvars.hcl
-# Description:  Common vSphere variables for Windows 11 VDI Packer builds
+# Description:  Required vSphere variables for Windows 11 VDI Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # ISO Settings
@@ -40,9 +39,22 @@ vcenter_snapshot_name           = "VDI snapshot"
 
 # VM OS Settings
 vm_guestos_type                 = "windows9_64Guest"
-build_username                  = "Administrator"
-build_password                  = "REPLACEWITHADMINPASS"
+vm_guestos_language             = "en-GB"
+vm_guestos_keyboard             = "en-GB"
+vm_guestos_systemlocale         = "en-GB"
+vm_guestos_timezone             = "GMT Standard Time"
+
+# Horizon Desktop Settings
+hz_bginfo_path                  = "other/bginfo"                                            # Relative path on the Intranet Server to BG Info files
+hz_bginfo_img                   = "v12n-desktop-background.jpg"                             # Desktop background image for BG Info
+hz_bginfo_file                  = "Bginfo64.exe"                                            # BG Info EXE file
+hz_agent_path                   = "vmware/horizon/2111"                                     # Relative path on the Intranet Server to Horizon Agent files
+hz_agent_file                   = "VMware-Horizon-Agent-x86_64-2111.1-8.4.0-19066669.exe"   # Horizon Agent installation file name
+hz_appvols_file                 = "AppVolumesAgent.msi"                                   # AppVolumes agent installation file name
+hz_fslogix_file                 = "FSLogixAppsSetup.exe"                                    # FSLogix agent installation file name
+hz_osot_file                    = "VMwareHorizonOSOptimizationTool-x86_64-1.0_2111.exe"     # Horizon OS Optimization Tool installation file name
+hz_osot_template                = "VMware Templates\\Windows 10 and Server 2016 or later"   # OSOT template to be used
 
 # Provisioner Settings
-script_files                    = [ "scripts/win11vdi-config.ps1" ]
+script_files                    = [ "scripts/config.ps1" ]
 inline_cmds                     = [ "Get-EventLog -LogName * | ForEach { Clear-EventLog -LogName $_.Log }" ]

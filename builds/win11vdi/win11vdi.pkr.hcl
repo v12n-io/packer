@@ -3,21 +3,20 @@
 # Description:  Build definition for Windows 11 VDI
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
-# Date:         24/01/2022
 # ----------------------------------------------------------------------------
 
 # -------------------------------------------------------------------------- #
 #                           Packer Configuration                             #
 # -------------------------------------------------------------------------- #
 packer {
-    required_version = ">= 1.7.9"
+    required_version = ">= 1.8.3"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.3"
+            version = ">= v1.0.6"
             source  = "github.com/hashicorp/vsphere"
         }
         windows-update = {
-            version = ">= 0.14.0"
+            version = ">= 0.14.1"
             source  = "github.com/rgl/windows-update"
         }
     }
@@ -27,8 +26,19 @@ packer {
 #                              Local Variables                               #
 # -------------------------------------------------------------------------- #
 locals { 
-    build_version   = formatdate("YY.MM", timestamp())
-    build_date      = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    build_version               = formatdate("YY.MM", timestamp())
+    build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
+    floppy_content              = {
+                                    "Autounattend.xml" = templatefile("${abspath(path.root)}/config/Autounattend.pkrtpl.hcl", {
+                                        admin_password            = var.admin_password
+                                        vm_guestos_language       = var.vm_guestos_language
+                                        vm_guestos_systemlocale   = var.vm_guestos_systemlocale
+                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
+                                        vm_guestos_timezone       = var.vm_guestos_timezone
+                                        vm_windows_image          = "Enterprise"
+                                    })
+                                  }
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
 }
 
 # -------------------------------------------------------------------------- #
@@ -53,7 +63,7 @@ source "vsphere-iso" "win11vdi" {
     # Virtual Machine
     guest_os_type               = var.vm_guestos_type
     vm_name                     = "${ source.name }-${ var.build_branch }-${ local.build_version }"
-    notes                       = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    notes                       = local.vm_description
     firmware                    = var.vm_firmware
     video_ram                   = var.vm_video_ram
     vTPM                        = var.vm_vtpm         
@@ -77,7 +87,8 @@ source "vsphere-iso" "win11vdi" {
 
     # Removeable Media
     iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }", "[] /vmimages/tools-isoimages/windows.iso" ]
-    floppy_files                = [ "config/Autounattend.xml", "scripts/win11vdi-initialise.ps1" ]
+    floppy_files                = [ "scripts/initialise.ps1" ]
+    floppy_content              = local.floppy_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
@@ -85,8 +96,8 @@ source "vsphere-iso" "win11vdi" {
     boot_command                = [ "<spacebar>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "winrm"
-    winrm_username              = var.build_username
-    winrm_password              = var.build_password
+    winrm_username              = var.admin_username
+    winrm_password              = var.admin_password
     shutdown_command            = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Complete\""
     shutdown_timeout            = var.vm_shutdown_timeout
 }
@@ -100,8 +111,8 @@ build {
 
     # PowerShell Provisioner to install RSAT and remove bloat
     provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
+        elevated_user           = var.admin_username
+        elevated_password       = var.admin_password
         inline                  = [ "powercfg.exe /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c",
                                     "Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online | Out-Null",
                                     "Get-WindowsCapability -Name Browser.InternetExplorer* -Online | Remove-WindowsCapability -Online | Out-Null",
@@ -168,28 +179,41 @@ build {
     
     # PowerShell Provisioner to execute scripts 
     provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
+        elevated_user           = var.admin_username
+        elevated_password       = var.admin_password
         scripts                 = var.script_files
+        environment_vars        = [ "PKISERVER=${ var.build_pkiserver }",
+                                    "INTRANETSERVER=${ var.intranet_server }",
+                                    "BGINFOPATH=${ var.hz_bginfo_path }",
+                                    "BGINFOIMG=${ var.hz_bginfo_img }",
+                                    "BGINFOFILE=${ var.hz_bginfo_file }",
+                                    "HORIZONPATH=${ var.hz_agent_path }",
+                                    "HORIZONAGENT=${ var.hz_agent_file }",
+                                    "APPVOLSAGENT=${ var.hz_appvols_file }",
+                                    "APPVOLSSERVER=${ var.hz_appvols_server }",
+                                    "FSLOGIXAGENT=${ var.hz_fslogix_file }",
+                                    "OSOTAGENT=${ var.hz_osot_file }",
+                                    "OSOTTEMPLATE=${ var.hz_osot_template }" ]
     }
 
     # PowerShell Provisioner to execute commands
     provisioner "powershell" {
-        elevated_user           = var.build_username
-        elevated_password       = var.build_password
+        elevated_user           = var.admin_username
+        elevated_password       = var.admin_password
         inline                  = var.inline_cmds
     }
 
     post-processor "manifest" {
-        output              = "manifest.txt"
-        strip_path          = true
-        custom_data         = {
-                                vcenter_fqdn    = "${ var.vcenter_server }"
-                                vcenter_folder  = "${ var.vcenter_folder }"
-                                iso_file        = "${ var.os_iso_file }"
-                                vdi             = "true"
-                                build_repo      = "${ var.build_repo }"
-                                build_branch    = "${ var.build_branch }"
+        output                  = "manifest.txt"
+        strip_path              = true
+        custom_data             = {
+            vcenter_fqdn        = var.vcenter_server
+            vcenter_folder      = var.vcenter_folder
+            iso_file            = var.os_iso_file
+            build_repo          = var.build_repo
+            build_branch        = var.build_branch
+            build_version       = local.build_version
+            build_date          = local.build_date
         }
     }
 }
