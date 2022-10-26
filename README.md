@@ -3,18 +3,18 @@ This repository contains Packer builds for many common OSs running as guests on 
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
-* 22.11 - Major changes:
-            - Archived builds have been moved in to a separate directory
-            - All configuration files (e.g. Autounattend.xml and ks.config) are now Packer template files that are customised by Packer during execution. There is no more string substitution using grep!
-            - All Linux OS configuration files are supplied using CD ISOs that are dynamically built by Packer. The built-in HTTP server in Packer is no longer used. This requires Packer to have access to a utility that can be used to create these ISO images, such as "xorriso".
-            - Rocky 8 image.
-            - Rocky 9 image.
-            - RHEL 9 image.
-            - ESXi 7 image.
-            - ESXi 8 image.
-            - All sensitive or environment specific settings are now supplied using environment variables.
-            - The file common.pkrvars.hcl is deprecated and will be removed in the next version.
-            - The file vsphere.pkrvars.hcl is deprecated and will be removed in the next version.
+* 22.11 - Major changes:  
+            - Archived builds have been moved in to a separate directory. 
+            - All configuration files (e.g. Autounattend.xml and ks.config) are now Packer template files that are customised by Packer during execution. There is no more string substitution using grep!  
+            - All Linux OS configuration files are supplied using CD ISOs that are dynamically built by Packer. The built-in HTTP server in Packer is no longer used. This requires Packer to have access to a utility that can be used to create these ISO images, such as "xorriso".  
+            - Rocky 8 image.  
+            - Rocky 9 image.  
+            - RHEL 9 image.  
+            - ESXi 7 image.  
+            - ESXi 8 image.  
+            - All sensitive or environment specific settings are now supplied using environment variables.  
+            - The file common.pkrvars.hcl is deprecated and will be removed in the next version.  
+            - The file vsphere.pkrvars.hcl is deprecated and will be removed in the next version.  
 * 22.02 - Several major changes:
             - The folder layout has been updated. All builds are now self-contained; they have all HCL files and scripts under a single directory.
             - Photon 3, Windows 10 and Windows 2016 have been archived.
