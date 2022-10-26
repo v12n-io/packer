@@ -1,31 +1,39 @@
 # Packer
-This repository contains Packer builds for many common OSs running as guests on a vSphere platform. As of Packer v1.7.0, HashiCorp Configuration Language (HCL) is fully supported and so all of the builds in this repository have been updated to use HCL instead of JSON.
+This repository contains Packer builds for many common OSs running as guests on a vSphere platform. As of Packer v1.7.0, HashiCorp Configuration Language (HCL) is fully supported and so all of the builds in this repository have been updated to use HCL instead of JSON.  
 From September 2021, required versions have been included in each of the builds. This will require Packer and any required plugins to be at certain versions for the build to execute.
 
 ## Version History
-* 22.11 - Major changes:  
-            - Archived builds have been moved in to a separate directory. 
-            - All configuration files (e.g. Autounattend.xml and ks.config) are now Packer template files that are customised by Packer during execution. There is no more string substitution using grep!  
-            - All Linux OS configuration files are supplied using CD ISOs that are dynamically built by Packer. The built-in HTTP server in Packer is no longer used. This requires Packer to have access to a utility that can be used to create these ISO images, such as "xorriso".  
-            - Rocky 8 image.  
-            - Rocky 9 image.  
-            - RHEL 9 image.  
-            - ESXi 7 image.  
-            - ESXi 8 image.  
-            - All sensitive or environment specific settings are now supplied using environment variables.  
-            - The file common.pkrvars.hcl is deprecated and will be removed in the next version.  
-            - The file vsphere.pkrvars.hcl is deprecated and will be removed in the next version.  
-* 22.02 - Several major changes:
-            - The folder layout has been updated. All builds are now self-contained; they have all HCL files and scripts under a single directory.
-            - Photon 3, Windows 10 and Windows 2016 have been archived.
-            - Variable definitions have been moved in to separate HCL files to make the main template files smaller and easier to navigate.
-* 21.11 - Minimum Packer version is now 1.7.7. Minimum Packer vSphere plugin is now 1.0.2. Trusted CA cert name changes.
-* 21.10.1 - Added manifest post-processors. Windows Server builds with Desktop Experience renamed to *dexp.
-* 21.10 - Added RHEL 7 template, plus some other fixes.
-* 21.09.1 - Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
-* 21.09 - First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
+### 22.11
+* Archived builds have been moved in to a separate directory. 
+* All configuration files (e.g. Autounattend.xml and ks.config) are now Packer template files that are customised by Packer during execution. There is no more string substitution using grep!  
+* All Linux OS configuration files are supplied using CD ISOs that are dynamically built by Packer. The built-in HTTP server in Packer is no longer used. This requires Packer to have access to a utility that can be used to create these ISO images, such as "xorriso".  
+* Rocky 8 image.  
+* Rocky 9 image.  
+* RHEL 9 image.  
+* ESXi 7 image.  
+* ESXi 8 image.  
+* All sensitive or environment specific settings are now supplied using environment variables.  
+* The file common.pkrvars.hcl is deprecated and will be removed in the next version.  
+* The file vsphere.pkrvars.hcl is deprecated and will be removed in the next version.  
+### 22.02
+* The folder layout has been updated. All builds are now self-contained; they have all HCL files and scripts under a single directory.
+* Photon 3, Windows 10 and Windows 2016 have been archived.
+* Variable definitions have been moved in to separate HCL files to make the main template files smaller and easier to navigate.
+### 21.11
+* Minimum Packer version is now 1.7.7.
+* Minimum Packer vSphere plugin is now 1.0.2.
+* Trusted CA cert name changes.
+### 21.10.1
+* Added manifest post-processors.
+* Windows Server builds with Desktop Experience renamed to *dexp.
+### 21.10
+* Added RHEL 7 template, plus some other fixes.
+### 21.09.1
+* Added Windows 2022 and reconfigured Cloudbase-Init for VMwareGuestInfoService. 
+### 21.09
+* First numbered version. Minimum Packer and plugin versions specified. VM firmware updated to EFI secure where possible.
 
-All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information being supplied through environment variables.
+All of the files in this repository have been de-personalised as much as possible, with sensitive or environment-specific information being supplied through environment variables.  
 Within the "builds" folder there are two variable definitions files that provide common values to all of the builds:
 #### common.pkrvars.hcl
 This file contains variables that configure some of the Packer functionality and some elements of build customisation. As noted in the version history, this file is deprecated. It is no longer required and will be removed in the next version.
