@@ -107,6 +107,16 @@ python-dbus
 python-gobject
 open-vm-tools
 open-vm-tools-desktop
+bc
+gdm
+libappindicator-gtk3
+lsof
+pulseaudio-module-x11
+pulseaudio-utils
+xorg-x11-drv-vmware
+xorg-x11-server-utils
+xorg-x11-xauth
+zenity
 %end
 
 ### Post-installation commands.
