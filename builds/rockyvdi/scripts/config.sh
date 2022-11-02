@@ -68,7 +68,6 @@ fi
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 sudo rm -f /etc/machine-id
-sudo cloud-init clean --logs --seed
 sudo rm -f /etc/ssh/ssh_host_*
 if [ -f /var/log/audit/audit.log ]; then
     sudo cat /dev/null > /var/log/audit/audit.log
