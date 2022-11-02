@@ -315,3 +315,7 @@ variable "hz_agent_file" {
     type        = string
     description = "Horizon Agent installation file name"
 }
+variable "intranet_server" {
+    type        = string
+    description = "Intranet server HTTP(S) location for acquiring Horizon files"
+}
