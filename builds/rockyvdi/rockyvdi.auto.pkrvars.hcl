@@ -6,14 +6,14 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "Rocky-9.0-x86_64-dvd.iso"
-os_iso_path                     = "os/rocky/9"
+os_iso_file                     = "Rocky-8.6-x86_64-dvd1.iso"
+os_iso_path                     = "os/rocky/8"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "Rocky"
-vm_os_version                   = "9.0"
+vm_os_version                   = "8.6"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"
@@ -34,7 +34,7 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-vm_guestos_type                 = "rhel9_64Guest"
+vm_guestos_type                 = "rhel8_64Guest"
 vm_guestos_language             = "en_GB"
 vm_guestos_keyboard             = "gb"
 vm_guestos_timezone             = "UTC"
