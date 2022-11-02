@@ -60,6 +60,12 @@ sudo cat << ISSUE > /etc/issue
 ISSUE
 sudo ln -sf /etc/issue /etc/issue.net
 
+## Install Horizon Agent
+echo '-- Installing Horizon Agent ...'
+sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT} &>/dev/null
+sudo rpm -i ${HORIZONAGENT}
+sudo /usr/lib/vmware/viewagent/bin/ViewSetup.sh -S yes
+
 ## Final cleanup actions
 echo '-- Executing final cleanup tasks ...'
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
