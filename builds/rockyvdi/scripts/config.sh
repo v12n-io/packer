@@ -109,10 +109,10 @@ KeyboardLayoutSync=FALSE
 #domain name is YOURDOMAIN, you should set YOURDOMAIN.
 NetbiosDomain=REPLACEWITHNETBIOS
 AGENT
-sudo sed -i "s/REPLACEWITHSUBNET/$HORIZONSUBNET/g" /etc/vmware/viewagent-custom.conf
-sudo sed -i "s/REPLACEWITHNETBIOS/$HORIZONNETBIOS/g" /etc/vmware/viewagent-custom.conf
+sudo sed -i -r "s|REPLACEWITHSUBNET|$HORIZONSUBNET|g" /etc/vmware/viewagent-custom.conf
+sudo sed -i -r "s|REPLACEWITHNETBIOS|$HORIZONNETBIOS|g" /etc/vmware/viewagent-custom.conf
 
-sudo cat << JOIN > /etc/vmware/viewagent-custom.conf
+sudo cat << JOIN > /root/join.sh
 #!/bin/bash
 
 # Discover the domain
@@ -125,10 +125,10 @@ echo 'REPLACEWITHPASSWORD' | realm join -v --computer-ou='REPLACEWITHOU' -U REPL
 sed -i "s/cache_credentials = True/cache_credentials = False/g" /etc/sssd/sssd.conf
 JOIN
 sudo chmod 700 /root/join.sh &>/dev/null
-sudo sed -i "s/REPLACEWITHDOMAIN/$HORIZONDOMAIN/g" /root/join.sh
-sudo sed -i "s/REPLACEWITHPASSWORD/$HORIZONPASS/g" /root/join.sh
-sudo sed -i "s/REPLACEWITHUSER/$HORIZONUSER/g" /root/join.sh
-sudo sed -i "s/REPLACEWITHOU/$HORIZONOU/g" /root/join.sh
+sudo sed -i -r "s|REPLACEWITHDOMAIN|$HORIZONDOMAIN|g" /root/join.sh
+sudo sed -i -r "s|REPLACEWITHPASSWORD|$HORIZONPASS|g" /root/join.sh
+sudo sed -i -r "s|REPLACEWITHUSER|$HORIZONUSER|g" /root/join.sh
+sudo sed -i -r "s|REPLACEWITHOU|$HORIZONOU|g" /root/join.sh
 
 ## Final cleanup actions
 echo '-- Executing final cleanup tasks ...'
