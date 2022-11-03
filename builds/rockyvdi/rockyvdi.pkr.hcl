@@ -119,6 +119,7 @@ build {
     provisioner "shell" {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
+        expect_disconnect   = true
         environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
                                 "INTRANETSERVER=${ var.intranet_server }",
                                 "HORIZONPATH=${ var.hz_agent_path }",
