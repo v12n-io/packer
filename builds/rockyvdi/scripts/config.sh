@@ -9,6 +9,10 @@
 #sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 ## Apply updates
+echo '-- Setting hostname ...'
+echo 'rockyvdi' &>/dev/null | sudo tee /etc/hostname
+
+## Apply updates
 echo '-- Applying package updates ...'
 sudo dnf update -y -q &>/dev/null
 
@@ -65,12 +69,72 @@ echo '-- Installing Horizon Agent ...'
 sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT} &>/dev/null
 sudo rpm -i ${HORIZONAGENT} &>/dev/null
 
+## Configure Horizon Agent
+echo '-- Configuring Horizon Agent ...'
+sudo cat << AGENT > /etc/vmware/viewagent-custom.conf
+#Enable/Disable SSO. Default is TRUE
+SSOEnable=TRUE
+
+#Set the User ID format for SSO. Default is [username]. If the separator contains special char, you need escape it.
+SSOUserFormat=[username]@[domain]
+
+#Set a subnet which other machines can connect to ViewAgent with it. If there are more than one
+#local IP with different subnets, the local IP in the configured subnet will be used for ViewAgent.
+#You need specify the value in IP/CIDR format, such as Subnet=192.168.1.0/24
+Subnet=REPLACEWITHSUBNET
+
+#Set the run once script which will be executed as root permission when the agent
+#service starts and host name has been changed since agent installation.
+#The specified script will be executed once only after the 1st host name change.
+#The option can be used to re-join the cloned VM to AD. Take winbind solution for
+#example, you should join the base VM to AD with winbind, and set this option to
+#a script path, which should contain domain re-join command, such as:
+#"/usr/bin/net ads join -U <YourADUserName>%<ADUserPassword>". After VM Clone, the
+#OS customization will change the host name. After that, when agent service starts,
+#the script will be executed to join the cloned VM to AD.
+RunOnceScript=/root/join.sh
+
+#Set the timeout time in seconds for RunOnceScript execute. Default is 120s.
+#RunOnceScriptTimeout=120
+
+#Select the desktop environment if installed in Ubuntu 14.04/16.04/18.04, RHEL/CentOS 7.
+SSODesktopType=UseGnomeClassic
+
+#Enable/Disable Keyboard layout sync, default is TRUE
+KeyboardLayoutSync=FALSE
+
+#Set the Netbios domain name if this agent have joined domain.
+#Please set the Netbios domain name, not DNS domain name. For
+#example, if the DNS domain name is yourdomain.com, and the Netbios
+#domain name is YOURDOMAIN, you should set YOURDOMAIN.
+NetbiosDomain=REPLACEWITHNETBIOS
+AGENT
+sudo sed -i "s/REPLACEWITHSUBNET/$HORIZONSUBNET/g" /etc/vmware/viewagent-custom.conf
+sudo sed -i "s/REPLACEWITHNETBIOS/$HORIZONNETBIOS/g" /etc/vmware/viewagent-custom.conf
+
+sudo cat << JOIN > /etc/vmware/viewagent-custom.conf
+#!/bin/bash
+
+# Discover the domain
+realm discover REPLACEWITHDOMAIN
+
+# Join to the domain
+echo 'REPLACEWITHPASSWORD' | realm join -v --computer-ou='REPLACEWITHOU' -U REPLACEWITHUSER REPLACEWITHDOMAIN
+
+# Configure /etc/sssd/sssd.conf
+sed -i "s/cache_credentials = True/cache_credentials = False/g" /etc/sssd/sssd.conf
+JOIN
+sudo chmod 700 /root/join.sh &>/dev/null
+sudo sed -i "s/REPLACEWITHDOMAIN/$HORIZONDOMAIN/g" /root/join.sh
+sudo sed -i "s/REPLACEWITHPASSWORD/$HORIZONPASS/g" /root/join.sh
+sudo sed -i "s/REPLACEWITHUSER/$HORIZONUSER/g" /root/join.sh
+sudo sed -i "s/REPLACEWITHOU/$HORIZONOU/g" /root/join.sh
+
 ## Final cleanup actions
 echo '-- Executing final cleanup tasks ...'
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
     sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
-echo 'rockyvdi' | sudo tee /etc/hostname
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 sudo rm -f /etc/machine-id
@@ -85,5 +149,3 @@ if [ -f /var/log/lastlog ]; then
     sudo cat /dev/null > /var/log/lastlog
 fi
 echo '-- Configuration complete'
-echo '-- Rebooting'
-sudo shutdown -r now

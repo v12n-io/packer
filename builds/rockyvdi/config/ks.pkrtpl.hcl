@@ -12,6 +12,9 @@ cdrom
 ### By default, kickstart installations are performed in graphical mode.
 text
 
+# X Window System configuration information
+xconfig --startxonboot
+
 ### Accepts the End User License Agreement.
 eula --agreed
 

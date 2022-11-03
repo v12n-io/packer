@@ -123,7 +123,13 @@ build {
         environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
                                 "INTRANETSERVER=${ var.intranet_server }",
                                 "HORIZONPATH=${ var.hz_agent_path }",
-                                "HORIZONAGENT=${ var.hz_agent_file }" ]
+                                "HORIZONAGENT=${ var.hz_agent_file }",
+                                "HORIZONNETBIOS=${ var.hz_netbios }",
+                                "HORIZONUSER=${ var.hz_domain_user }",
+                                "HORIZONPASS=${ var.hz_domain_pass }",
+                                "HORIZONDOMAIN=${ var.hz_domain_fqdn }",
+                                "HORIZONSUBNET=${ var.hz_subnet }",
+                                "HORIZONOU=${ var.hz_domain_ou }" ]
     }
 
     post-processor "manifest" {

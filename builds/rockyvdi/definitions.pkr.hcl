@@ -319,3 +319,29 @@ variable "intranet_server" {
     type        = string
     description = "Intranet server HTTP(S) location for acquiring Horizon files"
 }
+variable "hz_netbios" {
+    type        = string
+    description = "NETBIOS name for the domain to be joined"
+}
+variable "hz_domain_user" {
+    type        = string
+    description = "Domain user used to join desktops to the domain"
+    sensitive   = true
+}
+variable "hz_domain_pass" {
+    type        = string
+    description = "Domain password used to join desktops to the domain"
+    sensitive   = true
+}
+variable "hz_domain_fqdn" {
+    type        = string
+    description = "FQDN for the domain to be joined"
+}
+variable "hz_subnet" {
+    type        = string
+    description = "Subnet where VMware BLAST can connect to desktops"
+}
+variable "hz_domain_ou" {
+    type        = string
+    description = "Domain OU to join desktops to"
+}
