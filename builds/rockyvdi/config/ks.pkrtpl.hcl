@@ -89,7 +89,17 @@ services --enabled=NetworkManager,sshd
 
 ### Packages selection.
 %packages --ignoremissing --excludedocs
+@anaconda-tools
+@base-x
 @core
+@fonts
+@gnome-desktop
+@guest-desktop-agents
+@hardware-support
+@internet-browser
+@multimedia
+@networkmanager-submodules
+@workstation-product
 -iwl*firmware
 sudo
 net-tools
