@@ -67,8 +67,8 @@ sudo ln -sf /etc/issue /etc/issue.net
 
 ## Install Horizon Agent
 echo '-- Installing Horizon Agent ...'
-sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT} &>/dev/null
-sudo rpm -i ${HORIZONAGENT} &>/dev/null
+sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT}
+sudo rpm -i ${HORIZONAGENT}
 sleep 10s
 
 ## Configure Horizon Agent
