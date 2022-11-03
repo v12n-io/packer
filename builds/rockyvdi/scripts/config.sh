@@ -4,9 +4,10 @@
 # @website https://blog.v12n.io
 
 ## Disable IPv6
-#echo '-- Disabling IPv6 in grub ...'
-#sudo sed -i 's|^\(GRUB_CMDLINE_LINUX.*\)"$|\1 ipv6.disable=1"|' /etc/default/grub
-#sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
+echo '-- Disabling IPv6 in grub ...'
+echo 'GRUB_CMDLINE_LINUX="$GRUB_CMDLINE_LINUX ipv6.disable=1"' &>/dev/null | sudo tee -a /etc/default/grub
+sudo grub2-mkconfig -o /boot/grub2/grub.cfg &>/dev/null
+sudo grub2-mkconfig -o /boot/efi/EFI/rocky/grub.cfg &>/dev/null
 
 ## Apply updates
 echo '-- Setting hostname ...'
@@ -68,6 +69,7 @@ sudo ln -sf /etc/issue /etc/issue.net
 echo '-- Installing Horizon Agent ...'
 sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT} &>/dev/null
 sudo rpm -i ${HORIZONAGENT} &>/dev/null
+sleep 10s
 
 ## Configure Horizon Agent
 echo '-- Configuring Horizon Agent ...'
@@ -129,6 +131,8 @@ sudo sed -i -r "s|REPLACEWITHDOMAIN|$HORIZONDOMAIN|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHPASSWORD|$HORIZONPASS|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHUSER|$HORIZONUSER|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHOU|$HORIZONOU|g" /root/join.sh
+
+sudo sed -i -r "s|#Clipboard.Direction=1|Clipboard.Direction=1|g" /etc/vmware/config
 
 ## Disable Gnome Autostart
 echo 'X-GNOME-Autostart-enabled=false' &>/dev/null | sudo tee -a /etc/xdg/autostart/gnome-initial-setup-first-login.desktop
