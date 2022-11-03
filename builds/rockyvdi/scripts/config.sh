@@ -10,7 +10,7 @@
 
 ## Apply updates
 echo '-- Setting hostname ...'
-echo 'rockyvdi' &>/dev/null | sudo tee /etc/hostname
+sudo hostnamectl set-hostname rockyvdi
 
 ## Apply updates
 echo '-- Applying package updates ...'
@@ -129,6 +129,9 @@ sudo sed -i -r "s|REPLACEWITHDOMAIN|$HORIZONDOMAIN|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHPASSWORD|$HORIZONPASS|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHUSER|$HORIZONUSER|g" /root/join.sh
 sudo sed -i -r "s|REPLACEWITHOU|$HORIZONOU|g" /root/join.sh
+
+## Disable Gnome Autostart
+echo 'X-GNOME-Autostart-enabled=false' &>/dev/null | sudo tee -a /etc/xdg/autostart/gnome-initial-setup-first-login.desktop
 
 ## Final cleanup actions
 echo '-- Executing final cleanup tasks ...'
