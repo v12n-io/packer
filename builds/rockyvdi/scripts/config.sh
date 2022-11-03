@@ -10,10 +10,6 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg &>/dev/null
 sudo grub2-mkconfig -o /boot/efi/EFI/rocky/grub.cfg &>/dev/null
 
 ## Apply updates
-echo '-- Setting hostname ...'
-sudo hostnamectl set-hostname rockyvdi
-
-## Apply updates
 echo '-- Applying package updates ...'
 sudo dnf update -y -q &>/dev/null
 
@@ -67,9 +63,8 @@ sudo ln -sf /etc/issue /etc/issue.net
 
 ## Install Horizon Agent
 echo '-- Installing Horizon Agent ...'
-sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT}
-sudo rpm -i ${HORIZONAGENT}
-sleep 10s
+sudo wget -q ${INTRANETSERVER}/${HORIZONPATH}/${HORIZONAGENT} &>/dev/null
+sudo rpm -i ${HORIZONAGENT} &>/dev/null
 
 ## Configure Horizon Agent
 echo '-- Configuring Horizon Agent ...'
