@@ -84,3 +84,5 @@ if [ -f /var/log/lastlog ]; then
     sudo cat /dev/null > /var/log/lastlog
 fi
 echo '-- Configuration complete'
+echo '-- Rebooting'
+sudo shutdown -r now

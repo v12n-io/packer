@@ -117,6 +117,13 @@ xorg-x11-drv-vmware
 xorg-x11-server-utils
 xorg-x11-xauth
 zenity
+glibc
+adcli
+sssd
+authconfig
+samba-common-tools
+krb5-workstation
+realmd
 %end
 
 ### Post-installation commands.
