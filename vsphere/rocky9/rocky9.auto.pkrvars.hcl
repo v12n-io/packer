@@ -6,14 +6,14 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "Rocky-9.0-x86_64-dvd.iso"
+os_iso_file                     = "Rocky-9.1-x86_64-dvd.iso"
 os_iso_path                     = "os/rocky/9"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "Rocky"
-vm_os_version                   = "9.0"
+vm_os_version                   = "9.1"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"

@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "en-us_windows_server_2022_updated_sep_2022_x64_dvd_44ee9450.iso"
+os_iso_file                     = "en-us_windows_server_2022_updated_feb_2023_x64_dvd_76afefb5.iso"
 os_iso_path                     = "os/microsoft/server/2022"
 
 # OS Meta Data

@@ -33,7 +33,6 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-admin_username                  = "root"
 vm_guestos_type                 = "vmkernel7Guest"
 vm_guestos_keyboard             = "US Default"
 

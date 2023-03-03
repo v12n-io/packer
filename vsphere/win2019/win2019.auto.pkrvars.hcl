@@ -1,12 +1,12 @@
 # ----------------------------------------------------------------------------
-# Name:         variables.auto.pkrvars.hcl
+# Name:         win2019.auto.pkrvars.hcl
 # Description:  Required vSphere variables for Windows 2019 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "en-us_windows_server_2019_updated_aug_2021_x64_dvd_a6431a28.iso"
+os_iso_file                     = "en-us_windows_server_2019_x64_dvd_f9475476.iso"
 os_iso_path                     = "os/microsoft/server/2019"
 
 # OS Meta Data

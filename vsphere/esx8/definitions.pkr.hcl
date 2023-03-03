@@ -23,6 +23,7 @@ variable "admin_username" {
     type        = string
     description = "Default administrative username for this OS"
     sensitive   = true
+    default     = "root"
 }
 variable "admin_password" {
     type        = string

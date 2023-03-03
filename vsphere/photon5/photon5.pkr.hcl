@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------
-# Name:         esx7.pkr.hcl
-# Description:  Build definition for ESX 7
+# Name:         photon5.pkr.hcl
+# Description:  Build definition for Photon 5
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
@@ -25,19 +25,20 @@ locals {
     build_version               = formatdate("YY.MM", timestamp())
     build_date                  = formatdate("YYYY-MM-DD hh:mm ZZZ", timestamp())
     ks_content                  = {
-                                    "KS.CFG" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                    "ks.cfg" = templatefile("${abspath(path.root)}/config/ks.pkrtpl.hcl", {
+                                        build_username            = var.build_username
+                                        build_password            = var.build_password
+                                        admin_username            = var.admin_username
                                         admin_password            = var.admin_password
-                                        vm_guestos_keyboard       = var.vm_guestos_keyboard
                                     })
                                   }
     vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nISO: ${ var.os_iso_file }"
-
 }
 
 # -------------------------------------------------------------------------- #
 #                       Template Source Definitions                          #
 # -------------------------------------------------------------------------- #
-source "vsphere-iso" "esx7" {
+source "vsphere-iso" "photon5" {
     # vCenter
     vcenter_server              = var.vcenter_server
     username                    = var.vcenter_username
@@ -73,7 +74,6 @@ source "vsphere-iso" "esx7" {
     cpu_cores                   = var.vm_cpu_cores
     CPU_hot_plug                = var.vm_cpu_hotadd
     RAM                         = var.vm_mem_size
-    NestedHV                    = true
     RAM_hot_plug                = var.vm_mem_hotadd
     cdrom_type                  = var.vm_cdrom_type
     remove_cdrom                = var.vm_cdrom_remove
@@ -86,24 +86,25 @@ source "vsphere-iso" "esx7" {
         network                 = var.vcenter_network
         network_card            = var.vm_nic_type
     }
-    network_adapters {
-        network                 = var.vcenter_network
-        network_card            = var.vm_nic_type
-    }
 
     # Removeable Media
-    iso_paths                   = ["[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }"]
+    iso_paths                   = [ "[${ var.os_iso_datastore }] ${ var.os_iso_path }/${ var.os_iso_file }" ]
     cd_content                  = local.ks_content
 
     # Boot and Provisioner
     boot_order                  = var.vm_boot_order
     boot_wait                   = var.vm_boot_wait
-    boot_command                = [ "<wait><leftShiftOn>o<leftShiftOff><wait> ks=cdrom:/KS.CFG<enter>" ]
+    boot_command                = [ "<esc><wait>c",
+                                    "linux /isolinux/vmlinuz root=/dev/ram0 loglevel=3 insecure_installation=1 ks=/dev/sr1:/ks.cfg photon.media=cdrom",
+                                    "<enter>", "initrd /isolinux/initrd.img",
+                                    "<enter>",
+                                    "boot",
+                                    "<enter>" ]
     ip_wait_timeout             = var.vm_ip_timeout
     communicator                = "ssh"
-    ssh_username                = var.admin_username
-    ssh_password                = var.admin_password
-    shutdown_command            = "esxcli system maintenanceMode set -e true -t 0; esxcli system shutdown poweroff -d 10 -r \"Packer Shutdown\"; esxcli system maintenanceMode set -e false -t 0"
+    ssh_username                = var.build_username
+    ssh_password                = var.build_password
+    shutdown_command            = "sudo shutdown -P now"
     shutdown_timeout            = var.vm_shutdown_timeout
 }
 
@@ -112,11 +113,15 @@ source "vsphere-iso" "esx7" {
 # -------------------------------------------------------------------------- #
 build {
     # Build sources
-    sources                 = [ "source.vsphere-iso.esx7" ]
+    sources                     = [ "source.vsphere-iso.photon5" ]
     
-    # Shell Provisioner to execute scripts 
+    # Shell Provisioner to execute scripts
     provisioner "shell" {
-        inline              = var.inline_cmds
+        execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
+        scripts             = var.script_files
+        environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
+                                "ANSIBLEUSER=${ var.build_ansible_user }",
+                                "ANSIBLEKEY=${ var.build_ansible_key }" ]
     }
 
     post-processor "manifest" {

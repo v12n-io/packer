@@ -6,14 +6,14 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "VMware-VMvisor-Installer-8.0-20513097.x86_64.iso"
+os_iso_file                     = "VMware-VMvisor-Installer-8.0b-21203435.x86_64.iso"
 os_iso_path                     = "os/esxi/8"
 
 # OS Meta Data
 vm_os_family                    = "ESXi"
 vm_os_type                      = "Hypervisor"
 vm_os_vendor                    = "VMware"
-vm_os_version                   = "8.0.0 IA"
+vm_os_version                   = "8.0B"
 
 # VM Hardware Settings
 vm_firmware                     = "efi"
@@ -33,7 +33,6 @@ vcenter_content_library_ovf     = true
 vcenter_content_library_destroy = true
 
 # VM OS Settings
-admin_username                  = "root"
 vm_guestos_type                 = "vmkernel7Guest"
 vm_guestos_keyboard             = "US Default"
 

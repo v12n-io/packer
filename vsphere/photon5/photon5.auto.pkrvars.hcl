@@ -1,19 +1,19 @@
 # ----------------------------------------------------------------------------
-# Name:         photon4.auto.pkrvars.hcl
+# Name:         photon5.auto.pkrvars.hcl
 # Description:  Required vSphere variables for Photon 4 Packer builds
 # Author:       Michael Poore (@mpoore)
 # URL:          https://github.com/v12n-io/packer
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "photon-4.0-c001795b8.iso"
-os_iso_path                     = "os/photon/4"
+os_iso_file                     = "photon-5.0-9e778f409.iso"
+os_iso_path                     = "os/photon/5"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "Photon"
-vm_os_version                   = "4.0 Rev2"
+vm_os_version                   = "5.0 Beta"
 
 # VM Hardware Settings
 vm_firmware                     = "efi-secure"

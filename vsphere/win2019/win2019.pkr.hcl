@@ -9,10 +9,10 @@
 #                           Packer Configuration                             #
 # -------------------------------------------------------------------------- #
 packer {
-    required_version = ">= 1.7.7"
+    required_version = ">= 1.8.6"
     required_plugins {
         vsphere = {
-            version = ">= v1.0.6"
+            version = ">= v1.1.1"
             source  = "github.com/hashicorp/vsphere"
         }
     }
@@ -50,7 +50,7 @@ locals {
                                         vm_windows_image          = "SERVERSTANDARD"
                                     })
                                   }
-    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }"
+    vm_description              = "VER: ${ local.build_version }\nDATE: ${ local.build_date }\nISO: ${ var.os_iso_file }"
 }
 
 # -------------------------------------------------------------------------- #
