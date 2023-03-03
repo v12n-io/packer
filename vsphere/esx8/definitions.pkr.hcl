@@ -132,18 +132,22 @@ variable "vm_guestos_type" {
 variable "vm_guestos_language" {
     type        = string
     description = "The language that the guest OS will be configured with"
+    default     = "en-GB"
 }
 variable "vm_guestos_keyboard" {
     type        = string
     description = "The keyboard type that the guest OS will use"
+    default     = "en-GB"
 }
 variable "vm_guestos_timezone" {
     type        = string
     description = "The timezone the guest OS will be set to"
+    default     = "GMT Standard Time"
 }
 variable "vm_guestos_systemlocale" {
     type        = string
     description = "The language that the guest OS will be configured with"
+    default     = "en-US"
 }
 
 # Virtual Machine Hardware Settings
