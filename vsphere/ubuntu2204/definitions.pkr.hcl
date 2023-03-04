@@ -40,6 +40,12 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
+variable "build_password_encrypted" {
+    type        = string
+    description = "Encrypted password for the non-administrative user"
+    sensitive   = true
+    default     = ""
+}
 variable "build_ansible_user" {
     type        = string
     description = "Name of the user to be used by Ansible"
