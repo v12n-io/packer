@@ -274,7 +274,7 @@ variable "vcenter_snapshot_name" {
 variable "vm_ip_timeout" {
     type        = string
     description = "Set the timeout for the VM to obtain an IP address (e.g. '1h5m2s' or '2s')"
-    default     = "20m"
+    default     = "30m"
 }
 variable "vm_shutdown_timeout" {
     type = string
