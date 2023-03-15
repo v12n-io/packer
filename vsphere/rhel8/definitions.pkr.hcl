@@ -160,7 +160,7 @@ variable "vm_firmware" {
 variable "vm_hardware_version" {
     type        = number
     description = "Version of VM hardware to use (e.g. '18' or '19' etc)"
-    default     = 19
+    default     = 20
 }
 variable "vm_boot_order" {
     type        = string

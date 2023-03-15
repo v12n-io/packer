@@ -16,6 +16,7 @@ vm_os_vendor                    = "RHEL"
 vm_os_version                   = "8.7"
 
 # VM Hardware Settings
+vm_hardware_version             = 20
 vm_firmware                     = "efi-secure"
 vm_cpu_sockets                  = 1
 vm_cpu_cores                    = 1
