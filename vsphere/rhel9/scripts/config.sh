@@ -121,6 +121,7 @@ echo 'Executing final cleanup tasks ...'
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
     sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
+sudo rm -f /etc/sysconfig/network-scripts/*
 sudo rm -rf /tmp/*
 sudo rm -rf /var/tmp/*
 sudo rm -f /etc/machine-id
