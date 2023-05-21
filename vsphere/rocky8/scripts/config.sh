@@ -14,8 +14,8 @@ sudo dnf update -y -q &>/dev/null
 
 ## Install core packages
 echo '-- Installing additional packages ...'
-sudo dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
-sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
+sudo dnf install -y -q ca-certificates dnf-plugins-core
+sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart
 
 ## Adding additional repositories
 echo '-- Adding repositories ...'
