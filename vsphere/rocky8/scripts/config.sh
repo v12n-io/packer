@@ -10,20 +10,20 @@
 
 ## Apply updates
 echo '-- Applying package updates ...'
-sudo dnf update -y -q &>/dev/null
+sudo dnf update -y -q >/dev/null
 
 ## Install core packages
 echo '-- Installing additional packages ...'
-sudo dnf install -y -q ca-certificates dnf-plugins-core
-sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart
+sudo dnf install -y -q ca-certificates dnf-plugins-core >/dev/null
+sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart >/dev/null
 
 ## Adding additional repositories
 echo '-- Adding repositories ...'
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo >/dev/null
 
 ## Cleanup yum
 echo '-- Clearing yum cache ...'
-sudo dnf clean all &>/dev/null
+sudo dnf clean all >/dev/null
 
 ## Configure SSH server
 echo '-- Configuring SSH server daemon ...'
@@ -43,14 +43,14 @@ EOF
 sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
 sudo chmod 700 /home/$ANSIBLEUSER/.ssh
 sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
-echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
+echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER >/dev/null
 
 ## Install trusted SSL CA certificates
 echo '-- Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q ${PKISERVER}/$cert &>/dev/null
+    sudo wget -q ${PKISERVER}/$cert >/dev/null
 done
 sudo update-ca-trust extract
 
