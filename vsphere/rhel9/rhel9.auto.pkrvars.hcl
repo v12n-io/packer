@@ -6,14 +6,14 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "rhel-baseos-9.1-x86_64-dvd.iso"
+os_iso_file                     = "rhel-baseos-9.2-x86_64-dvd.iso"
 os_iso_path                     = "os/redhat/9"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "RHEL"
-vm_os_version                   = "9.1"
+vm_os_version                   = "9.2"
 
 # VM Hardware Settings
 vm_hardware_version             = 20
