@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "rhel-baseos-9.2-x86_64-dvd.iso"
+os_iso_file                     = "rhel-9.2-x86_64-dvd.iso"
 os_iso_path                     = "os/redhat/9"
 
 # OS Meta Data
