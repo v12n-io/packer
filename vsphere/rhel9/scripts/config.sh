@@ -24,6 +24,8 @@ sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 ## Adding additional repositories
 echo 'Adding repositories ...'
 sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+sudo rpm --import https://repo.saltproject.io/salt/py3/redhat/9/x86_64/SALT-PROJECT-GPG-PUBKEY-2023.pub &>/dev/null
+curl -fsSL https://repo.saltproject.io/salt/py3/redhat/9/x86_64/latest.repo | sudo tee /etc/yum.repos.d/salt.repo &>/dev/null
 
 ## Cleanup yum
 echo 'Clearing yum cache ...'
