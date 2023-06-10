@@ -58,12 +58,12 @@ sudo update-ca-trust extract
 
 ## Configure cloud-init
 echo '-- Configuring cloud-init ...'
-#sudo cat << CLOUDCFG > /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
-#disable_vmware_customization: false
-#datasource:
-#  VMware:
-#    vmware_cust_file_max_wait: 20
-#CLOUDCFG
+sudo cat << CLOUDCFG > /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
+disable_vmware_customization: false
+datasource:
+  VMware:
+    vmware_cust_file_max_wait: 20
+CLOUDCFG
 sudo sed -i '/^ssh_pwauth/s/0/1/' /etc/cloud/cloud.cfg
 
 ## Setup MoTD
