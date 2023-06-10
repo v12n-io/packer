@@ -40,14 +40,14 @@ variable "build_password" {
     description = "Password for the non-administrative user"
     sensitive   = true
 }
-variable "build_ansible_user" {
+variable "build_configmgmt_user" {
     type        = string
-    description = "Name of the user to be used by Ansible"
+    description = "Name of the user to be used by Configuration Management tooling"
     sensitive   = true
 }
-variable "build_ansible_key" {
+variable "build_configmgmt_key" {
     type        = string
-    description = "SSH key for the Ansible user"
+    description = "SSH key for the Configuration Management tooling user"
     sensitive   = true
 }
 variable "rhsm_user" {

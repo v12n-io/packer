@@ -38,19 +38,19 @@ sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
 sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
 sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
-## Create Ansible user
-echo 'Creating local user for Ansible integration ...'
-sudo groupadd $ANSIBLEUSER
-sudo useradd -g $ANSIBLEUSER -G wheel -m -s /bin/bash $ANSIBLEUSER
-echo $ANSIBLEUSER:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/$ANSIBLEUSER/.ssh
-sudo cat << EOF > /home/$ANSIBLEUSER/.ssh/authorized_keys
-$ANSIBLEKEY
+## Create Configuration Management user
+echo 'Creating local user for Configuration Management integration ...'
+sudo groupadd $CONFIGMGMTUSER
+sudo useradd -g $CONFIGMGMTUSER -G wheel -m -s /bin/bash $CONFIGMGMTUSER
+echo $CONFIGMGMTUSER:$(openssl rand -base64 14) | sudo chpasswd
+sudo mkdir /home/$CONFIGMGMTUSER/.ssh
+sudo cat << EOF > /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+$CONFIGMGMTKEY
 EOF
-sudo chown -R $ANSIBLEUSER:$ANSIBLEUSER /home/$ANSIBLEUSER/.ssh
-sudo chmod 700 /home/$ANSIBLEUSER/.ssh
-sudo chmod 600 /home/$ANSIBLEUSER/.ssh/authorized_keys
-echo "$ANSIBLEUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$ANSIBLEUSER &>/dev/null
+sudo chown -R $CONFIGMGMTUSER:$CONFIGMGMTUSER /home/$CONFIGMGMTUSER/.ssh
+sudo chmod 700 /home/$CONFIGMGMTUSER/.ssh
+sudo chmod 600 /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+echo "$CONFIGMGMTUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$CONFIGMGMTUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo 'Installing trusted SSL CA certificates ...'
