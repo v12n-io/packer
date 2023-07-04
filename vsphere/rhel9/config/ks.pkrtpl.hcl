@@ -99,6 +99,7 @@ curl
 perl
 git
 unzip
+NetworkManager
 %end
 
 ### Post-installation commands.
