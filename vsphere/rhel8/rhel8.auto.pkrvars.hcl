@@ -6,14 +6,14 @@
 # ----------------------------------------------------------------------------
 
 # ISO Settings
-os_iso_file                     = "rhel-8.7-x86_64-dvd.iso"
+os_iso_file                     = "rhel-8.8-x86_64-dvd.iso"
 os_iso_path                     = "os/redhat/8"
 
 # OS Meta Data
 vm_os_family                    = "Linux"
 vm_os_type                      = "Server"
 vm_os_vendor                    = "RHEL"
-vm_os_version                   = "8.7"
+vm_os_version                   = "8.8"
 
 # VM Hardware Settings
 vm_hardware_version             = 20

@@ -76,13 +76,8 @@ volgroup sysvg --pesize=4096 pv.01
 
 ### Modify logical volume sizes for the virtual machine hardware.
 ### Create logical volumes.
-logvol swap --fstype swap --name=lv_swap --vgname=sysvg --size=1024 --label=SWAPFS
-logvol / --fstype xfs --name=lv_root --vgname=sysvg --size=8192 --label=ROOTFS
-logvol /home --fstype xfs --name=lv_home --vgname=sysvg --size=4096 --label=HOMEFS --fsoptions="nodev,nosuid"
-logvol /opt --fstype xfs --name=lv_opt --vgname=sysvg --size=2048 --label=OPTFS --fsoptions="nodev"
-logvol /tmp --fstype xfs --name=lv_tmp --vgname=sysvg --size=4096 --label=TMPFS --fsoptions="nodev,noexec,nosuid"
-logvol /var --fstype xfs --name=lv_var --vgname=sysvg --size=4096 --label=VARFS --fsoptions="nodev"
-logvol /var/log --fstype xfs --name=lv_log --vgname=sysvg --size=4096 --label=LOGFS --fsoptions="nodev,noexec,nosuid"
+logvol swap --fstype swap --name=lv_swap --vgname=sysvg --size=8192 --label=SWAPFS
+logvol / --fstype xfs --name=lv_root --vgname=sysvg --percent=100 --label=ROOTFS
 
 ### Modifies the default set of services that will run under the default runlevel.
 services --enabled=NetworkManager,sshd

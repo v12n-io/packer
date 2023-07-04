@@ -119,8 +119,8 @@ build {
         execute_command     = "echo '${ var.build_password }' | {{.Vars}} sudo -E -S sh -eu '{{.Path}}'"
         scripts             = var.script_files
         environment_vars    = [ "PKISERVER=${ var.build_pkiserver }",
-                                "ANSIBLEUSER=${ var.build_ansible_user }",
-                                "ANSIBLEKEY=${ var.build_ansible_key }",
+                                "CONFIGMGMTUSER=${ var.build_configmgmt_user }",
+                                "CONFIGMGMTKEY=${ var.build_configmgmt_key }",
                                 "RHSM_USER=${ var.rhsm_user }",
                                 "RHSM_PASS=${ var.rhsm_pass }" ]
     }
