@@ -5,76 +5,77 @@
 
 ## Disable IPv6
 echo 'Disabling IPv6 in grub ...'
-sudo sed -i 's|^\(GRUB_CMDLINE_LINUX.*\)"$|\1 ipv6.disable=1"|' /etc/default/grub
-sudo grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
+sed -i 's|^\(GRUB_CMDLINE_LINUX.*\)"$|\1 ipv6.disable=1"|' /etc/default/grub
+grub2-mkconfig -o /boot/efi/EFI/redhat/grub.cfg &>/dev/null
 
 ## Register with RHSM
 echo 'Registering with RedHat Subscription Manager ...'
-sudo subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto-attach &>/dev/null
+subscription-manager register --username $RHSM_USER --password $RHSM_PASS --auto-attach &>/dev/null
 
 ## Apply updates
 echo 'Applying package updates ...'
-sudo dnf update -y -q &>/dev/null
+dnf update -y -q &>/dev/null
 
 ## Install core packages
 echo 'Installing additional packages ...'
-sudo dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
-sudo dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
+dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
+dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
 echo 'Adding repositories ...'
-sudo dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
-sudo rpm --import https://repo.saltproject.io/salt/py3/redhat/9/x86_64/SALT-PROJECT-GPG-PUBKEY-2023.pub &>/dev/null
-curl -fsSL https://repo.saltproject.io/salt/py3/redhat/9/x86_64/latest.repo | sudo tee /etc/yum.repos.d/salt.repo &>/dev/null
+dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo &>/dev/null
+rpm --import https://repo.saltproject.io/salt/py3/redhat/9/x86_64/SALT-PROJECT-GPG-PUBKEY-2023.pub &>/dev/null
+curl -fsSL https://repo.saltproject.io/salt/py3/redhat/9/x86_64/latest.repo | tee /etc/yum.repos.d/salt.repo &>/dev/null
 
 ## Cleanup yum
 echo 'Clearing yum cache ...'
-sudo dnf clean all &>/dev/null
+dnf clean all &>/dev/null
 
 ## Configure SSH server
 echo 'Configuring SSH server daemon ...'
-sudo sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
-sudo sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
-sudo sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+sed -i '/^PermitRootLogin/s/yes/no/' /etc/ssh/sshd_config
+sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_config
+sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 ## Create Configuration Management user
 echo 'Creating local user for Configuration Management integration ...'
-sudo groupadd $CONFIGMGMTUSER
-sudo useradd -g $CONFIGMGMTUSER -G wheel -m -s /bin/bash $CONFIGMGMTUSER
-echo $CONFIGMGMTUSER:$(openssl rand -base64 14) | sudo chpasswd
-sudo mkdir /home/$CONFIGMGMTUSER/.ssh
-sudo cat << EOF > /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+groupadd $CONFIGMGMTUSER
+useradd -g $CONFIGMGMTUSER -G wheel -m -s /bin/bash $CONFIGMGMTUSER
+echo $CONFIGMGMTUSER:$(openssl rand -base64 14) | chpasswd
+mkdir /home/$CONFIGMGMTUSER/.ssh
+cat << EOF > /home/$CONFIGMGMTUSER/.ssh/authorized_keys
 $CONFIGMGMTKEY
 EOF
-sudo chown -R $CONFIGMGMTUSER:$CONFIGMGMTUSER /home/$CONFIGMGMTUSER/.ssh
-sudo chmod 700 /home/$CONFIGMGMTUSER/.ssh
-sudo chmod 600 /home/$CONFIGMGMTUSER/.ssh/authorized_keys
-echo "$CONFIGMGMTUSER ALL=(ALL) NOPASSWD: ALL" | sudo tee -a /etc/sudoers.d/$CONFIGMGMTUSER &>/dev/null
+chown -R $CONFIGMGMTUSER:$CONFIGMGMTUSER /home/$CONFIGMGMTUSER/.ssh
+chmod 700 /home/$CONFIGMGMTUSER/.ssh
+chmod 600 /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+echo "$CONFIGMGMTUSER ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers.d/$CONFIGMGMTUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo 'Installing trusted SSL CA certificates ...'
 pkiCerts=("root.crt" "issuing.crt")
 cd /etc/pki/ca-trust/source/anchors
 for cert in ${pkiCerts[@]}; do
-    sudo wget -q ${PKISERVER}/$cert &>/dev/null
+    wget -q ${PKISERVER}/$cert &>/dev/null
 done
-sudo update-ca-trust extract
+update-ca-trust extract
 
 ## Configure cloud-init
 echo '-- Configuring cloud-init ...'
-sudo cat << CLOUDCFG > /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
+cat << CLOUDCFG > /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
 disable_vmware_customization: false
 datasource:
   VMware:
     vmware_cust_file_max_wait: 20
 CLOUDCFG
+cloud-init clean --logs --seed
 
 ## Setup MoTD
 echo 'Setting login banner ...'
 BUILDDATE=$(date +"%y%m")
 RELEASE=$(cat /etc/redhat-release)
 DOCS="https://github.com/v12n-io/packer"
-sudo cat << ISSUE > /etc/issue
+cat << ISSUE > /etc/issue
 
            {__   {__ {_            
 {__     {__ {__ {_     {__{__ {__  
@@ -87,33 +88,42 @@ sudo cat << ISSUE > /etc/issue
         $DOCS
 
 ISSUE
-sudo ln -sf /etc/issue /etc/issue.net
+ln -sf /etc/issue /etc/issue.net
 
 ## Unregister from RHSM
 echo 'Unregistering from Red Hat Subscription Manager ...'
-sudo subscription-manager remove --all &>/dev/null
-sudo subscription-manager unregister &>/dev/null
-sudo subscription-manager clean &>/dev/null
+subscription-manager remove --all &>/dev/null
+subscription-manager unregister &>/dev/null
+subscription-manager clean &>/dev/null
+rm -rf /var/log/rhsm/*
 
 ## Final cleanup actions
 echo 'Executing final cleanup tasks ...'
+# Udev rules
 if [ -f /etc/udev/rules.d/70-persistent-net.rules ]; then
-    sudo rm -f /etc/udev/rules.d/70-persistent-net.rules
+    rm -f /etc/udev/rules.d/70-persistent-net.rules
 fi
-sudo rm -f /etc/sysconfig/network-scripts/*
-sudo rm -rf /tmp/*
-sudo rm -rf /var/tmp/*
-sudo rm -f /etc/machine-id
-sudo rm -f /var/lib/dbus/machine-id
-sudo cloud-init clean --logs --seed
-sudo rm -f /etc/ssh/ssh_host_*
+# Temp directories
+rm -rf /tmp/*
+rm -rf /var/tmp/*
+rm -rf /var/cache/dnf/*
+# Machine id
+truncate -s 0 /etc/machine-id
+# SSH keys
+rm -f /etc/ssh/ssh_host_*
+# Audit logs
 if [ -f /var/log/audit/audit.log ]; then
-    sudo cat /dev/null > /var/log/audit/audit.log
+    cat /dev/null > /var/log/audit/audit.log
 fi
 if [ -f /var/log/wtmp ]; then
-    sudo cat /dev/null > /var/log/wtmp
+    cat /dev/null > /var/log/wtmp
 fi
 if [ -f /var/log/lastlog ]; then
-    sudo cat /dev/null > /var/log/lastlog
+    cat /dev/null > /var/log/lastlog
 fi
+# Clean history
+history -cw
+echo > ~/.bash_history
+rm -fr /root/.bash_history
+# Finished
 echo 'Configuration complete'
