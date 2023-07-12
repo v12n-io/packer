@@ -17,9 +17,8 @@ echo 'Applying package updates ...'
 dnf update -y -q &>/dev/null
 
 ## Install core packages
-echo 'Installing additional packages ...'
+echo 'Installing core packages ...'
 dnf install -y -q ca-certificates dnf-plugins-core &>/dev/null
-dnf install -y -q cloud-init perl python3 cloud-utils-growpart &>/dev/null
 
 ## Adding additional repositories
 echo 'Adding repositories ...'
@@ -27,8 +26,12 @@ dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.
 rpm --import https://repo.saltproject.io/salt/py3/redhat/9/x86_64/SALT-PROJECT-GPG-PUBKEY-2023.pub &>/dev/null
 curl -fsSL https://repo.saltproject.io/salt/py3/redhat/9/x86_64/latest.repo | tee /etc/yum.repos.d/salt.repo &>/dev/null
 
+## Install additional packages
+echo 'Installing additional packages ...'
+dnf install -y -q cloud-init perl python3 cloud-utils-growpart salt-minion &>/dev/null
+
 ## Cleanup yum
-echo 'Clearing yum cache ...'
+echo 'Clearing dnf cache ...'
 dnf clean all &>/dev/null
 
 ## Configure SSH server
@@ -38,18 +41,18 @@ sed -i "s/.*PubkeyAuthentication.*/PubkeyAuthentication yes/g" /etc/ssh/sshd_con
 sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
 
 ## Create Configuration Management user
-echo 'Creating local user for Configuration Management integration ...'
-groupadd $CONFIGMGMTUSER
-useradd -g $CONFIGMGMTUSER -G wheel -m -s /bin/bash $CONFIGMGMTUSER
-echo $CONFIGMGMTUSER:$(openssl rand -base64 14) | chpasswd
-mkdir /home/$CONFIGMGMTUSER/.ssh
-cat << EOF > /home/$CONFIGMGMTUSER/.ssh/authorized_keys
-$CONFIGMGMTKEY
-EOF
-chown -R $CONFIGMGMTUSER:$CONFIGMGMTUSER /home/$CONFIGMGMTUSER/.ssh
-chmod 700 /home/$CONFIGMGMTUSER/.ssh
-chmod 600 /home/$CONFIGMGMTUSER/.ssh/authorized_keys
-echo "$CONFIGMGMTUSER ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers.d/$CONFIGMGMTUSER &>/dev/null
+#echo 'Creating local user for Configuration Management integration ...'
+#groupadd $CONFIGMGMTUSER
+#useradd -g $CONFIGMGMTUSER -G wheel -m -s /bin/bash $CONFIGMGMTUSER
+#echo $CONFIGMGMTUSER:$(openssl rand -base64 14) | chpasswd
+#mkdir /home/$CONFIGMGMTUSER/.ssh
+#cat << EOF > /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+#$CONFIGMGMTKEY
+#EOF
+#chown -R $CONFIGMGMTUSER:$CONFIGMGMTUSER /home/$CONFIGMGMTUSER/.ssh
+#chmod 700 /home/$CONFIGMGMTUSER/.ssh
+#chmod 600 /home/$CONFIGMGMTUSER/.ssh/authorized_keys
+#echo "$CONFIGMGMTUSER ALL=(ALL) NOPASSWD: ALL" | tee -a /etc/sudoers.d/$CONFIGMGMTUSER &>/dev/null
 
 ## Install trusted SSL CA certificates
 echo 'Installing trusted SSL CA certificates ...'
@@ -64,11 +67,33 @@ update-ca-trust extract
 echo '-- Configuring cloud-init ...'
 cat << CLOUDCFG > /etc/cloud/cloud.cfg.d/99-vmware-guest-customization.cfg
 disable_vmware_customization: false
+ssh_pwauth: yes
 datasource:
   VMware:
     vmware_cust_file_max_wait: 20
 CLOUDCFG
 cloud-init clean --logs --seed
+sed -i '/^ssh_pwauth/s/0/1/' /etc/cloud/cloud.cfg
+
+## Configure salt-minion
+if [ -z "$SALT_MINION" ]
+then
+echo '-- Configuring salt-minion ...'
+cat << MINION > /etc/salt/minion.d/master.conf
+$SALT_MINION
+MINION
+cat << MINION_TIMER > /usr/lib/systemd/system/salt-minion.timer
+[Unit]
+Description=Timer for the salt-minion service
+
+[Timer]
+OnBootSec=1min
+
+[Install]
+WantedBy=timers.target
+MINION_TIMER
+systemctl enable salt-minion.timer
+fi
 
 ## Setup MoTD
 echo 'Setting login banner ...'
