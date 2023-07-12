@@ -307,3 +307,7 @@ variable "build_pkiserver" {
     type        = string
     description = "URL for acquiring SSL certificates"
 }
+variable "salt_minion" {
+    type        = string
+    description = "Salt-minion master servers"
+}

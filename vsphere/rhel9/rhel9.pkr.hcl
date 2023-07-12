@@ -122,7 +122,8 @@ build {
                                 "CONFIGMGMTUSER=${ var.build_configmgmt_user }",
                                 "CONFIGMGMTKEY=${ var.build_configmgmt_key }",
                                 "RHSM_USER=${ var.rhsm_user }",
-                                "RHSM_PASS=${ var.rhsm_pass }" ]
+                                "RHSM_PASS=${ var.rhsm_pass }",
+                                "SALT_MINION=${ var.salt_minion }" ]
     }
 
     post-processor "manifest" {
