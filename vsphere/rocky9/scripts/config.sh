@@ -64,6 +64,7 @@ datasource:
   VMware:
     vmware_cust_file_max_wait: 20
 CLOUDCFG
+sudo sed -i '/^ssh_pwauth/s/0/1/' /etc/cloud/cloud.cfg
 
 ## Setup MoTD
 echo '-- Setting login banner ...'
