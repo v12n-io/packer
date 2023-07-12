@@ -76,24 +76,18 @@ cloud-init clean --logs --seed
 sed -i '/^ssh_pwauth/s/0/1/' /etc/cloud/cloud.cfg
 
 ## Configure salt-minion
-if [ -z "$SALT_MINION" ]
-then
 echo '-- Configuring salt-minion ...'
-cat << MINION > /etc/salt/minion.d/master.conf
-$SALT_MINION
-MINION
-cat << MINION_TIMER > /usr/lib/systemd/system/salt-minion.timer
+cat << MINIONTIMER > /usr/lib/systemd/system/salt-minion.timer
 [Unit]
 Description=Timer for the salt-minion service
 
 [Timer]
-OnBootSec=1min
+OnBootSec=2min
 
 [Install]
 WantedBy=timers.target
-MINION_TIMER
+MINIONTIMER
 systemctl enable salt-minion.timer
-fi
 
 ## Setup MoTD
 echo 'Setting login banner ...'
